@@ -1,0 +1,38 @@
+html {
+  font-family: 'Roboto Condensed', sans-serif;
+  @apply bg-theme-500;
+}
+
+#root {
+  overflow: auto;
+  min-height:100vh;
+  background-color: theme('colors.theme.500');
+}
+
+.container-fluid {
+  max-width: 91.666667%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn {
+  @apply inline-block rounded py-1 px-2;
+}
+
+.btn.btn-blue {
+  @apply bg-blue-500 text-white;
+  &:hover {
+    @apply bg-blue-700;
+  }
+}
+
+.btn.btn-red {
+  @apply bg-red-500 text-white;
+  &:hover {
+    @apply bg-red-700;
+  }
+}
+
+.btn.btn-action {
+  @apply text-2xl py-0 px-2 cursor-pointer leading-normal;
+}

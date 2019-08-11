@@ -1,0 +1,26 @@
+table.table {
+  @apply w-full bg-theme-400 mt-4 text-sm;
+  thead {
+    @apply text-left border-t border-b border-theme-700;
+    th {
+      @apply py-4 px-4 tracking-wider;
+    }
+  }
+
+  tbody {
+    tr {
+      @apply bg-theme-400 border-b border-theme-600;
+      &:hover {
+        td {
+          @apply text-theme-lighter;
+        }
+      }
+      td {
+        @apply py-4 px-4;
+      }
+    }
+  }
+  &.striped tbody>tr:nth-child(odd) {
+    @apply bg-theme-300;
+  }
+}
