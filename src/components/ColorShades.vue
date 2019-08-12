@@ -302,6 +302,30 @@ export default {
         return
       }
 
+      // change to version number
+      if (event.key === '0') {
+        if (this.versions.length < 10) {
+          return
+        }
+        this.changeVersion(9)
+        return
+      } else if (event.key > 0 && event.key < this.maxVersions) {
+        let version = parseInt(event.key)
+        if (this.versions.length < version) {
+          return
+        }
+        this.changeVersion(version - 1)
+        return
+      }
+
+      // change version with arrows
+      if (event.code === 'ArrowRight' && this.versions.length > this.selectedVersion + 1) {
+        this.changeVersion(this.selectedVersion + 1)
+      }
+      if (event.code === 'ArrowLeft' && this.selectedVersion - 1 >= 0) {
+        this.changeVersion(this.selectedVersion - 1)
+      }
+
       // delete (double D)
       if (event.code === 'KeyD' && event.code === this.doubleKey.k) {
         this.doubleKey.k = ''
@@ -315,7 +339,6 @@ export default {
       this.doubleKey.t = setTimeout(() => {
         this.doubleKey.k = ''
       }, this.doubleKey.d)
-
     },
     deleteVersion(index) {
       this.versions.splice(index, 1)
@@ -406,10 +429,10 @@ export default {
       return `#${value}`
     },
     displayRGB(value) {
-      return `${value[0]}, ${value[1]}, ${value[1]}`
+      return `${value[0]}, ${value[1]}, ${value[2]}`
     },
     displayHSL(value) {
-      return `${value[0]}, ${value[1]}%, ${value[1]}%`
+      return `${value[0]}, ${value[1]}%, ${value[2]}%`
     },
     appendColon(value) {
       return value ? `'${value}': ` : ''

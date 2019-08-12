@@ -3,14 +3,21 @@
 
     <div class=" bg-theme-lighter py-4 mb-4 text-theme">
       <div class="container">
-        <div class="flex justify-between">
+        <div class="flex flex-wrap justify-between px-4 sm:px-0">
           <div>
-            <h1 class="text-3xl mb-0 leading-none tracking-wide text-white light:text-theme-darker">tailwindshades</h1>
+            <div class="flex items-center text-white light:text-theme-darker">
+              <span class="mr-2 text-xl leading-loose">
+                <i class="fas fa-swatchbook"></i>
+              </span>
+              <h1 class="text-3xl mb-0 leading-none tracking-wide inline-block">
+                tailwindshades
+              </h1>
+            </div>
             <p class="mt-0">
               A tool to help generate color shades for tailwindcss
             </p>
           </div>
-          <div class="text-right mt-1 self-center">
+          <div class="text-right mt-1 self-center flex items-center">
             <button
               type="button"
               class="btn focus:outline-none"
@@ -27,6 +34,15 @@
             >
               Dark
             </button>
+            <div class="inline-block ml-8">
+              <a
+                href="https://github.com/anheric/tailwindshades"
+                class="text-2xl cursor-pointer text-theme-lighter hover:text-theme"
+                target="_blank"
+              >
+                <i class="fab fa-github"></i>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -71,7 +87,7 @@ export default {
     return {
       selection: {},
       hexinput: '',
-      colors: ['#6658dd'],
+      colors: [],
     }
   },
   computed: {
