@@ -87,13 +87,6 @@ export default {
     title: 'Tailwind Shades',
     meta: [
       { name: 'description', content: 'A tool to help generate color shades for Tailwind CSS.' },
-      { property: 'og:title', content: 'Shades generator for Tailwind CSS' },
-      { property: 'og:description', content: 'A tool to help generate color shades for Tailwind CSS.' },
-      { property: 'og:image', content: 'https://www.tailwindshades.com/share.png' },
-      { property: 'og:url', content: 'https://www.tailwindshades.com/' },
-      { property: 'twitter:title', content: 'Shades generator for Tailwind CSS' },
-      { property: 'twitter:description', content: 'A tool to help generate color shades for Tailwind CSS.' },
-      { property: 'twitter:image', content: 'https://www.tailwindshades.com/share.png' },
     ],
   },
   data() {
