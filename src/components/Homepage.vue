@@ -63,6 +63,7 @@
               <div class="flex h-64">
                 <div
                   class="w-12 flex-grow mr-1 cursor-pointer"
+                  :class="{ 'px-2 border-2 light:border-black': selectedSuggestion === suggestion}"
                   :style="'background-color:rgb(' + suggestion.rgb.join(',') + ';'"
                   v-for="(suggestion, i) in suggestions"
                   :key="'suggestion-' + i"
