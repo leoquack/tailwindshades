@@ -212,7 +212,10 @@ export default {
     },
     ...mapActions([
       'config/changeTheme'
-    ])
+    ]),
+    track () {
+      this.$ga.page('/')
+    }
   }
 }
 </script>
