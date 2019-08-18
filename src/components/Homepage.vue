@@ -175,7 +175,9 @@ export default {
     })
   },
   mounted() {
-    this.$ga.page('/')
+    if (process.env.NODE_ENV === 'production') {
+      this.$ga.page('/')
+    }
   },
   methods: {
     randomSuggestion(colors) {
