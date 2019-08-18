@@ -174,6 +174,9 @@ export default {
       config: 'config/config',
     })
   },
+  mounted() {
+    this.$ga.page('/')
+  },
   methods: {
     randomSuggestion(colors) {
       let hue = Math.floor(Math.random() * 360)
@@ -213,9 +216,6 @@ export default {
     ...mapActions([
       'config/changeTheme'
     ]),
-    track () {
-      this.$ga.page('/')
-    }
   }
 }
 </script>
