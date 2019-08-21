@@ -289,6 +289,15 @@ export default {
     document.removeEventListener('keydown', this.keyboardInput)
   },
   methods: {
+    initialOptions() {
+      return {
+        maxStepUp: 10,
+        maxStepDown: 10,
+        minLightness: 50,
+        maxLightness: 100,
+        lightnessRangeLimit: 100,
+      }
+    },
     keyboardInput(event) {
       if (event.ctrlKey) {
         return
@@ -402,15 +411,6 @@ export default {
 
       this.versions.push(version)
       this.selectedVersion = this.versions.length - 1
-    },
-    initialOptions() {
-      return {
-        lightnessRangeLimit: 100,
-        maxStepUp: 5,
-        maxStepDown: 5,
-        minLightness: 50,
-        maxLightness: 100,
-      }
     },
     textColorFromLuminance(rgb) {
       // https://www.w3.org/TR/AERT/#color-contrast
