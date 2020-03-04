@@ -8,10 +8,6 @@ To run locally:
 
 ```
 yarn install && yarn serve
-```
-
-or
-
-```
+# OR
 npm install && npm run serve
 ```
