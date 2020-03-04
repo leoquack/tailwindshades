@@ -1,4 +1,17 @@
 # tailwindshades
+
 A tool to help generate color shades for tailwindcss
 
-Online demo: https://www.tailwindshades.com
+https://www.tailwindshades.com
+
+To run locally:
+
+```
+yarn install && yarn serve
+```
+
+or
+
+```
+npm install && npm run serve
+```
