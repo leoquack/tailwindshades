@@ -1,39 +1,33 @@
 <template>
   <div>
-
-    <div class=" bg-theme-lighter py-4 mb-4 text-theme">
+    <div
+      class="bg-theme-lighter py-8 mb-4 text-theme"
+      :style="'border-top:1px solid rgb(' + suggestions[Math.floor(Math.random() * Math.floor(10))].rgb.join(',') + ';'"
+    >
       <div class="container">
         <div class="flex flex-wrap justify-between px-4 sm:px-0">
-          <div>
-            <div class="flex items-center text-white light:text-theme-darker">
-              <span class="mr-2 text-xl leading-loose">
-                <i class="fas fa-swatchbook"></i>
-              </span>
-              <h1 class="text-3xl mb-0 leading-none tracking-wide inline-block">
-                tailwindshades
-              </h1>
-            </div>
-            <p class="mt-0">
-              A tool to help generate color shades for Tailwind CSS
-            </p>
+          <div class="w-1/3"></div>
+
+          <div class="w-1/3 text-center">
+            <h1
+              class="text-5xl font-black mb-0 leading-none tracking-wide inline-block"
+            >tailwindshades</h1>
+            <p class="mt-0">A tool to help generate color shades for Tailwind CSS</p>
           </div>
-          <div class="text-right mt-1 self-center flex items-center">
+
+          <div class="w-1/3 text-right mt-1 flex items-center justify-end">
             <button
               type="button"
               class="btn focus:outline-none"
               :class="config.theme === 'light' ? 'bg-blue-400 text-blue-100' : 'border border-theme-600'"
               @click="changeTheme('light')"
-            >
-              Light
-            </button>
+            >Light</button>
             <button
               type="button"
               class="btn focus:outline-none ml-2"
               :class="config.theme === 'dark' ? 'bg-blue-600 text-white' : 'border border-theme-600'"
               @click="changeTheme('dark')"
-            >
-              Dark
-            </button>
+            >Dark</button>
             <div class="inline-block ml-8">
               <a
                 href="https://github.com/anheric/tailwindshades"
@@ -49,14 +43,16 @@
     </div>
 
     <div class="container text-theme">
-
       <div v-if="!colors.length">
         <div class="px-2">
           <div class="flex flex-wrap -mx-2 py-4 bg-theme-400">
             <div class="w-full md:w-2/3 px-2">
               <div class="flex flex-wrap items-center">
                 <p class="text-2xl">Suggestions</p>
-                <span class="ml-4 cursor-pointer hover:text-blue-500" @click="suggestionsRefresh = !suggestionsRefresh">
+                <span
+                  class="ml-4 cursor-pointer hover:text-blue-500"
+                  @click="suggestionsRefresh = !suggestionsRefresh"
+                >
                   <i class="fas fa-sync"></i>
                 </span>
               </div>
@@ -79,9 +75,9 @@
                 placeholder="hex"
                 v-model="hexinput"
                 @focus="focus = 'input'"
-              >
+              />
               <div @click="focus = 'vue-color'">
-                <chrome-picker v-model="selection" :disable-alpha="true" :disable-fields="true"/>
+                <chrome-picker v-model="selection" :disable-alpha="true" :disable-fields="true" />
               </div>
             </div>
           </div>
@@ -89,7 +85,8 @@
 
         <div class="text-center mt-4 bg-theme-400 p-4" v-show="selected">
           <p class="text-2xl leading-none">
-            Selected: <span class="font-bold">{{ selected }}</span>
+            Selected:
+            <span class="font-bold">{{ selected }}</span>
           </p>
           <p class="text-xs">({{ focus }})</p>
           <button class="btn btn-blue mt-4" @click="addColor">Generate shades</button>
@@ -101,10 +98,9 @@
       </div>
 
       <div v-for="(color, i) in colors" :key="'color-' + i">
-        <color-shades :color="color"/>
+        <color-shades :color="color" />
       </div>
     </div>
-
   </div>
 </template>
 
@@ -122,7 +118,10 @@ export default {
   metaInfo: {
     title: 'Tailwind Shades',
     meta: [
-      { name: 'description', content: 'A tool to help generate color shades for Tailwind CSS.' },
+      {
+        name: 'description',
+        content: 'A tool to help generate color shades for Tailwind CSS.',
+      },
     ],
   },
   data() {
@@ -172,7 +171,7 @@ export default {
     },
     ...mapGetters({
       config: 'config/config',
-    })
+    }),
   },
   mounted() {
     if (process.env.NODE_ENV === 'production') {
@@ -196,10 +195,10 @@ export default {
       if (sr > 0) {
         saturation = this.randomizer.saturationRange[0] + Math.floor(Math.random() * sr)
       }
-      let hsl = { h: hue, s: saturation, l:lightness }
+      let hsl = { h: hue, s: saturation, l: lightness }
       return {
         hsl,
-        rgb: convert.hsl.rgb(Object.values(hsl))
+        rgb: convert.hsl.rgb(Object.values(hsl)),
       }
     },
     clear() {
@@ -215,9 +214,7 @@ export default {
     changeTheme(theme) {
       this['config/changeTheme'](theme)
     },
-    ...mapActions([
-      'config/changeTheme'
-    ]),
-  }
+    ...mapActions(['config/changeTheme']),
+  },
 }
 </script>

@@ -1,13 +1,8 @@
 <template>
   <div>
-
     <div class="mt-1 flex flex-wrap items-end">
       <div class="w-full lg:w-2/3">
-        <div
-          class="inline-block relative"
-          v-for="(version, i) in versions"
-          :key="'version-' + i"
-        >
+        <div class="inline-block relative" v-for="(version, i) in versions" :key="'version-' + i">
           <div
             class="inline-block px-1 text-red-500 text-xs cursor-pointer hover:bg-theme-300"
             title="Delete version (double D)"
@@ -21,7 +16,6 @@
             :class="{ 'bg-theme-300': selectedVersion === i }"
             @click="changeVersion(i)"
           >
-
             <div v-for="(shade, j) in version.shades" :key="'shade-' + j">
               <div
                 class="h-2 w-10 p-1 flex justify-center items-center"
@@ -29,10 +23,7 @@
               ></div>
             </div>
 
-            <span
-              class="text-xs"
-              :class="{ 'font-bold': selectedVersion === i }"
-            >{{ i + 1 }}</span>
+            <span class="text-xs" :class="{ 'font-bold': selectedVersion === i }">{{ i + 1 }}</span>
           </div>
         </div>
       </div>
@@ -42,26 +33,29 @@
           @click="update"
           title="Update version (S)"
           v-if="selectedVersion !== null"
-        ><i class="far fa-save"></i></div>
+        >
+          <i class="far fa-save"></i>
+        </div>
         <div
           class="btn btn-action bg-blue-500 text-white"
           @click="save"
           title="Save new version (N)"
-        ><i class="far fa-plus-square"></i></div>
+        >
+          <i class="far fa-plus-square"></i>
+        </div>
       </div>
     </div>
 
-    <div class=" bg-theme-400 mb-8 rounded py-1 px-" v-if="result.shades && result.shades.length">
+    <div class="bg-theme-400 mb-8 rounded py-1 px-" v-if="result.shades && result.shades.length">
       <div class="flex flex-wrap">
-
         <div class="w-full sm:w-1/3 px-2 py-4">
           <div v-for="(shade, i) in result.shades" :key="'shade-' + i">
             <div
               class="h-12 p-1 flex justify-center items-center"
               :style="'background-color: hsl(' + shade.hsl[0] + ', ' + shade.hsl[1] + '%, ' + shade.hsl[2] + '%); color:' + textColorFromLuminance(shade.rgb) + ';'"
             >
-                <!-- {{ 'hsl(' + shade.hsl[0] + ', ' + shade.hsl[1] + '%, ' + shade.hsl[2] + '%)' }} -->
-                #{{ shade.hex }}
+              <!-- {{ 'hsl(' + shade.hsl[0] + ', ' + shade.hsl[1] + '%, ' + shade.hsl[2] + '%)' }} -->
+              #{{ shade.hex }}
             </div>
           </div>
         </div>
@@ -72,15 +66,16 @@
               <p class="text-2xl">Base color</p>
               <p class="text-sm mb-2">
                 Initial:
-                <a class="underline text-blue-500 cursor-pointer" title="reset" @click="resetBaseColor">{{ color }}</a>
+                <a
+                  class="underline text-blue-500 cursor-pointer"
+                  title="reset"
+                  @click="resetBaseColor"
+                >{{ color }}</a>
               </p>
             </div>
             <div class="flex flex-wrap">
               <div class="mr-2">
-                <div
-                  class="w-16 h-16 mb-4"
-                  :style="'background-color: #' + result.color.hex + ';'"
-                ></div>
+                <div class="w-16 h-16 mb-4" :style="'background-color: #' + result.color.hex + ';'"></div>
               </div>
               <div class="text-sm">
                 <p>HEX: {{ result.color.hex | displayHEX }}</p>
@@ -90,13 +85,13 @@
             </div>
 
             <div class="mb-4">
-              <range-picker title="Hue" v-model="baseColorEdit.hsl.h" :min="0" :max="360"/>
+              <range-picker title="Hue" v-model="baseColorEdit.hsl.h" :min="0" :max="360" />
             </div>
             <div class="mb-4">
-              <range-picker title="Saturation" v-model="baseColorEdit.hsl.s" :min="0" :max="100"/>
+              <range-picker title="Saturation" v-model="baseColorEdit.hsl.s" :min="0" :max="100" />
             </div>
             <div class="mb-4">
-              <range-picker title="Lightness" v-model="baseColorEdit.hsl.l" :min="0" :max="100"/>
+              <range-picker title="Lightness" v-model="baseColorEdit.hsl.l" :min="0" :max="100" />
             </div>
           </div>
         </div>
@@ -106,10 +101,10 @@
             <p class="text-2xl">Shades</p>
           </div>
           <div class="mb-4">
-            <range-picker title="Max Step Up %" v-model="options.maxStepUp" :min="1" :max="20"/>
+            <range-picker title="Max Step Up %" v-model="options.maxStepUp" :min="1" :max="20" />
           </div>
           <div class="mb-4">
-            <range-picker title="Max Step Down %" v-model="options.maxStepDown" :min="1" :max="20"/>
+            <range-picker title="Max Step Down %" v-model="options.maxStepDown" :min="1" :max="20" />
           </div>
           <!-- <div class="mb-4">
             <range-picker title="Lightness Range Limit" v-model="options.lightnessRangeLimit" :min="50" :max="100"/>
@@ -119,7 +114,7 @@
           </div>
           <div class="mb-4">
             <range-picker title="Min Lightness %" v-model="options.minLightness" :min="0" :max="50"/>
-          </div> -->
+          </div>-->
         </div>
 
         <div class="w-full sm:w-1/3 px-2 py-4" v-if="code.visible">
@@ -129,13 +124,11 @@
               class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               type="text"
               v-model="code.name"
-            >
+            />
             <pre class="text-xs bg-white text-black p-2 mt-2">{{ code.name | appendColon }}{{ codeDisplay }}</pre>
           </div>
         </div>
-
       </div>
-
     </div>
   </div>
 </template>
@@ -161,7 +154,7 @@ export default {
           h: null,
           s: null,
           l: null,
-        }
+        },
       },
       options: {},
       versions: [],
@@ -175,7 +168,7 @@ export default {
         t: null,
         d: 275,
         k: '',
-      }
+      },
     }
   },
   computed: {
@@ -183,13 +176,11 @@ export default {
       if (!this.result.shades || !this.result.shades.length) {
         return {}
       }
-      let shades = [
-        `  default: '#${this.result.shades[4].hex}'`
-      ]
+      let shades = [`  default: '#${this.result.shades[4].hex}'`]
       for (let i in this.result.shades) {
         shades.push(`  '${parseInt(i) + 1}00': '#${this.result.shades[i].hex}'`)
       }
-      return `{\n${shades.join(',\n')}\n}`
+      return `{\n${shades.join(',\n')}\n},`
     },
     baseColor() {
       // let hex = this.color
@@ -214,9 +205,8 @@ export default {
 
       let edgeLimit = (100 - this.options.lightnessRangeLimit) / 2
 
-
       // get max lightness
-      let maximum = (100 - edgeLimit) > this.options.maxLightness ? this.options.maxLightness : 100 - edgeLimit
+      let maximum = 100 - edgeLimit > this.options.maxLightness ? this.options.maxLightness : 100 - edgeLimit
       let stepUp = maximum / 4
       stepUp = stepUp < 0 ? 0 : stepUp
       stepUp = stepUp > this.options.maxStepUp ? this.options.maxStepUp : stepUp
@@ -242,7 +232,7 @@ export default {
       let shades = []
 
       for (let i = 4; i >= 1; i--) {
-        let hslup = [ hsl[0], hsl[1], hsl[2] + i * stepUp ]
+        let hslup = [hsl[0], hsl[1], hsl[2] + i * stepUp]
         shades.push({
           hex: convert.rgb.hex(convert.hsl.rgb(hslup)),
           hsl: hslup,
@@ -256,7 +246,7 @@ export default {
       })
 
       for (let i = 1; i < 5; i++) {
-        let hsldown = [ hsl[0], hsl[1], hsl[2] - i * stepDown ]
+        let hsldown = [hsl[0], hsl[1], hsl[2] - i * stepDown]
         shades.push({
           hex: convert.rgb.hex(convert.hsl.rgb(hsldown)),
           hsl: hsldown,
@@ -273,9 +263,9 @@ export default {
           rgb,
           hex,
         },
-        shades
+        shades,
       }
-    }
+    },
   },
   mounted() {
     this.options = this.initialOptions()
@@ -366,12 +356,11 @@ export default {
       let version = this.versions[index]
       this.baseColorEdit.hsl = Object.assign({}, version.baseColorEdit.hsl)
       this.options = Object.assign({}, version.options)
-
     },
     newVersion() {
       let version = {
         baseColorEdit: {
-          hsl: Object.assign({}, this.baseColorEdit.hsl)
+          hsl: Object.assign({}, this.baseColorEdit.hsl),
         },
         options: Object.assign({}, this.options),
       }
@@ -414,15 +403,15 @@ export default {
     },
     textColorFromLuminance(rgb) {
       // https://www.w3.org/TR/AERT/#color-contrast
-      let lumi = (.299 * rgb[0] + .587 * rgb[1] + .114 * rgb[2]) / 255
-      return lumi > .5 ? 'black' : 'white'
+      let lumi = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255
+      return lumi > 0.5 ? 'black' : 'white'
     },
     resetBaseColor() {
       let hsl = convert.hex.hsl(this.color)
       this.baseColorEdit.hsl.h = hsl[0]
       this.baseColorEdit.hsl.s = hsl[1]
       this.baseColorEdit.hsl.l = hsl[2]
-    }
+    },
   },
   filters: {
     displayHEX(value) {
@@ -436,7 +425,7 @@ export default {
     },
     appendColon(value) {
       return value ? `'${value}': ` : ''
-    }
-  }
+    },
+  },
 }
 </script>
