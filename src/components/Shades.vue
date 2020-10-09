@@ -1,30 +1,15 @@
 <template>
-  <div>
+  <div class="h-full">
     <div
-      class="mb-8 rounded py-1 text-theme"
+      class="mb-8 rounded py-1 text-theme px-2 h-full"
       v-if="result.shades && result.shades.length"
     >
-      <div class="flex flex-wrap">
-        <div class="w-full sm:w-1/3 px-2 py-4">
-          <p class="text-lg font-bold">Preview</p>
-          <div
-            v-for="(shade, i) in result.shades"
-            :key="'shade-' + i"
-          >
-            <div
-              class="h-12 p-1 flex justify-center items-center"
-              :class="{'font-black': i === 4 }"
-              :style="`background-color: #${shade.hex}; color: ${shade.textColor};`"
-            >
-              #{{ shade.hex }}
-            </div>
-          </div>
-        </div>
 
-        <div class="w-full sm:w-1/3 px-2 py-4">
+      <div class="flex flex-wrap h-full -mx-2">
+        <div class="w-full md:w-1/3 px-2">
           <div class="mb-4">
             <div>
-              <p class="text-2xl">Fine tune base color</p>
+              <p class="text-lg text-theme-lighter font-black">Fine tune base color</p>
               <p class="text-sm mb-2">
                 Initial selection:
                 <a
@@ -75,13 +60,33 @@
           </div>
         </div>
 
-        <div class="w-full sm:w-1/3 px-2 py-4">
+        <div class="w-full md:w-1/3 px-2">
+          <p class="text-lg text-theme-lighter font-black">Preview</p>
+          <div class="flex flex-col">
+            <div
+              v-for="(shade, i) in result.shades"
+              :key="'shade-' + i"
+              class="px-1 py-2"
+              :class="{'font-black': i === 4 }"
+              :style="`background-color: #${shade.hex}; color: ${shade.textColor};`"
+            >
+              <div class="flex w-full justify-between items-center">
+                <p class="w-1/3 text-xs">({{ (i + 1) * 100 }})</p>
+                <p class="w-1/3 text-center">#{{ shade.hex }}</p>
+                <p class="w-1/3"></p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="w-full md:w-1/3 px-2">
           <div class="mb-4">
-            <p class="text-2xl">Shades</p>
+            <p class="text-lg text-theme-lighter font-black">Shades</p>
           </div>
           <div class="mb-4">
             <range-picker
-              title="Max Step Up %"
+              title="Step up %"
               v-model="groupOptions.stepUp"
               :min="3"
               :max="20"
@@ -89,7 +94,7 @@
           </div>
           <div class="mb-4">
             <range-picker
-              title="Max Step Down %"
+              title="Step down %"
               v-model="groupOptions.stepDown"
               :min="3"
               :max="20"
