@@ -12,6 +12,7 @@
     "core-js": "^3.6.5",
     "global": "^4.4.0",
     "maska": "^1.2.0",
+    "noty": "^3.2.0-beta",
     "vue": "^2.6.11",
     "vue-analytics": "^5.17.2",
     "vue-color": "^2.7.0",

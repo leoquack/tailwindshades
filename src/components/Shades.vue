@@ -1,20 +1,21 @@
 <template>
   <div>
     <div
-      class="mb-8 rounded py-1 px-"
+      class="mb-8 rounded py-1 text-theme"
       v-if="result.shades && result.shades.length"
     >
       <div class="flex flex-wrap">
         <div class="w-full sm:w-1/3 px-2 py-4">
+          <p class="text-lg font-bold">Preview</p>
           <div
             v-for="(shade, i) in result.shades"
             :key="'shade-' + i"
           >
             <div
               class="h-12 p-1 flex justify-center items-center"
-              :style="'background-color: hsl(' + shade.hsl[0] + ', ' + shade.hsl[1] + '%, ' + shade.hsl[2] + '%); color:' + textColorFromBrightness(shade.rgb) + ';'"
+              :class="{'font-black': i === 4 }"
+              :style="`background-color: #${shade.hex}; color: ${shade.textColor};`"
             >
-              <!-- {{ 'hsl(' + shade.hsl[0] + ', ' + shade.hsl[1] + '%, ' + shade.hsl[2] + '%)' }} -->
               #{{ shade.hex }}
             </div>
           </div>
@@ -23,13 +24,13 @@
         <div class="w-full sm:w-1/3 px-2 py-4">
           <div class="mb-4">
             <div>
-              <p class="text-2xl">Base color</p>
+              <p class="text-2xl">Fine tune base color</p>
               <p class="text-sm mb-2">
                 Initial selection:
                 <a
                   class="underline text-blue-500 cursor-pointer"
                   title="reset"
-                  @click="resetBaseColor"
+                  @click="this.hsl = this.initialHSL"
                 >{{ initial }}</a>
               </p>
             </div>
@@ -50,7 +51,7 @@
             <div class="mb-4">
               <range-picker
                 title="Hue"
-                v-model="baseColorEdit.hsl.h"
+                v-model="hsl.h"
                 :min="0"
                 :max="360"
               />
@@ -58,7 +59,7 @@
             <div class="mb-4">
               <range-picker
                 title="Saturation"
-                v-model="baseColorEdit.hsl.s"
+                v-model="hsl.s"
                 :min="0"
                 :max="100"
               />
@@ -66,7 +67,7 @@
             <div class="mb-4">
               <range-picker
                 title="Lightness"
-                v-model="baseColorEdit.hsl.l"
+                v-model="hsl.l"
                 :min="0"
                 :max="100"
               />
@@ -81,7 +82,7 @@
           <div class="mb-4">
             <range-picker
               title="Max Step Up %"
-              v-model="options.maxStepUp"
+              v-model="groupOptions.stepUp"
               :min="1"
               :max="20"
             />
@@ -89,20 +90,11 @@
           <div class="mb-4">
             <range-picker
               title="Max Step Down %"
-              v-model="options.maxStepDown"
+              v-model="groupOptions.stepDown"
               :min="1"
               :max="20"
             />
           </div>
-          <!-- <div class="mb-4">
-            <range-picker title="Lightness Range Limit" v-model="options.lightnessRangeLimit" :min="50" :max="100"/>
-          </div>
-          <div class="mb-4">
-            <range-picker title="Max Lightness %" v-model="options.maxLightness" :min="50" :max="100"/>
-          </div>
-          <div class="mb-4">
-            <range-picker title="Min Lightness %" v-model="options.minLightness" :min="0" :max="50"/>
-          </div>-->
         </div>
 
         <div
@@ -126,7 +118,7 @@
 
 
 <script>
-import convert from 'color-convert'
+import converter from 'color-convert'
 import RangePicker from '@/components/RangePicker'
 // import Noty from 'noty'
 
@@ -139,14 +131,11 @@ export default {
   },
   data() {
     return {
-      baseColorEdit: {
-        hsl: {
-          h: null,
-          s: null,
-          l: null,
-        },
+      hsl: [],
+      groupOptions: {
+        stepUp: 10,
+        stepDown: 10,
       },
-      options: {},
       code: {
         visible: true,
         name: '',
@@ -169,85 +158,46 @@ export default {
       }
       return `{\n${shades.join(',\n')}\n},`
     },
-    baseColor() {
-      let hsl = convert.hex.hsl(this.initial)
-      // let rgb = convert.hex.rgb(hex)
-
-      if (this.baseColorEdit.hsl.h !== null && this.baseColorEdit.hsl.s !== null && this.baseColorEdit.hsl.l !== null) {
-        hsl = [...Object.values(this.baseColorEdit.hsl)]
-        // rgb = convert.hsl.rgb[hsl]
-        // hex = convert.rgb.hex[rgb]
-      }
-      return { hsl }
-      // return { hex, hsl, rgb }
+    initialHSL() {
+      return converter.hex.hsl(this.initial)
     },
     result() {
-      if (!Object.entries(this.options).length) {
-        return {}
-      }
-      let hsl = this.baseColor.hsl
+      let hsl = this.initialHSL
 
-      // as readable as possible for now
-
-      let edgeLimit = (100 - this.options.lightnessRangeLimit) / 2
-
-      // get max lightness
-      let maximum = 100 - edgeLimit > this.options.maxLightness ? this.options.maxLightness : 100 - edgeLimit
-      let stepUp = maximum / 4
-      stepUp = stepUp < 0 ? 0 : stepUp
-      stepUp = stepUp > this.options.maxStepUp ? this.options.maxStepUp : stepUp
-
-      // get min lightness
-      let minimum = hsl[2] - edgeLimit < this.options.minLightness ? this.options.minLightness : hsl[2] - edgeLimit
-      let stepDown = minimum / 4
-      stepDown = stepDown < 0 ? 0 : stepDown
-      stepDown = stepDown > this.options.maxStepDown ? this.options.maxStepDown : stepDown
-
-      // console.log('lightness', hsl[2])
-      // console.log('edgeLimit', edgeLimit)
-      // console.log('right edgeLimit', 100 - edgeLimit)
-      // console.log('left edgeLimit', hsl[2] - edgeLimit)
-      // console.log('maxLightness', this.options.maxLightness)
-      // console.log('minLightness', this.options.minLightness)
-      // console.log('maximum', maximum)
-      // console.log('minimum', minimum)
-      // console.log('stepUp', stepUp)
-      // console.log('stepDown', stepDown)
-      // console.log('------')
+      let stepUp = this.groupOptions.stepUp
+      let stepDown = this.groupOptions.stepDown
 
       let shades = []
-
       for (let i = 4; i >= 1; i--) {
-        let hslup = [hsl[0], hsl[1], hsl[2] + i * stepUp]
+        let lightness = hsl[2] + i * stepUp
+        let hex = converter.rgb.hex(converter.hsl.rgb([hsl[0], hsl[1], lightness > 100 ? 100 : lightness]))
         shades.push({
-          hex: convert.rgb.hex(convert.hsl.rgb(hslup)),
-          hsl: hslup,
-          rgb: convert.hsl.rgb(hslup),
+          hex,
+          textColor: this.textColorFromBrightness(hex),
         })
       }
-      shades.push({
-        hex: convert.rgb.hex(convert.hsl.rgb(hsl)),
-        hsl,
-        rgb: convert.hsl.rgb(hsl),
-      })
-
+      {
+        let hex = converter.rgb.hex(converter.hsl.rgb(hsl))
+        shades.push({
+          hex,
+          textColor: this.textColorFromBrightness(hex),
+        })
+      }
       for (let i = 1; i < 5; i++) {
-        let hsldown = [hsl[0], hsl[1], hsl[2] - i * stepDown]
+        let lightness = hsl[2] - i * stepDown
+        let hex = converter.rgb.hex(converter.hsl.rgb([hsl[0], hsl[1], lightness < 0 ? 0 : lightness]))
         shades.push({
-          hex: convert.rgb.hex(convert.hsl.rgb(hsldown)),
-          hsl: hsldown,
-          rgb: convert.hsl.rgb(hsldown),
+          hex,
+          textColor: this.textColorFromBrightness(hex),
         })
       }
 
-      // Just in case hsl gets edited in the future.
-      let rgb = convert.hsl.rgb(hsl)
-      let hex = convert.rgb.hex(rgb)
+      let rgb = converter.hsl.rgb(hsl)
       return {
         color: {
           hsl,
           rgb,
-          hex,
+          hex: converter.rgb.hex(hsl),
         },
         shades,
       }
@@ -258,31 +208,15 @@ export default {
     //   text: 'test',
     //   timeout: 4000,
     // }).show()
-    this.options = this.initialOptions()
-    this.baseColorEdit.hsl.h = this.baseColor.hsl[0]
-    this.baseColorEdit.hsl.s = this.baseColor.hsl[1]
-    this.baseColorEdit.hsl.l = this.baseColor.hsl[2]
+    this.hsl = this.initialHSL
   },
   methods: {
-    initialOptions() {
-      return {
-        maxStepUp: 10,
-        maxStepDown: 10,
-        minLightness: 50,
-        maxLightness: 100,
-        lightnessRangeLimit: 100,
-      }
-    },
-    textColorFromBrightness(rgb) {
+    textColorFromBrightness(hex) {
+      let rgb = converter.hex.rgb('#' + hex)
+
       // https://www.w3.org/TR/AERT/#color-contrast
       let brightness = (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000
       return brightness > 125 ? 'black' : 'white'
-    },
-    resetBaseColor() {
-      let hsl = convert.hex.hsl(this.initial)
-      this.baseColorEdit.hsl.h = hsl[0]
-      this.baseColorEdit.hsl.s = hsl[1]
-      this.baseColorEdit.hsl.l = hsl[2]
     },
   },
   filters: {

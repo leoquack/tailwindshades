@@ -37,7 +37,7 @@
     >
       <div class="leading-none text-theme-lighter">
         <p class="text-lg md:text-xl text-left">Start by</p>
-        <p class="text-3xl md:text-4xl font-bold mt-1 text-left">Selecting a <u>base</u> color</p>
+        <p class="text-3xl md:text-4xl font-bold mt-1 text-left">selecting a <u>base</u> color</p>
         <input
           type="text"
           v-model="hex"
@@ -48,11 +48,12 @@
           <p class="text-left">Default tailwindcss palette colors (500)</p>
           <div class="flex justify-between h-12 mt-2">
             <div
-              class="w-1/12 cursor-pointer"
-              :class="{ 'px-2 border-2 light:border-black': hex === color.hex}"
+              class="flex-grow cursor-pointer"
+              :class="{ 'border-2 light:border-black': hex === color.hex}"
               :style="`background-color: ${color.hex};`"
               v-for="color in defaultTailwindPaletteBaseColors"
               :key="'tailwind-default-base-' + color.name"
+              :title="color.name"
               @click="hex = color.hex, focus = 'suggestion'"
             ></div>
           </div>
@@ -60,7 +61,7 @@
         <transition name="fade">
           <div
             class="btn mt-8 py-4 px-8"
-            :style="`background-color: ${hex}; color: ${textColorFromBrightness(hex)}`"
+            :style="`background-color: ${hex}; color: ${textColorByBrightness()}`"
             v-show="validHex"
             @click="step = 'shades'"
           >
@@ -76,6 +77,7 @@
         <button
           class="text-theme text-4xl leading-none hover:text-blue-400 focus:outline-none"
           @click="step = 'base'"
+          title="Back to base selection"
         >
           <i class="fas fa-angle-up"></i>
         </button>
@@ -90,7 +92,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import ShadesComponent from '@/components/Shades'
-import convert from 'color-convert'
+import converter from 'color-convert'
 
 export default {
   components: {
@@ -141,11 +143,11 @@ export default {
     }
   },
   methods: {
-    textColorFromBrightness(hex) {
-      if (!hex) {
+    textColorByBrightness() {
+      if (!this.validHex) {
         return
       }
-      let rgb = convert.hex.rgb(hex)
+      let rgb = converter.hex.rgb(this.hex)
 
       // https://www.w3.org/TR/AERT/#color-contrast
       let brightness = (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000
