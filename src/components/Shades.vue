@@ -30,7 +30,7 @@
                 <a
                   class="underline text-blue-500 cursor-pointer"
                   title="reset"
-                  @click="this.hsl = this.initialHSL"
+                  @click="reset"
                 >{{ initial }}</a>
               </p>
             </div>
@@ -51,7 +51,7 @@
             <div class="mb-4">
               <range-picker
                 title="Hue"
-                v-model="hsl.h"
+                v-model="hsl[0]"
                 :min="0"
                 :max="360"
               />
@@ -59,7 +59,7 @@
             <div class="mb-4">
               <range-picker
                 title="Saturation"
-                v-model="hsl.s"
+                v-model="hsl[1]"
                 :min="0"
                 :max="100"
               />
@@ -67,7 +67,7 @@
             <div class="mb-4">
               <range-picker
                 title="Lightness"
-                v-model="hsl.l"
+                v-model="hsl[2]"
                 :min="0"
                 :max="100"
               />
@@ -83,7 +83,7 @@
             <range-picker
               title="Max Step Up %"
               v-model="groupOptions.stepUp"
-              :min="1"
+              :min="3"
               :max="20"
             />
           </div>
@@ -91,7 +91,7 @@
             <range-picker
               title="Max Step Down %"
               v-model="groupOptions.stepDown"
-              :min="1"
+              :min="3"
               :max="20"
             />
           </div>
@@ -159,10 +159,10 @@ export default {
       return `{\n${shades.join(',\n')}\n},`
     },
     initialHSL() {
-      return converter.hex.hsl(this.initial)
+      return converter.rgb.hsl(converter.hex.rgb(this.initial))
     },
     result() {
-      let hsl = this.initialHSL
+      let hsl = this.hsl
 
       let stepUp = this.groupOptions.stepUp
       let stepDown = this.groupOptions.stepDown
@@ -197,7 +197,7 @@ export default {
         color: {
           hsl,
           rgb,
-          hex: converter.rgb.hex(hsl),
+          hex: converter.rgb.hex(rgb),
         },
         shades,
       }
@@ -208,9 +208,12 @@ export default {
     //   text: 'test',
     //   timeout: 4000,
     // }).show()
-    this.hsl = this.initialHSL
+    this.hsl = [...this.initialHSL]
   },
   methods: {
+    reset() {
+      this.hsl = [...this.initialHSL]
+    },
     textColorFromBrightness(hex) {
       let rgb = converter.hex.rgb('#' + hex)
 
