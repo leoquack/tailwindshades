@@ -1,12 +1,14 @@
+@import 'form.pcss';
+
 html {
-  font-family: 'Roboto Condensed';
-  @apply bg-theme-500;
+  font-family: 'Inter', sans-serif;
+  background: white;
 }
 
 #root {
   overflow: auto;
-  min-height:100vh;
-  background-color: theme('colors.theme.500');
+  min-height: 100vh;
+  @apply bg-theme;
 }
 
 .container-fluid {
@@ -16,7 +18,7 @@ html {
 }
 
 .btn {
-  @apply inline-block rounded py-1 px-2;
+  @apply inline-block cursor-pointer py-2 px-4 rounded-full font-black text-sm;
 }
 
 .btn.btn-blue {
@@ -35,4 +37,43 @@ html {
 
 .btn.btn-action {
   @apply text-2xl py-0 px-2 cursor-pointer leading-normal;
+}
+
+.logo-text {
+  background: linear-gradient(
+    240deg,
+    rgba(88, 249, 185, 1) 11%,
+    rgba(63, 194, 240, 1) 20%,
+    rgba(63, 194, 240, 1) 26%,
+    rgba(242, 96, 205, 1) 37%,
+    rgba(242, 96, 205, 1) 51%,
+    rgba(255, 255, 255, 1) 51%
+  );
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+#root.theme-light {
+  .logo-text {
+    background: linear-gradient(
+      240deg,
+      rgba(88, 249, 185, 1) 11%,
+      rgba(63, 194, 240, 1) 20%,
+      rgba(63, 194, 240, 1) 26%,
+      rgba(242, 96, 205, 1) 37%,
+      rgba(242, 96, 205, 1) 51%,
+      rgba(120, 120, 120, 1) 51%
+    );
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }

@@ -1,0 +1,9 @@
+.form-control {
+  @apply appearance-none rounded-sm bg-white w-full py-2 px-3;
+  &:focus {
+    @apply outline-none;
+  }
+  &:not(.form-no-outline):focus {
+    @apply shadow-outline;
+  }
+}

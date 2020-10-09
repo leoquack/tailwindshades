@@ -18,7 +18,19 @@ module.exports = {
           '700': 'var(--color-theme-700)',
           '800': 'var(--color-theme-800)',
           '900': 'var(--color-theme-900)',
-        }
+        },
+        blue: {
+          default: '#49BBE9',
+          '100': '#FFFFFF',
+          '200': '#D2EEF9',
+          '300': '#A4DDF4',
+          '400': '#77CCEE',
+          '500': '#49BBE9',
+          '600': '#21ACE4',
+          '700': '#188FBF',
+          '800': '#137196',
+          '900': '#0D526D',
+        },
       },
       textColor: {
         theme: {
@@ -34,9 +46,9 @@ module.exports = {
           '700': 'var(--color-theme-700)',
           '800': 'var(--color-theme-800)',
           '900': 'var(--color-theme-900)',
-        }
-      }
-    }
+        },
+      },
+    },
   },
   variants: {
     borderColor: ['hover', 'focus', 'dark', 'light'],
@@ -45,7 +57,7 @@ module.exports = {
   },
   plugins: [
     // rules that apply only for dark theme
-    function ({ addVariant, e }) {
+    function({ addVariant, e }) {
       addVariant('dark', ({ modifySelectors, separator }) => {
         modifySelectors(({ className }) => {
           return `.theme-dark .${e(`dark${separator}${className}`)}`
@@ -53,12 +65,12 @@ module.exports = {
       })
     },
     // rules that apply only for light theme
-    function ({ addVariant, e }) {
+    function({ addVariant, e }) {
       addVariant('light', ({ modifySelectors, separator }) => {
         modifySelectors(({ className }) => {
           return `.theme-light .${e(`light${separator}${className}`)}`
         })
       })
     },
-  ]
+  ],
 }

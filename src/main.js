@@ -7,11 +7,13 @@ import '@/assets/main.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import 'noty/lib/noty.css'
 import 'noty/lib/themes/mint.css'
+import Maska from 'maska'
 
 Vue.use(VueMeta)
 Vue.use(VueAnalytics, {
-  id: 'UA-145441695-1'
+  id: 'UA-145441695-1',
 })
+Vue.use(Maska)
 
 Vue.config.productionTip = false
 

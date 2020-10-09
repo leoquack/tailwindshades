@@ -1,58 +1,18 @@
 <template>
   <div>
-    <div class="mt-1 flex flex-wrap items-end">
-      <div class="w-full lg:w-2/3">
-        <div class="inline-block relative" v-for="(version, i) in versions" :key="'version-' + i">
-          <div
-            class="inline-block px-1 text-red-500 text-xs cursor-pointer hover:bg-theme-300"
-            title="Delete version (double D)"
-            @click="deleteVersion(i)"
-          >
-            <i class="far fa-trash-alt"></i>
-          </div>
-
-          <div
-            class="mr-1 py-1 px-2 text-center hover:bg-theme-300"
-            :class="{ 'bg-theme-300': selectedVersion === i }"
-            @click="changeVersion(i)"
-          >
-            <div v-for="(shade, j) in version.shades" :key="'shade-' + j">
-              <div
-                class="h-2 w-10 p-1 flex justify-center items-center"
-                :style="'background-color: hsl(' + shade.hsl[0] + ', ' + shade.hsl[1] + '%, ' + shade.hsl[2] + '%); color:' + textColorFromLuminance(shade.rgb) + ';'"
-              ></div>
-            </div>
-
-            <span class="text-xs" :class="{ 'font-bold': selectedVersion === i }">{{ i + 1 }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="w-full lg:w-1/3 text-right mb-2">
-        <div
-          class="btn btn-action bg-blue-700 text-white mr-2"
-          @click="update"
-          title="Update version (S)"
-          v-if="selectedVersion !== null"
-        >
-          <i class="far fa-save"></i>
-        </div>
-        <div
-          class="btn btn-action bg-blue-500 text-white"
-          @click="save"
-          title="Save new version (N)"
-        >
-          <i class="far fa-plus-square"></i>
-        </div>
-      </div>
-    </div>
-
-    <div class="bg-theme-400 mb-8 rounded py-1 px-" v-if="result.shades && result.shades.length">
+    <div
+      class="mb-8 rounded py-1 px-"
+      v-if="result.shades && result.shades.length"
+    >
       <div class="flex flex-wrap">
         <div class="w-full sm:w-1/3 px-2 py-4">
-          <div v-for="(shade, i) in result.shades" :key="'shade-' + i">
+          <div
+            v-for="(shade, i) in result.shades"
+            :key="'shade-' + i"
+          >
             <div
               class="h-12 p-1 flex justify-center items-center"
-              :style="'background-color: hsl(' + shade.hsl[0] + ', ' + shade.hsl[1] + '%, ' + shade.hsl[2] + '%); color:' + textColorFromLuminance(shade.rgb) + ';'"
+              :style="'background-color: hsl(' + shade.hsl[0] + ', ' + shade.hsl[1] + '%, ' + shade.hsl[2] + '%); color:' + textColorFromBrightness(shade.rgb) + ';'"
             >
               <!-- {{ 'hsl(' + shade.hsl[0] + ', ' + shade.hsl[1] + '%, ' + shade.hsl[2] + '%)' }} -->
               #{{ shade.hex }}
@@ -65,17 +25,20 @@
             <div>
               <p class="text-2xl">Base color</p>
               <p class="text-sm mb-2">
-                Initial:
+                Initial selection:
                 <a
                   class="underline text-blue-500 cursor-pointer"
                   title="reset"
                   @click="resetBaseColor"
-                >{{ color }}</a>
+                >{{ initial }}</a>
               </p>
             </div>
             <div class="flex flex-wrap">
               <div class="mr-2">
-                <div class="w-16 h-16 mb-4" :style="'background-color: #' + result.color.hex + ';'"></div>
+                <div
+                  class="w-16 h-16 mb-4"
+                  :style="'background-color: #' + result.color.hex + ';'"
+                ></div>
               </div>
               <div class="text-sm">
                 <p>HEX: {{ result.color.hex | displayHEX }}</p>
@@ -85,13 +48,28 @@
             </div>
 
             <div class="mb-4">
-              <range-picker title="Hue" v-model="baseColorEdit.hsl.h" :min="0" :max="360" />
+              <range-picker
+                title="Hue"
+                v-model="baseColorEdit.hsl.h"
+                :min="0"
+                :max="360"
+              />
             </div>
             <div class="mb-4">
-              <range-picker title="Saturation" v-model="baseColorEdit.hsl.s" :min="0" :max="100" />
+              <range-picker
+                title="Saturation"
+                v-model="baseColorEdit.hsl.s"
+                :min="0"
+                :max="100"
+              />
             </div>
             <div class="mb-4">
-              <range-picker title="Lightness" v-model="baseColorEdit.hsl.l" :min="0" :max="100" />
+              <range-picker
+                title="Lightness"
+                v-model="baseColorEdit.hsl.l"
+                :min="0"
+                :max="100"
+              />
             </div>
           </div>
         </div>
@@ -101,10 +79,20 @@
             <p class="text-2xl">Shades</p>
           </div>
           <div class="mb-4">
-            <range-picker title="Max Step Up %" v-model="options.maxStepUp" :min="1" :max="20" />
+            <range-picker
+              title="Max Step Up %"
+              v-model="options.maxStepUp"
+              :min="1"
+              :max="20"
+            />
           </div>
           <div class="mb-4">
-            <range-picker title="Max Step Down %" v-model="options.maxStepDown" :min="1" :max="20" />
+            <range-picker
+              title="Max Step Down %"
+              v-model="options.maxStepDown"
+              :min="1"
+              :max="20"
+            />
           </div>
           <!-- <div class="mb-4">
             <range-picker title="Lightness Range Limit" v-model="options.lightnessRangeLimit" :min="50" :max="100"/>
@@ -117,7 +105,10 @@
           </div>-->
         </div>
 
-        <div class="w-full sm:w-1/3 px-2 py-4" v-if="code.visible">
+        <div
+          class="w-full sm:w-1/3 px-2 py-4"
+          v-if="code.visible"
+        >
           <div class="w-64 mx-auto">
             <label class="block">Color name:</label>
             <input
@@ -137,12 +128,11 @@
 <script>
 import convert from 'color-convert'
 import RangePicker from '@/components/RangePicker'
-import crypto from 'crypto'
-import Noty from 'noty'
+// import Noty from 'noty'
 
 export default {
   props: {
-    color: String,
+    initial: String,
   },
   components: {
     RangePicker,
@@ -157,9 +147,6 @@ export default {
         },
       },
       options: {},
-      versions: [],
-      maxVersions: 10,
-      selectedVersion: null,
       code: {
         visible: true,
         name: '',
@@ -183,8 +170,7 @@ export default {
       return `{\n${shades.join(',\n')}\n},`
     },
     baseColor() {
-      // let hex = this.color
-      let hsl = convert.hex.hsl(this.color)
+      let hsl = convert.hex.hsl(this.initial)
       // let rgb = convert.hex.rgb(hex)
 
       if (this.baseColorEdit.hsl.h !== null && this.baseColorEdit.hsl.s !== null && this.baseColorEdit.hsl.l !== null) {
@@ -254,7 +240,7 @@ export default {
         })
       }
 
-      // here in case hsl gets edited in the future
+      // Just in case hsl gets edited in the future.
       let rgb = convert.hsl.rgb(hsl)
       let hex = convert.rgb.hex(rgb)
       return {
@@ -268,15 +254,14 @@ export default {
     },
   },
   mounted() {
+    // new Noty({
+    //   text: 'test',
+    //   timeout: 4000,
+    // }).show()
     this.options = this.initialOptions()
     this.baseColorEdit.hsl.h = this.baseColor.hsl[0]
     this.baseColorEdit.hsl.s = this.baseColor.hsl[1]
     this.baseColorEdit.hsl.l = this.baseColor.hsl[2]
-
-    document.addEventListener('keydown', this.keyboardInput)
-  },
-  beforeDestroy() {
-    document.removeEventListener('keydown', this.keyboardInput)
   },
   methods: {
     initialOptions() {
@@ -288,126 +273,13 @@ export default {
         lightnessRangeLimit: 100,
       }
     },
-    keyboardInput(event) {
-      if (event.ctrlKey) {
-        return
-      }
-      if (event.code === 'KeyS') {
-        this.update()
-        return
-      }
-      if (event.code === 'KeyN') {
-        this.save()
-        return
-      }
-
-      // change to version number
-      if (event.key === '0') {
-        if (this.versions.length < 10) {
-          return
-        }
-        this.changeVersion(9)
-        return
-      } else if (event.key > 0 && event.key < this.maxVersions) {
-        let version = parseInt(event.key)
-        if (this.versions.length < version) {
-          return
-        }
-        this.changeVersion(version - 1)
-        return
-      }
-
-      // change version with arrows
-      if (event.code === 'ArrowRight' && this.versions.length > this.selectedVersion + 1) {
-        this.changeVersion(this.selectedVersion + 1)
-      }
-      if (event.code === 'ArrowLeft' && this.selectedVersion - 1 >= 0) {
-        this.changeVersion(this.selectedVersion - 1)
-      }
-
-      // delete (double D)
-      if (event.code === 'KeyD' && event.code === this.doubleKey.k) {
-        this.doubleKey.k = ''
-        this.deleteVersion(this.selectedVersion)
-        return
-      }
-      this.doubleKey.k = event.code
-      if (this.doubleKey.t) {
-        clearTimeout(this.doubleKey.t)
-      }
-      this.doubleKey.t = setTimeout(() => {
-        this.doubleKey.k = ''
-      }, this.doubleKey.d)
-    },
-    deleteVersion(index) {
-      this.versions.splice(index, 1)
-      if (index - 1 >= 0) {
-        this.changeVersion(index - 1)
-      }
-    },
-    changeVersion(index) {
-      this.selectedVersion = index
-      // creating new when unsaved is not a good idea. (delete side effect)
-      // let n = this.newVersion()
-      // if (!this.versions.some(v => v.hash === n.hash)) {
-      //   this.save()
-      // }
-
-      let version = this.versions[index]
-      this.baseColorEdit.hsl = Object.assign({}, version.baseColorEdit.hsl)
-      this.options = Object.assign({}, version.options)
-    },
-    newVersion() {
-      let version = {
-        baseColorEdit: {
-          hsl: Object.assign({}, this.baseColorEdit.hsl),
-        },
-        options: Object.assign({}, this.options),
-      }
-      // no need for hmac
-      let shasum = crypto.createHash('sha256')
-      shasum.update(JSON.stringify(version))
-      version.hash = shasum.digest('hex')
-      return version
-    },
-    update() {
-      if (this.selectedVersion === null) {
-        return
-      }
-      let version = this.newVersion()
-      let selected = this.versions[this.selectedVersion]
-      selected.hash = version.hash
-      this.$set(selected.baseColorEdit, 'hsl', version.baseColorEdit.hsl)
-      this.$set(selected, 'options', version.options)
-      this.$set(selected, 'shades', this.result.shades)
-    },
-    save() {
-      if (this.versions.length + 1 > this.maxVersions) {
-        new Noty({
-          text: 'Max versions',
-          timeout: 4000,
-        }).show()
-        return
-      }
-      let version = this.newVersion()
-
-      version.shades = this.result.shades
-
-      // no duplicates
-      if (this.versions.some(v => v.hash === version.hash)) {
-        return false
-      }
-
-      this.versions.push(version)
-      this.selectedVersion = this.versions.length - 1
-    },
-    textColorFromLuminance(rgb) {
+    textColorFromBrightness(rgb) {
       // https://www.w3.org/TR/AERT/#color-contrast
-      let lumi = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255
-      return lumi > 0.5 ? 'black' : 'white'
+      let brightness = (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000
+      return brightness > 125 ? 'black' : 'white'
     },
     resetBaseColor() {
-      let hsl = convert.hex.hsl(this.color)
+      let hsl = convert.hex.hsl(this.initial)
       this.baseColorEdit.hsl.h = hsl[0]
       this.baseColorEdit.hsl.s = hsl[1]
       this.baseColorEdit.hsl.l = hsl[2]

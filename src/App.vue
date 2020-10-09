@@ -1,22 +1,25 @@
 <template>
-  <div id="root" :class="'theme-' + config.theme">
-    <home-page />
+  <div
+    id="root"
+    :class="'theme-' + config.theme"
+  >
+    <base-component class="h-screen" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import HomePage from './components/Homepage.vue'
+import BaseComponent from './components/Base.vue'
 
 export default {
   name: 'app',
   components: {
-    HomePage
+    BaseComponent,
   },
   computed: {
     ...mapGetters({
       config: 'config/config',
-    })
+    }),
   },
 }
 </script>
