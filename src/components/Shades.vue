@@ -271,14 +271,16 @@ export default {
       try {
         let copied = document.execCommand('copy')
         new Noty({
-          text: copied ? 'Code copied' : failText,
+          text: copied ? 'Code copied to clipboard' : failText,
           type: 'info',
+          layout: 'bottomRight',
           timeout: 4000,
         }).show()
       } catch (err) {
         new Noty({
           text: failText,
           type: 'error',
+          layout: 'bottomRight',
           timeout: 4000,
         }).show()
       }

@@ -2,7 +2,10 @@ const purgecss = require('@fullhuman/postcss-purgecss')({
   content: [
     './src/**/*.html',
     './src/**/*.vue',
-    './src/**/*.jsx',
+    './src/**/*.js',
+    './src/assets/css/*',
+    './node_modules/noty/lib/noty.css',
+    './node_modules/noty/lib/themes/mint.css',
   ],
   whitelist: ['html', 'body', 'theme-dark', 'theme-light'],
   defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || []
