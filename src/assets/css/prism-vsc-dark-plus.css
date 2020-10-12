@@ -39,7 +39,7 @@ pre[class*="language-"] {
   padding: 1em;
   margin: .5em 0;
   overflow: auto;
-  background: theme('colors.theme.600');
+  background: #404040;
 }
 
 :not(pre)>code[class*="language-"] {

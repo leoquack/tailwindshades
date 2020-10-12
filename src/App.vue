@@ -1,7 +1,7 @@
 <template>
   <div
     id="root"
-    class="h-screen"
+    class="h-full"
     :class="'theme-' + config.theme"
   >
     <base-component class="flex flex-col h-full" />

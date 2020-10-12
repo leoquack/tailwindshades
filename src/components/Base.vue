@@ -33,7 +33,7 @@
 
     <div
       v-if="step === 'base'"
-      class="container px-2 md:px-0 h-full text-center flex items-center justify-center"
+      class="px-2 md:px-0 h-full text-center flex items-center justify-center"
     >
       <div class="leading-none text-theme-lighter -mt-12">
         <p class="text-lg md:text-xl text-left">Start by</p>

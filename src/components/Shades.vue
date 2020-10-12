@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col h-full">
+  <div class="flex flex-col h-full pb-2">
     <div
-      class="flex flex-col rounded text-theme h-full overflow-hidden"
+      class="flex flex-col rounded text-theme h-full px-2"
       v-if="result.shades && result.shades.length"
     >
 
@@ -26,59 +26,58 @@
         </div>
 
         <div class="w-full md:w-1/3 pr-6 pl-2 mt-6">
-          <div class="overflow-hidden border border-theme-600 pb-2">
+          <div class="px-2 border border-theme-600 pb-2">
             <div class="flex items-center leading-none border-b border-theme-600">
-              <p class="text-4xl font-black mr-3 bg-theme-600 w-12 h-12 flex items-center justify-center">1</p>
-              <p class="text-xl text-theme-darker font-bold">Fine tune base color</p>
+              <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">1</p>
+              <p class="text-xl py-2 px-2 text-theme-darker font-bold">Fine tune base color</p>
             </div>
 
-            <div class="flex mt-1 -px-2">
-              <div class="flex flex-wrap items-end mt-2 px-2">
-                <div class="mr-1">
+            <div class="md:px-2 pt-2">
+              <div class="flex mt-1">
+                <div class="pr-2 flex">
                   <div
-                    class="w-16 h-16"
-                    :style="'background-color: #' + result.color.hex + ';'"
-                  ></div>
+                    class="text-xs leading-4 flex flex-col justify-center px-1 md:px-2 select-none"
+                    :style="'background-color: #' + result.color.hex + '; color: ' + textColorFromBrightness(result.color.hex) + ';'"
+                  >
+                    <p><strong>HEX:</strong> {{ result.color.hex | displayHEX }}</p>
+                    <p><strong>RGB:</strong> {{ result.color.rgb | displayRGB }}</p>
+                    <p><strong>HSL:</strong> {{ result.color.hsl | displayHSL }}</p>
+                    <p>
+                      <strong>Initial selection: </strong>
+                      <a
+                        class="underline cursor-pointer hover:bg-theme hover:text-theme-lighter"
+                        title="reset"
+                        @click="reset"
+                      >{{ initial }}</a>
+                    </p>
+                  </div>
                 </div>
-                <div class="text-xs leading-4">
-                  <p><strong>HEX:</strong> {{ result.color.hex | displayHEX }}</p>
-                  <p><strong>RGB:</strong> {{ result.color.rgb | displayRGB }}</p>
-                  <p><strong>HSL:</strong> {{ result.color.hsl | displayHSL }}</p>
-                  <p>
-                    <strong>Initial selection:</strong>
-                    <a
-                      class="underline text-blue-500 cursor-pointer"
-                      title="reset"
-                      @click="reset"
-                    >{{ initial }}</a>
-                  </p>
-                </div>
-              </div>
 
-              <div class="flex-grow px-2">
-                <div>
-                  <range-picker
-                    title="Hue"
-                    v-model="hsl[0]"
-                    :min="0"
-                    :max="360"
-                  />
-                </div>
-                <div>
-                  <range-picker
-                    title="Saturation"
-                    v-model="hsl[1]"
-                    :min="0"
-                    :max="100"
-                  />
-                </div>
-                <div>
-                  <range-picker
-                    title="Lightness"
-                    v-model="hsl[2]"
-                    :min="0"
-                    :max="100"
-                  />
+                <div class="flex-grow">
+                  <div>
+                    <range-picker
+                      title="Hue"
+                      v-model="hsl[0]"
+                      :min="0"
+                      :max="360"
+                    />
+                  </div>
+                  <div>
+                    <range-picker
+                      title="Saturation"
+                      v-model="hsl[1]"
+                      :min="0"
+                      :max="100"
+                    />
+                  </div>
+                  <div>
+                    <range-picker
+                      title="Lightness"
+                      v-model="hsl[2]"
+                      :min="0"
+                      :max="100"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -87,8 +86,8 @@
           <div class="border border-theme-600 mt-6">
             <div class="mb-2">
               <div class="flex items-center leading-none border-b border-theme-600">
-                <p class="text-4xl font-black mr-3 bg-theme-600 w-12 h-12 flex items-center justify-center">2</p>
-                <p class="text-xl text-theme-darker font-bold">Uniform shades</p>
+                <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">2</p>
+                <p class="text-xl py-2 px-2 text-theme-darker font-bold">Uniform shades</p>
               </div>
             </div>
             <div class="mb-2 px-2">
@@ -115,8 +114,8 @@
           >
             <div class="mb-2">
               <div class="flex items-center leading-none border-b border-theme-600">
-                <p class="text-4xl font-black mr-3 bg-theme-600 w-12 h-12 flex items-center justify-center">3</p>
-                <p class="text-xl text-theme-darker font-bold">Get code</p>
+                <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">3</p>
+                <p class="text-xl py-2 px-2 text-theme-darker font-bold">Get code</p>
               </div>
             </div>
             <div class="px-2 relative">
