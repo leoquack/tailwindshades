@@ -33,16 +33,16 @@
 
     <div
       v-if="step === 'base'"
-      class="container px-2 md:px-0 h-full text-center flex items-center justify-center -mt-10"
+      class="container px-2 md:px-0 h-full text-center flex items-center justify-center"
     >
-      <div class="leading-none text-theme-lighter">
+      <div class="leading-none text-theme-lighter -mt-12">
         <p class="text-lg md:text-xl text-left">Start by</p>
         <p class="text-3xl md:text-4xl font-bold mt-1 text-left">selecting a <u>base</u> color</p>
         <input
           type="text"
           v-model="hex"
           v-maska="{ mask: '!#HHHHHH', tokens: { 'H': { pattern: /[0-9a-fA-F]/, uppercase: true }}}"
-          class="form-control form-no-outline text-gray-800 font-black text-2xl mt-6 py-6 px-8"
+          class="form-control form-no-outline font-black text-2xl mt-6 py-6 px-8"
         >
         <div class="mt-8">
           <p class="text-left">Default tailwindcss palette colors (*-500)</p>
@@ -73,10 +73,10 @@
     </div>
 
     <div
-      class="h-full"
+      class="flex flex-col h-full"
       v-if="step === 'shades'"
     >
-      <div class="flex bg-theme-lighter border-t border-theme mb-4 py-2 px-2">
+      <div class="flex bg-theme-lighter border-t border-theme py-2 px-2">
         <button
           class="text-theme text-sm hover:text-blue-400 focus:outline-none"
           @click="step = 'base'"

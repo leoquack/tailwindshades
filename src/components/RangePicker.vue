@@ -1,15 +1,12 @@
 <template>
   <div>
-    <label
-      class="block text-sm font-bold"
-      :for="kebabTitle"
-    >
+    <label class="block font-bold text-xs select-none ml-1">
       {{ title }}
-      <span class="text-xs text-theme-darker light:text-theme-lighter">{{ min }} - {{ max }}</span>
+      <span class="font-normal">{{ min }} - {{ max }}</span>
     </label>
     <div class="flex flex-wrap">
       <input
-        class="shadow appearance-none border rounded w-full sm:w-2/12 mb-1 sm:mb-0 py-2 px-3 sm:px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        class="appearance-none rounded-full w-12 px-1 text-xs text-theme-lighter mr-1 bg-theme-600"
         :id="kebabTitle"
         type="number"
         :value="value"
@@ -18,7 +15,7 @@
         @input="$emit('input', parseInt($event.target.value))"
       >
       <input
-        class="shadow appearance-none border rounded w-full sm:w-10/12 py-2 px-3 text-gray-700 leading-tight focus:outline-none"
+        class="flex-grow"
         :id="kebabTitle + '-range'"
         type="range"
         :min="min"
@@ -49,7 +46,7 @@ export default {
       return str
         .match(/[A-Z]{2,}(?=[A-Z][a-z0-9]*|\b)|[A-Z]?[a-z0-9]*|[A-Z]|[0-9]+/g)
         .filter(Boolean)
-        .map((x) => x.toLowerCase())
+        .map(x => x.toLowerCase())
         .join('-')
     },
   },

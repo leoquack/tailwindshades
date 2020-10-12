@@ -1,9 +1,10 @@
 <template>
   <div
     id="root"
+    class="h-screen"
     :class="'theme-' + config.theme"
   >
-    <base-component class="h-screen" />
+    <base-component class="flex flex-col h-full" />
   </div>
 </template>
 

@@ -77,3 +77,36 @@ html {
 .fade-leave-to {
   opacity: 0;
 }
+
+input[type='range'] {
+  outline: 0;
+  border: 0;
+  border-radius: 500px;
+  /* width: 400px; */
+  /* max-width: 100%; */
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    & {
+      overflow: hidden;
+      height: 20px;
+      -webkit-appearance: none;
+      background-color: theme('colors.theme.600');
+    }
+    &::-webkit-slider-thumb {
+      width: 20px;
+      -webkit-appearance: none;
+      height: 20px;
+      cursor: ew-resize;
+      background: theme('colors.theme.700');
+      /* box-shadow: -330px 0 0 320px theme('colors.theme.200'), inset 0 0 0 20px theme('colors.theme.700'); */
+      border-radius: 50%;
+      transition: box-shadow 0.2s ease-in-out;
+      position: relative;
+    }
+  }
+  &::-moz-range-progress {
+    background-color: theme('colors.theme.600');
+  }
+  &::-ms-fill-lower {
+    background-color: theme('colors.theme.600');
+  }
+}
