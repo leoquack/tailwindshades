@@ -196,7 +196,7 @@ export default {
       if (!this.result.shades || !this.result.shades.length) {
         return {}
       }
-      let shades = [`  default: '#${this.result.shades[4].hex}'`]
+      let shades = [`  DEFAULT: '#${this.result.shades[4].hex}'`]
       for (let i in this.result.shades) {
         shades.push(`  '${parseInt(i) + 1}00': '#${this.result.shades[i].hex}'`)
       }
