@@ -203,7 +203,7 @@ export default {
       return `{\n${shades.join(',\n')}\n},`
     },
     initialHSL() {
-      return converter.rgb.hsl(converter.hex.rgb(this.initial))
+      return converter.rgb.hsl.raw(converter.hex.rgb(this.initial))
     },
     result() {
       let hsl = this.hsl
