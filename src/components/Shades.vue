@@ -148,7 +148,7 @@ export default {
 
       shades.push(
         ...this.result.shades.map(({ stop, hex }) => {
-          return `  '${stop * 100}': '#${hex},'`
+          return `  '${stop * 100}': '#${hex}'`
         })
       )
 
