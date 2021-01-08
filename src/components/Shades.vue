@@ -1,24 +1,19 @@
 <template>
   <div class="flex flex-col h-full pb-2">
-    <div
-      class="flex flex-col rounded text-theme h-full px-2"
-      v-if="result.shades && result.shades.length"
-    >
-
+    <div class="flex flex-col rounded text-theme h-full px-2" v-if="result.shades && result.shades.length">
       <div class="flex flex-wrap -mx-2 h-full">
         <div class="flex flex-col w-full md:w-2/3 px-2 md:h-full">
           <!-- <p class="text-lg text-theme-lighter font-black">Preview</p> -->
           <div class="flex flex-col h-full">
             <div
-              v-for="(shade, i) in result.shades"
-              :key="'shade-' + i"
-              class="px-2 flex flex-grow"
-              :class="{'font-black': i === 4 }"
-              :style="`background-color: #${shade.hex}; color: ${shade.textColor};`"
+              v-for="{ stop, hex, textColor } in result.shades"
+              :key="'shade-' + stop * 100"
+              :class="['px-2 flex flex-grow', { 'font-black': stop === 5 }]"
+              :style="`background-color: #${hex}; color: ${textColor};`"
             >
               <div class="flex w-full justify-between items-center">
-                <p class="w-1/3 text-xs">({{ (i + 1) * 100 }})</p>
-                <p class="w-1/3 text-center">#{{ shade.hex }}</p>
+                <p class="w-1/3 text-xs">({{ stop * 100 }})</p>
+                <p class="w-1/3 text-center">#{{ hex }}</p>
                 <p class="w-1/3"></p>
               </div>
             </div>
@@ -44,39 +39,20 @@
                     <p><strong>HSL:</strong> {{ result.color.hsl | displayHSL }}</p>
                     <p>
                       <strong>Initial selection: </strong>
-                      <a
-                        class="underline cursor-pointer hover:bg-theme hover:text-theme-lighter"
-                        title="reset"
-                        @click="reset"
-                      >{{ initial }}</a>
+                      <a class="underline cursor-pointer hover:bg-theme hover:text-theme-lighter" title="reset" @click="reset">{{ initial }}</a>
                     </p>
                   </div>
                 </div>
 
                 <div class="flex-grow">
                   <div>
-                    <range-picker
-                      title="Hue"
-                      v-model="hsl[0]"
-                      :min="0"
-                      :max="360"
-                    />
+                    <range-picker title="Hue" v-model="hsl[0]" :min="0" :max="360" />
                   </div>
                   <div>
-                    <range-picker
-                      title="Saturation"
-                      v-model="hsl[1]"
-                      :min="0"
-                      :max="100"
-                    />
+                    <range-picker title="Saturation" v-model="hsl[1]" :min="0" :max="100" />
                   </div>
                   <div>
-                    <range-picker
-                      title="Lightness"
-                      v-model="hsl[2]"
-                      :min="0"
-                      :max="100"
-                    />
+                    <range-picker title="Lightness" v-model="hsl[2]" :min="0" :max="100" />
                   </div>
                 </div>
               </div>
@@ -91,27 +67,14 @@
               </div>
             </div>
             <div class="mb-2 px-2">
-              <range-picker
-                title="Step up %"
-                v-model="groupOptions.stepUp"
-                :min="3"
-                :max="20"
-              />
+              <range-picker title="Step up %" v-model="groupOptions.stepUp" :min="3" :max="20" />
             </div>
             <div class="mb-2 px-2">
-              <range-picker
-                title="Step down %"
-                v-model="groupOptions.stepDown"
-                :min="3"
-                :max="20"
-              />
+              <range-picker title="Step down %" v-model="groupOptions.stepDown" :min="3" :max="20" />
             </div>
           </div>
 
-          <div
-            class="border border-theme-600 mt-6"
-            v-if="code.visible"
-          >
+          <div class="border border-theme-600 mt-6" v-if="code.visible">
             <div class="mb-2">
               <div class="flex items-center leading-none border-b border-theme-600">
                 <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">3</p>
@@ -120,32 +83,19 @@
             </div>
             <div class="px-2 relative">
               <label class="text-sm font-bold">Color name:</label>
-              <input
-                class="form-control"
-                type="text"
-                v-model="code.name"
-              />
+              <input class="form-control" type="text" v-model="code.name" />
               <prism-component language="javascript">{{ code.name | appendColon }}{{ codeDisplay }}</prism-component>
-              <input
-                type="hidden"
-                id="final-code"
-                :value="$options.filters.appendColon(code.name) + codeDisplay"
-              >
-              <div
-                class="absolute right-0 top-0 mt-20 mr-4 bg-theme-700 px-4 py-2 text-xl rounded-full cursor-pointer hover:bg-theme-800"
-                @click="copyCodeToClipboard"
-              >
+              <input type="hidden" id="final-code" :value="$options.filters.appendColon(code.name) + codeDisplay" />
+              <div class="absolute right-0 top-0 mt-20 mr-4 bg-theme-700 px-4 py-2 text-xl rounded-full cursor-pointer hover:bg-theme-800" @click="copyCodeToClipboard">
                 <i class="far fa-copy"></i>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 </template>
-
 
 <script>
 import converter from 'color-convert'
@@ -164,6 +114,7 @@ export default {
   },
   data() {
     return {
+      stops: [0.5, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9],
       hsl: [],
       groupOptions: {
         stepUp: 10,
@@ -182,24 +133,25 @@ export default {
   },
   watch: {
     resultBaseShade() {
-      this.code.name = ntc.name(this.result.shades[4].hex)[1].replace(/\s+/g, '-').toLowerCase()
+      this.code.name = ntc
+        .name('#' + this.result.color.hex)[1]
+        .replace(/\s+/g, '-')
+        .toLowerCase()
     },
   },
   computed: {
     resultBaseShade() {
-      if (!this.result?.shades[4]?.hex) {
-        return ''
-      }
-      return this.result.shades[4]
+      return this.result.color.hex
     },
     codeDisplay() {
-      if (!this.result.shades || !this.result.shades.length) {
-        return {}
-      }
-      let shades = [`  DEFAULT: '#${this.result.shades[4].hex}'`]
-      for (let i in this.result.shades) {
-        shades.push(`  '${parseInt(i) + 1}00': '#${this.result.shades[i].hex}'`)
-      }
+      let shades = [`  DEFAULT: '#${this.result.color.hex}'`]
+
+      shades.push(
+        ...this.result.shades.map(({ stop, hex }) => {
+          return `  '${stop * 100}': '#${hex},'`
+        })
+      )
+
       return `{\n${shades.join(',\n')}\n},`
     },
     initialHSL() {
@@ -207,36 +159,23 @@ export default {
     },
     result() {
       let hsl = this.hsl
-
       let stepUp = this.groupOptions.stepUp
       let stepDown = this.groupOptions.stepDown
-
-      let shades = []
-      for (let i = 4; i >= 1; i--) {
-        let lightness = hsl[2] + i * stepUp
-        let hex = converter.rgb.hex(converter.hsl.rgb([hsl[0], hsl[1], lightness > 100 ? 100 : lightness]))
-        shades.push({
-          hex,
-          textColor: this.textColorFromBrightness(hex),
-        })
-      }
-      {
-        let hex = converter.rgb.hex(converter.hsl.rgb(hsl))
-        shades.push({
-          hex,
-          textColor: this.textColorFromBrightness(hex),
-        })
-      }
-      for (let i = 1; i < 5; i++) {
-        let lightness = hsl[2] - i * stepDown
-        let hex = converter.rgb.hex(converter.hsl.rgb([hsl[0], hsl[1], lightness < 0 ? 0 : lightness]))
-        shades.push({
-          hex,
-          textColor: this.textColorFromBrightness(hex),
-        })
-      }
-
       let rgb = converter.hsl.rgb(hsl)
+
+      let shades = this.stops.map(stop => {
+        let distance = 5 - stop
+        let direction = distance > 0 ? stepUp : stepDown
+        let lightness = this.clamp(hsl[2] + direction * distance, 0, 100)
+        let hex = converter.rgb.hex(converter.hsl.rgb([hsl[0], hsl[1], lightness]))
+
+        return {
+          stop,
+          hex,
+          textColor: this.textColorFromBrightness(hex),
+        }
+      })
+
       return {
         color: {
           hsl,
@@ -251,6 +190,9 @@ export default {
     this.hsl = [...this.initialHSL]
   },
   methods: {
+    clamp(val, min, max) {
+      return Math.min(Math.max(val, min), max)
+    },
     reset() {
       this.hsl = [...this.initialHSL]
     },
