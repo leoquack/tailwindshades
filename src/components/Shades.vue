@@ -296,7 +296,7 @@ export default {
       return `${value[0]}, ${value[1]}, ${value[2]}`
     },
     displayHSL(value) {
-      return `${value[0]}, ${value[1]}%, ${value[2]}%`
+      return `${value[0].toFixed(2)}, ${value[1].toFixed(2)}%, ${value[2].toFixed(2)}%`
     },
     appendColon(value) {
       return value ? `'${value}': ` : ''
