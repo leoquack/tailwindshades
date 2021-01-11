@@ -114,7 +114,7 @@ export default {
   },
   data() {
     return {
-      stops: [0.5, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9],
+      stops: [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       hsl: [],
       groupOptions: {
         stepUp: 10,
