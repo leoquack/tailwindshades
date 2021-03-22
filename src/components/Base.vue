@@ -69,6 +69,9 @@
             <p class="text-xs mt-1">{{ hex }}</p>
           </div>
         </transition>
+
+        <carbon-ads class="flex justify-center items-center mt-24" />
+
       </div>
     </div>
 
@@ -96,11 +99,13 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import ShadesComponent from '@/components/Shades'
+import CarbonAds from '@/components/CarbonAds'
 import converter from 'color-convert'
 
 export default {
   components: {
     ShadesComponent,
+    CarbonAds,
   },
   metaInfo: {
     title: 'Tailwind Shades',

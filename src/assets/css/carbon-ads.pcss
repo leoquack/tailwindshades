@@ -1,0 +1,86 @@
+#root.theme-light {
+  #carbonads {
+    background-color: hsl(0, 0%, 98%);
+    box-shadow: 0 1px 4px 1px hsla(0, 0%, 0%, 0.1);
+    z-index: 100;
+
+    a {
+      color: inherit;
+      &:hover {
+        color: inherit;
+      }
+    }
+
+    .carbon-poweredby {
+      background: #f1f1f2;
+      color: inherit;
+      border-top-left-radius: 3px;
+    }
+  }
+}
+
+#carbonads {
+  * {
+    margin: initial;
+    padding: initial;
+  }
+
+  @apply bg-theme-darker;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  display: flex;
+  max-width: 330px;
+
+  a {
+    color: #ddd;
+    text-decoration: none;
+
+    &:hover {
+      color: #ddd;
+    }
+  }
+
+  span {
+    position: relative;
+    display: block;
+    overflow: hidden;
+  }
+
+  .carbon-wrap {
+    display: flex;
+  }
+
+  .carbon-img {
+    display: block;
+    margin: 0;
+    line-height: 1;
+
+    img {
+      display: block;
+    }
+  }
+
+  .carbon-text {
+    padding: 10px;
+    text-align: left;
+    font-size: 13px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .carbon-poweredby {
+    display: block;
+    padding: 6px 8px;
+    background: #1e2021;
+    color: #aaa;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    font-size: 8px;
+    line-height: 1;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-top-left-radius: 6px;
+  }
+}
