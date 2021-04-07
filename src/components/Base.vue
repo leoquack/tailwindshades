@@ -32,7 +32,7 @@
     </div>
 
     <div
-      v-if="step === 'base'"
+      v-if="step === 'base' && !hasURLHash"
       class="px-2 md:px-0 h-full text-center flex items-center justify-center"
     >
       <div class="leading-none text-theme-lighter -mt-12">
@@ -70,27 +70,35 @@
           </div>
         </transition>
 
-        <carbon-ads class="flex justify-center items-center mt-24" />
-
+        <carbon-ads v-if="isProduction" class="flex justify-center items-center mt-24" />
       </div>
     </div>
 
     <div
       class="flex flex-col h-full"
-      v-if="step === 'shades'"
+      v-if="step === 'shades' || hasURLHash"
     >
-      <div class="flex bg-theme-lighter border-t border-theme py-2 px-2">
+      <div class="flex justify-between bg-theme-lighter border-t border-theme py-2 px-2">
         <button
           class="text-theme text-sm hover:text-blue-400 focus:outline-none"
-          @click="step = 'base'"
+          @click="backToBaseSelection"
           title="Back to base selection"
         >
           <i class="fas fa-angle-left"></i>
           back to base color selection.
         </button>
+
+        <button
+          class="text-theme text-sm hover:text-blue-400 focus:outline-none"
+          @click="copyShareLink"
+          title="Copy share link"
+        >
+          <i class="fas fa-share"></i>
+          share
+        </button>
       </div>
 
-      <shades-component :initial="hex" />
+      <shades-component :initial="hex" ref="shadesComponent"/>
     </div>
 
   </div>
@@ -101,6 +109,7 @@ import { mapGetters, mapActions } from 'vuex'
 import ShadesComponent from '@/components/Shades'
 import CarbonAds from '@/components/CarbonAds'
 import converter from 'color-convert'
+import Noty from 'noty'
 
 export default {
   components: {
@@ -118,6 +127,7 @@ export default {
   },
   data() {
     return {
+      isProduction: process.env.NODE_ENV === 'production',
       step: 'base',
       hex: '',
       defaultTailwindPaletteBaseColors: [
@@ -132,6 +142,7 @@ export default {
         { name: 'purple', hex: '#9F7AEA' },
         { name: 'pink', hex: '#ED64A6' },
       ],
+      hasURLHash: window.location.hash.length > 2,
     }
   },
   computed: {
@@ -150,8 +161,58 @@ export default {
     if (process.env.NODE_ENV === 'production') {
       this.$ga.page('/')
     }
+
+    window.addEventListener('hashchange', this.handleHashChange)
+  },
+  beforeDestroy() {
+    window.removeEventListener('hashchange', this.handleHashChange)
   },
   methods: {
+    handleHashChange() {
+      this.hasURLHash = window.location.hash.length > 2
+      if (!this.hasURLHash) {
+        return
+      }
+
+      // Force reload in case the URL hash changes manually.
+      let h = window.location.hash.substring(1)
+      if (h !== this.$refs.shadesComponent.urlHash()) {
+        window.location.reload()
+      }
+    },
+    copyShareLink() {
+      var textarea = document.createElement('textarea')
+      textarea.textContent = window.location
+      textarea.style.position = 'fixed'
+      document.body.appendChild(textarea)
+      textarea.select()
+
+      let failText = "Couldn't copy code, please try manual copy-paste"
+      try {
+        let copied = document.execCommand('copy')
+        new Noty({
+          text: copied ? 'Share link copied to clipboard' : failText,
+          type: 'info',
+          layout: 'bottomRight',
+          timeout: 4000,
+        }).show()
+      } catch (err) {
+        new Noty({
+          text: failText,
+          type: 'error',
+          layout: 'bottomRight',
+          timeout: 4000,
+        }).show()
+      }
+
+      document.body.removeChild(textarea)
+      window.getSelection().removeAllRanges()
+    },
+    backToBaseSelection() {
+      window.location.hash = ''
+      history.pushState('', document.title, window.location.pathname + window.location.search)
+      this.step = 'base'
+    },
     textColorByBrightness() {
       if (!this.validHex) {
         return

@@ -129,13 +129,25 @@ export default {
         d: 275,
         k: '',
       },
+      delay: {
+        hash: {
+          n: null,
+          t: 150,
+        }
+      }
     }
   },
   watch: {
+    'result.shades'() {
+      this.updateURLHash()
+    },
+    'code.name'() {
+      this.updateURLHash()
+    },
     resultBaseShade() {
       this.code.name = ntc
         .name('#' + this.result.color.hex)[1]
-        .replace(/\s+/g, '-')
+        .replace(/[\s']+/g, '-')
         .toLowerCase()
     },
   },
@@ -187,9 +199,65 @@ export default {
     },
   },
   mounted() {
-    this.hsl = [...this.initialHSL]
+    if (!this.parseURLHash()) {
+      this.hsl = [...this.initialHSL]
+    }
   },
   methods: {
+    updateURLHash() {
+      clearTimeout(this.delay.hash.n)
+      this.delay.hash.n = setTimeout(() => {
+        window.location.hash = this.urlHash()
+      }, this.delay.hash.t)
+    },
+    urlHash() {
+      let parts = {
+        color: this.result.color.hex,
+        'step-up': this.groupOptions.stepUp,
+        'step-down': this.groupOptions.stepDown,
+        name: this.code.name,
+      }
+      return Object.entries(parts).map(part => part.map(encodeURIComponent).join('=')).join('&')
+    },
+    parseURLHash() {
+      if (window.location.hash.length < 2) {
+        return
+      }
+      let h = window.location.hash.substring(1)
+      let parts = h.split('&').map(part => part.split('=').map(decodeURIComponent))
+
+      // All "parameters" should have value.
+      if (!parts.every(p => p[1]?.length > 0)) {
+        return
+      }
+
+      // Validate values.
+      let color = parts.find(p => p[0] === 'color')[1]
+      let hexPattern = new RegExp(/^#?[a-f0-9]{6}$/i)
+      if (!hexPattern.test(color)) {
+        return
+      }
+
+      let stepUp = parts.find(p => p[0] === 'step-up')[1]
+      stepUp = this.clamp(parseInt(stepUp), 0, 12)
+
+      let stepDown = parts.find(p => p[0] === 'step-down')[1]
+      stepDown = this.clamp(parseInt(stepDown), 0, 12)
+
+      let name = parts.find(p => p[0] === 'name')[1]
+      let namePattern = new RegExp(/[A-z /]+$/i)
+      if (!namePattern.test(name)) {
+        return
+      }
+
+      // Set shades.
+      this.hsl = converter.rgb.hsl.raw(converter.hex.rgb('#'+color))
+      this.groupOptions.stepUp = stepUp
+      this.groupOptions.stepDown = stepDown
+      this.$nextTick(() => (this.code.name = name))
+
+      return true
+    },
     clamp(val, min, max) {
       return Math.min(Math.max(val, min), max)
     },
@@ -238,7 +306,7 @@ export default {
       return `${value[0]}, ${value[1]}, ${value[2]}`
     },
     displayHSL(value) {
-      return `${value[0].toFixed(2)}, ${value[1].toFixed(2)}%, ${value[2].toFixed(2)}%`
+      return `${value[0]?.toFixed(2)}, ${value[1]?.toFixed(2)}%, ${value[2]?.toFixed(2)}%`
     },
     appendColon(value) {
       return value ? `'${value}': ` : ''
