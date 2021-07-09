@@ -18,7 +18,7 @@
             >
               <div class="flex w-full justify-between items-center">
                 <p class="w-3/12 text-xs">({{ stop * 100 }})</p>
-                <p class="w-6/12 text-lg font-bold text-center">#{{ override ? override.hex : hex }}</p>
+                <p class="w-6/12 text-center">#{{ override ? override.hex : hex }}</p>
                 <div class="w-2/12">
 
                   <div class="flex-grow">

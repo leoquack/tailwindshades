@@ -97,7 +97,7 @@ input[type='range'] {
       -webkit-appearance: none;
       background-color: theme('colors.theme.600');
       &.slim {
-        height: 2px;
+        height: 1px;
         margin-top: 8px;
         margin-bottom: 8px;
         overflow: visible;
@@ -114,6 +114,11 @@ input[type='range'] {
       border-radius: 50%;
       transition: box-shadow 0.2s ease-in-out;
       position: relative;
+    }
+
+    &.slim::-webkit-slider-thumb {
+      width: 12px;
+      height: 12px;
     }
   }
   &::-moz-range-progress {
