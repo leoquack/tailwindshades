@@ -381,11 +381,11 @@ export default {
         return
       }
 
-      let urlOverridesRaw = parts.find(p => p[0] === 'overrides')[1]
+      let urlOverridesRaw = parts.find(p => p[0] === 'overrides')
       if (urlOverridesRaw) {
         let urlOverrides = ''
         try {
-          urlOverrides = JSON.parse(window.atob(urlOverridesRaw))
+          urlOverrides = JSON.parse(window.atob(urlOverridesRaw[1]))
         } catch {
           return
         }
