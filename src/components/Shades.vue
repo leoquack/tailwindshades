@@ -1,6 +1,9 @@
 <template>
   <div class="flex flex-col h-full pb-2">
-    <div class="flex flex-col rounded text-theme h-full px-2" v-if="result.shades && result.shades.length">
+    <div
+      class="flex flex-col rounded text-theme h-full px-2"
+      v-if="result.shades && result.shades.length"
+    >
       <div class="flex flex-wrap -mx-2 h-full">
         <div class="flex flex-col w-full md:w-2/3 px-2 md:h-full">
           <!-- <p class="text-lg text-theme-lighter font-black">Preview</p> -->
@@ -21,7 +24,7 @@
         </div>
 
         <div class="w-full md:w-1/3 pr-6 pl-2 mt-6">
-          <div class="px-2 border border-theme-600 pb-2">
+          <div class="border border-theme-600 pb-2">
             <div class="flex items-center leading-none border-b border-theme-600">
               <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">1</p>
               <p class="text-xl py-2 px-2 text-theme-darker font-bold">Fine tune base color</p>
@@ -39,20 +42,39 @@
                     <p><strong>HSL:</strong> {{ result.color.hsl | displayHSL }}</p>
                     <p>
                       <strong>Initial selection: </strong>
-                      <a class="underline cursor-pointer hover:bg-theme hover:text-theme-lighter" title="reset" @click="reset">{{ initial }}</a>
+                      <a
+                        class="underline cursor-pointer hover:bg-theme hover:text-theme-lighter"
+                        title="reset"
+                        @click="reset"
+                      >{{ initial }}</a>
                     </p>
                   </div>
                 </div>
 
                 <div class="flex-grow">
                   <div>
-                    <range-picker title="Hue" v-model="hsl[0]" :min="0" :max="360" />
+                    <range-picker
+                      title="Hue"
+                      v-model="hsl[0]"
+                      :min="0"
+                      :max="360"
+                    />
                   </div>
                   <div>
-                    <range-picker title="Saturation" v-model="hsl[1]" :min="0" :max="100" />
+                    <range-picker
+                      title="Saturation"
+                      v-model="hsl[1]"
+                      :min="0"
+                      :max="100"
+                    />
                   </div>
                   <div>
-                    <range-picker title="Lightness" v-model="hsl[2]" :min="0" :max="100" />
+                    <range-picker
+                      title="Lightness"
+                      v-model="hsl[2]"
+                      :min="0"
+                      :max="100"
+                    />
                   </div>
                 </div>
               </div>
@@ -67,14 +89,27 @@
               </div>
             </div>
             <div class="mb-2 px-2">
-              <range-picker title="Step up %" v-model="groupOptions.stepUp" :min="3" :max="20" />
+              <range-picker
+                title="Step up %"
+                v-model="groupOptions.stepUp"
+                :min="3"
+                :max="20"
+              />
             </div>
             <div class="mb-2 px-2">
-              <range-picker title="Step down %" v-model="groupOptions.stepDown" :min="3" :max="20" />
+              <range-picker
+                title="Step down %"
+                v-model="groupOptions.stepDown"
+                :min="3"
+                :max="20"
+              />
             </div>
           </div>
 
-          <div class="border border-theme-600 mt-6" v-if="code.visible">
+          <div
+            class="border border-theme-600 mt-6"
+            v-if="code.visible"
+          >
             <div class="mb-2">
               <div class="flex items-center leading-none border-b border-theme-600">
                 <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">3</p>
@@ -83,10 +118,21 @@
             </div>
             <div class="px-2 relative">
               <label class="text-sm font-bold">Color name:</label>
-              <input class="form-control" type="text" v-model="code.name" />
+              <input
+                class="form-control"
+                type="text"
+                v-model="code.name"
+              />
               <prism-component language="javascript">{{ code.name | appendColon }}{{ codeDisplay }}</prism-component>
-              <input type="hidden" id="final-code" :value="$options.filters.appendColon(code.name) + codeDisplay" />
-              <div class="absolute right-0 top-0 mt-20 mr-4 bg-theme-700 px-4 py-2 text-xl rounded-full cursor-pointer hover:bg-theme-800" @click="copyCodeToClipboard">
+              <input
+                type="hidden"
+                id="final-code"
+                :value="$options.filters.appendColon(code.name) + codeDisplay"
+              />
+              <div
+                class="absolute right-0 top-0 mt-20 mr-4 bg-theme-700 px-4 py-2 text-xl rounded-full cursor-pointer hover:bg-theme-800"
+                @click="copyCodeToClipboard"
+              >
                 <i class="far fa-copy"></i>
               </div>
             </div>
@@ -102,7 +148,6 @@ import converter from 'color-convert'
 import { ntc } from '@/lib/ntc.js'
 import RangePicker from '@/components/RangePicker'
 import PrismComponent from 'vue-prism-component'
-import Noty from 'noty'
 
 export default {
   props: {
@@ -133,8 +178,8 @@ export default {
         hash: {
           n: null,
           t: 150,
-        }
-      }
+        },
+      },
     }
   },
   watch: {
@@ -217,7 +262,9 @@ export default {
         'step-down': this.groupOptions.stepDown,
         name: this.code.name,
       }
-      return Object.entries(parts).map(part => part.map(encodeURIComponent).join('=')).join('&')
+      return Object.entries(parts)
+        .map(part => part.map(encodeURIComponent).join('='))
+        .join('&')
     },
     parseURLHash() {
       if (window.location.hash.length < 2) {
@@ -251,7 +298,7 @@ export default {
       }
 
       // Set shades.
-      this.hsl = converter.rgb.hsl.raw(converter.hex.rgb('#'+color))
+      this.hsl = converter.rgb.hsl.raw(converter.hex.rgb('#' + color))
       this.groupOptions.stepUp = stepUp
       this.groupOptions.stepDown = stepDown
       this.$nextTick(() => (this.code.name = name))
@@ -279,19 +326,17 @@ export default {
       let failText = "Couldn't copy code, please try manual copy-paste"
       try {
         let copied = document.execCommand('copy')
-        new Noty({
+        this.$notify({
           text: copied ? 'Code copied to clipboard' : failText,
           type: 'info',
-          layout: 'bottomRight',
-          timeout: 4000,
-        }).show()
+          duration: 4000,
+        })
       } catch (err) {
-        new Noty({
+        this.$notify({
           text: failText,
           type: 'error',
-          layout: 'bottomRight',
-          timeout: 4000,
-        }).show()
+          duration: 4000,
+        })
       }
 
       codeInput.setAttribute('type', 'hidden')

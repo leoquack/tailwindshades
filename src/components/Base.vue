@@ -1,5 +1,7 @@
 <template>
   <div>
+    <notifications position="bottom right" />
+
     <div class="bg-theme-lighter px-4 py-4 text-theme">
       <div class="flex flex-wrap justify-between items-center">
         <div>
@@ -70,7 +72,10 @@
           </div>
         </transition>
 
-        <carbon-ads v-if="isProduction" class="flex justify-center items-center mt-24" />
+        <carbon-ads
+          v-if="isProduction"
+          class="flex justify-center items-center mt-24"
+        />
       </div>
     </div>
 
@@ -98,7 +103,10 @@
         </button>
       </div>
 
-      <shades-component :initial="hex" ref="shadesComponent"/>
+      <shades-component
+        :initial="hex"
+        ref="shadesComponent"
+      />
     </div>
 
   </div>
@@ -109,7 +117,6 @@ import { mapGetters, mapActions } from 'vuex'
 import ShadesComponent from '@/components/Shades'
 import CarbonAds from '@/components/CarbonAds'
 import converter from 'color-convert'
-import Noty from 'noty'
 
 export default {
   components: {
@@ -190,19 +197,17 @@ export default {
       let failText = "Couldn't copy code, please try manual copy-paste"
       try {
         let copied = document.execCommand('copy')
-        new Noty({
+        this.$notify({
           text: copied ? 'Share link copied to clipboard' : failText,
           type: 'info',
-          layout: 'bottomRight',
-          timeout: 4000,
-        }).show()
+          duration: 4000,
+        })
       } catch (err) {
-        new Noty({
+        this.$notify({
           text: failText,
           type: 'error',
-          layout: 'bottomRight',
-          timeout: 4000,
-        }).show()
+          duration: 4000,
+        })
       }
 
       document.body.removeChild(textarea)
