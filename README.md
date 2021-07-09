@@ -7,7 +7,5 @@ https://www.tailwindshades.com
 To run locally:
 
 ```
-yarn install && yarn serve
-# OR
 npm install && npm run serve
 ```
