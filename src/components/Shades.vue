@@ -4,26 +4,65 @@
       class="flex flex-col rounded text-theme h-full px-2"
       v-if="result.shades && result.shades.length"
     >
-      <div class="flex flex-wrap -mx-2 h-full">
+      <div
+        class="flex flex-wrap -mx-2 h-full"
+        v-if="Object.entries(overrides).length"
+      >
         <div class="flex flex-col w-full md:w-2/3 px-2 md:h-full">
-          <!-- <p class="text-lg text-theme-lighter font-black">Preview</p> -->
-          <div class="flex flex-col h-full">
+          <div class="flex flex-col h-full mt-4">
             <div
-              v-for="{ stop, hex, textColor } in result.shades"
+              v-for="{ stop, hex, hsl, override, textColor } in result.shades"
               :key="'shade-' + stop * 100"
-              :class="['px-2 flex flex-grow', { 'font-black': stop === 5 }]"
-              :style="`background-color: #${hex}; color: ${textColor};`"
+              :class="[ 'px-2 flex flex-grow', { 'font-black': stop === 5 } ]"
+              :style="`background-color: #${(override ? override.hex : hex)}; color: ${(override ? override.textColor : textColor)};`"
             >
               <div class="flex w-full justify-between items-center">
-                <p class="w-1/3 text-xs">({{ stop * 100 }})</p>
-                <p class="w-1/3 text-center">#{{ hex }}</p>
-                <p class="w-1/3"></p>
+                <p class="w-3/12 text-xs">({{ stop * 100 }})</p>
+                <p class="w-6/12 text-lg font-bold text-center">#{{ override ? override.hex : hex }}</p>
+                <div class="w-2/12">
+
+                  <div class="flex-grow">
+                    <div>
+                      <slider-input
+                        :number-input-enabled="false"
+                        slim
+                        :title="(overrides[String(stop)].saturation !== -1 ? '* ' : '') + 'Saturation'"
+                        :value="overrides[String(stop)].saturation !== -1 ? overrides[String(stop)].saturation : hsl[1]"
+                        @input="overrideValue($event, stop, 'saturation')"
+                        :min="0"
+                        :max="100"
+                      />
+                    </div>
+                    <div>
+                      <slider-input
+                        :number-input-enabled="false"
+                        slim
+                        :title="(overrides[String(stop)].lightness !== -1 ? '* ' : '') + 'Lightness'"
+                        :value="overrides[String(stop)].lightness !== -1 ? overrides[String(stop)].lightness : hsl[2]"
+                        @input="overrideValue($event, stop, 'lightness')"
+                        :min="0"
+                        :max="100"
+                      />
+                    </div>
+                  </div>
+
+                </div>
+                <div class="w-1/12 flex items-center justify-center ">
+                  <div
+                    class="px-4 py-3 bg-theme-900 cursor-pointer text-white border border-theme-800"
+                    :class="{ 'opacity-10': !override }"
+                    @click="resetOverride(stop)"
+                  >
+                    <i class="fas fa-undo"></i>
+                  </div>
+                </div>
               </div>
             </div>
+
           </div>
         </div>
 
-        <div class="w-full md:w-1/3 pr-6 pl-2 mt-6">
+        <div class="w-full md:w-1/3 pr-6 pl-2 mt-4">
           <div class="border border-theme-600 pb-2">
             <div class="flex items-center leading-none border-b border-theme-600">
               <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">1</p>
@@ -53,7 +92,7 @@
 
                 <div class="flex-grow">
                   <div>
-                    <range-picker
+                    <slider-input
                       title="Hue"
                       v-model="hsl[0]"
                       :min="0"
@@ -61,7 +100,7 @@
                     />
                   </div>
                   <div>
-                    <range-picker
+                    <slider-input
                       title="Saturation"
                       v-model="hsl[1]"
                       :min="0"
@@ -69,7 +108,7 @@
                     />
                   </div>
                   <div>
-                    <range-picker
+                    <slider-input
                       title="Lightness"
                       v-model="hsl[2]"
                       :min="0"
@@ -89,7 +128,7 @@
               </div>
             </div>
             <div class="mb-2 px-2">
-              <range-picker
+              <slider-input
                 title="Step up %"
                 v-model="groupOptions.stepUp"
                 :min="3"
@@ -97,7 +136,7 @@
               />
             </div>
             <div class="mb-2 px-2">
-              <range-picker
+              <slider-input
                 title="Step down %"
                 v-model="groupOptions.stepDown"
                 :min="3"
@@ -146,15 +185,16 @@
 <script>
 import converter from 'color-convert'
 import { ntc } from '@/lib/ntc.js'
-import RangePicker from '@/components/RangePicker'
+import SliderInput from '@/components/SliderInput'
 import PrismComponent from 'vue-prism-component'
+import _ from 'lodash'
 
 export default {
   props: {
     initial: String,
   },
   components: {
-    RangePicker,
+    SliderInput,
     PrismComponent,
   },
   data() {
@@ -180,6 +220,7 @@ export default {
           t: 150,
         },
       },
+      overrides: {},
     }
   },
   watch: {
@@ -226,9 +267,31 @@ export default {
         let lightness = this.clamp(hsl[2] + direction * distance, 0, 100)
         let hex = converter.rgb.hex(converter.hsl.rgb([hsl[0], hsl[1], lightness]))
 
+        let override = this.overrides[String(stop)]
+
+        // If overriden = calculate hex and text color.
+        let overriden =
+          override &&
+          ((override?.saturation !== -1 && override?.saturation !== hsl[1]) ||
+            (override?.lightness !== -1 && override?.lightness !== lightness))
+        if (overriden) {
+          let overrideHSL = [hsl[0], hsl[1], lightness]
+          if (override.saturation !== -1 && override.saturation !== hsl[1]) {
+            overrideHSL[1] = override.saturation
+          }
+          if (override.lightness !== -1 && override.lightness !== lightness) {
+            overrideHSL[2] = override.lightness
+          }
+
+          override.hex = converter.rgb.hex(converter.hsl.rgb(overrideHSL))
+          override.textColor = this.textColorFromBrightness(override.hex)
+        }
+
         return {
-          stop,
+          stop: stop,
           hex,
+          override: overriden ? override : false,
+          hsl: [hsl[0], hsl[1], lightness],
           textColor: this.textColorFromBrightness(hex),
         }
       })
@@ -244,11 +307,18 @@ export default {
     },
   },
   mounted() {
+    for (let i in this.stops) {
+      this.$set(this.overrides, [this.stops[i]], this.defaultOverridable())
+    }
+
     if (!this.parseURLHash()) {
       this.hsl = [...this.initialHSL]
     }
   },
   methods: {
+    defaultOverridable() {
+      return { saturation: -1, lightness: -1 }
+    },
     updateURLHash() {
       clearTimeout(this.delay.hash.n)
       this.delay.hash.n = setTimeout(() => {
@@ -262,6 +332,20 @@ export default {
         'step-down': this.groupOptions.stepDown,
         name: this.code.name,
       }
+
+      let defaultOverridable = this.defaultOverridable()
+      let urlOverridables = {}
+      for (let i in this.overrides) {
+        let override = this.overrides[i]
+        if (!_.isEqual(override, defaultOverridable)) {
+          urlOverridables[i] = override
+        }
+      }
+
+      if (Object.entries(urlOverridables)) {
+        parts.overrides = window.btoa(JSON.stringify(urlOverridables))
+      }
+
       return Object.entries(parts)
         .map(part => part.map(encodeURIComponent).join('='))
         .join('&')
@@ -295,6 +379,17 @@ export default {
       let namePattern = new RegExp(/[A-z /]+$/i)
       if (!namePattern.test(name)) {
         return
+      }
+
+      let urlOverridesRaw = parts.find(p => p[0] === 'overrides')[1]
+      if (urlOverridesRaw) {
+        let urlOverrides = ''
+        try {
+          urlOverrides = JSON.parse(window.atob(urlOverridesRaw))
+        } catch {
+          return
+        }
+        this.overrides = Object.assign({}, this.overrides, urlOverrides)
       }
 
       // Set shades.
@@ -341,6 +436,19 @@ export default {
 
       codeInput.setAttribute('type', 'hidden')
       window.getSelection().removeAllRanges()
+    },
+    resetOverride(stop) {
+      if (!stop) {
+        return
+      }
+
+      // Set default values.
+      this.$set(this.overrides, String(stop), this.defaultOverridable())
+    },
+    overrideValue(event, stop, attribute) {
+      if (this.overrides[String(stop)][attribute]) {
+        this.overrides[String(stop)][attribute] = event
+      }
     },
   },
   filters: {

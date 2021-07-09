@@ -5,6 +5,10 @@ module.exports = {
       center: true,
     },
     extend: {
+      opacity: {
+        '10': 0.1,
+        '20': 0.2,
+      },
       colors: {
         theme: {
           default: 'var(--color-theme)',

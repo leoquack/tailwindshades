@@ -96,7 +96,14 @@ input[type='range'] {
       height: 20px;
       -webkit-appearance: none;
       background-color: theme('colors.theme.600');
+      &.slim {
+        height: 2px;
+        margin-top: 8px;
+        margin-bottom: 8px;
+        overflow: visible;
+      }
     }
+
     &::-webkit-slider-thumb {
       width: 20px;
       -webkit-appearance: none;

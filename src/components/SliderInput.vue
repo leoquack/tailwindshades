@@ -1,11 +1,22 @@
 <template>
   <div>
-    <label class="block font-bold text-xs select-none ml-1">
+    <label
+      class="block text-xs select-none"
+      :class="numberInputEnabled ? 'ml-1 font-bold' : 'text-center font-normal'"
+    >
       {{ title }}
-      <span class="font-normal">{{ min }} - {{ max }}</span>
+      <span
+        class="font-normal"
+        v-if="numberInputEnabled"
+      >{{ min }} - {{ max }}</span>
+      <span
+        class="font-normal"
+        v-else
+      >{{ Number(value).toFixed(2) }}</span>
     </label>
     <div class="flex flex-wrap">
       <input
+        v-if="numberInputEnabled"
         class="appearance-none rounded-full w-12 px-1 text-xs text-theme-lighter mr-1 bg-theme-600"
         :id="kebabTitle"
         type="number"
@@ -16,6 +27,7 @@
       >
       <input
         class="flex-grow"
+        :class="{ 'slim': slim }"
         :id="kebabTitle + '-range'"
         type="range"
         :min="min"
@@ -29,12 +41,17 @@
 
 <script>
 export default {
-  name: 'ranger-picker',
+  name: 'slider-input',
   props: {
     title: String,
     value: Number,
     min: Number,
     max: Number,
+    numberInputEnabled: {
+      type: Boolean,
+      default: true,
+    },
+    slim: Boolean,
   },
   computed: {
     kebabTitle() {
