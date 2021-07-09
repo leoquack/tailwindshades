@@ -245,8 +245,8 @@ export default {
       let shades = [`  DEFAULT: '#${this.result.color.hex}'`]
 
       shades.push(
-        ...this.result.shades.map(({ stop, hex }) => {
-          return `  '${stop * 100}': '#${hex}'`
+        ...this.result.shades.map(({ stop, hex, override }) => {
+          return `  '${stop * 100}': '#${override ? override.hex : hex}'`
         })
       )
 
