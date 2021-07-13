@@ -3,6 +3,7 @@
     <label
       class="block text-xs select-none"
       :class="numberInputEnabled ? 'ml-1 font-bold' : 'text-center font-normal'"
+      v-if="!slim"
     >
       {{ title }}
       <span
@@ -14,7 +15,7 @@
         v-else
       >{{ Number(value).toFixed(2) }}</span>
     </label>
-    <div class="flex flex-wrap">
+    <div class="flex flex-wrap relative">
       <input
         v-if="numberInputEnabled"
         class="appearance-none rounded-full w-12 px-1 text-xs text-theme-lighter mr-1 bg-theme-600"
@@ -25,6 +26,11 @@
         :max="max"
         @input="$emit('input', parseInt($event.target.value))"
       >
+      <div
+        v-if="slim"
+        style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+        class="select-none text-xs pointer-events-none text-theme-300 light:text-theme-800"
+      >{{ title }}</div>
       <input
         class="flex-grow"
         :class="{ 'slim': slim }"

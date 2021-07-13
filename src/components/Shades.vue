@@ -10,55 +10,90 @@
       >
         <div class="flex flex-col w-full md:w-2/3 px-2 md:h-full">
           <div class="flex flex-col h-full mt-4">
+            <div class="flex text-xs select-none">
+              <div class="w-5/12 xl:3/12 2xl:w-2/12 px-2 border border-theme-600 border-r-0 border-b-0 flex justify-between">
+                <p>Fine tune (do this last)</p>
+                <a
+                  v-if="hasOverrides"
+                  class="underline cursor-pointer hover:bg-theme text-blue hover:text-blue-600 px-2"
+                  @click="resetOverrides"
+                >reset</a>
+              </div>
+              <div class="w-7/12 xl:9/12 2xl:w-10/12 px-2 border border-theme-600 border-b-0">Result</div>
+            </div>
             <div
               v-for="{ stop, hex, hsl, override, textColor } in result.shades"
               :key="'shade-' + stop * 100"
-              :class="[ 'px-2 flex flex-grow', { 'font-black': stop === 5 } ]"
+              :class="[ 'flex flex-grow', { 'font-black': stop === 5 } ]"
               :style="`background-color: #${(override ? override.hex : hex)}; color: ${(override ? override.textColor : textColor)};`"
             >
               <div class="flex w-full justify-between items-center">
-                <p class="w-3/12 text-xs">({{ stop * 100 }})</p>
-                <p class="w-6/12 text-center">#{{ override ? override.hex : hex }}</p>
-                <div class="w-2/12">
-
-                  <div class="flex-grow">
-                    <div>
-                      <slider-input
-                        :number-input-enabled="false"
-                        slim
-                        :title="(overrides[String(stop)].saturation !== -1 ? '* ' : '') + 'Saturation'"
-                        :value="overrides[String(stop)].saturation !== -1 ? overrides[String(stop)].saturation : hsl[1]"
-                        @input="overrideValue($event, stop, 'saturation')"
-                        :min="0"
-                        :max="100"
-                      />
+                <div class="w-5/12 xl:3/12 2xl:w-2/12 h-full">
+                  <div
+                    class="flex justify-center items-center h-full text-theme bg-theme border border-theme-600"
+                    :class="{'border-t-0': stops[0] !== stop }"
+                  >
+                    <div class="w-3/12 flex">
+                      <div
+                        class="px-2 py-3 ml-2 bg-theme-900 cursor-pointer text-white border border-theme-800"
+                        :class="{ 'opacity-10': !override }"
+                        @click="resetOverride(stop)"
+                      >
+                        <i class="fas fa-undo"></i>
+                      </div>
                     </div>
-                    <div>
-                      <slider-input
-                        :number-input-enabled="false"
-                        slim
-                        :title="(overrides[String(stop)].lightness !== -1 ? '* ' : '') + 'Lightness'"
-                        :value="overrides[String(stop)].lightness !== -1 ? overrides[String(stop)].lightness : hsl[2]"
-                        @input="overrideValue($event, stop, 'lightness')"
-                        :min="0"
-                        :max="100"
-                      />
+                    <div class="w-9/12">
+                      <div class="flex-grow mr-2">
+                        <div>
+                          <slider-input
+                            :number-input-enabled="false"
+                            slim
+                            :title="(overrides[String(stop)].hue !== -1 ? '* ' : '') + 'Hue'"
+                            :value="overrides[String(stop)].hue !== -1 ? overrides[String(stop)].hue : hsl[0]"
+                            @input="overrideValue($event, stop, 'hue')"
+                            :min="0"
+                            :max="360"
+                          />
+                        </div>
+                        <div>
+                          <slider-input
+                            :number-input-enabled="false"
+                            slim
+                            :title="(overrides[String(stop)].saturation !== -1 ? '* ' : '') + 'Saturation'"
+                            :value="overrides[String(stop)].saturation !== -1 ? overrides[String(stop)].saturation : hsl[1]"
+                            @input="overrideValue($event, stop, 'saturation')"
+                            :min="0"
+                            :max="100"
+                          />
+                        </div>
+                        <div>
+                          <slider-input
+                            :number-input-enabled="false"
+                            slim
+                            :title="(overrides[String(stop)].lightness !== -1 ? '* ' : '') + 'Lightness'"
+                            :value="overrides[String(stop)].lightness !== -1 ? overrides[String(stop)].lightness : hsl[2]"
+                            @input="overrideValue($event, stop, 'lightness')"
+                            :min="0"
+                            :max="100"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
-
                 </div>
-                <div class="w-1/12 flex items-center justify-center ">
-                  <div
-                    class="px-4 py-3 bg-theme-900 cursor-pointer text-white border border-theme-800"
-                    :class="{ 'opacity-10': !override }"
-                    @click="resetOverride(stop)"
-                  >
-                    <i class="fas fa-undo"></i>
+
+                <div class="w-7/12 xl:9/12 2xl:w-10/12 text-center">
+                  <div class="px-2">
+                    <p class="text-xs leading-2">
+                      {{ stop * 100 }}
+                    </p>
+                    <p class="leading-4">
+                      #{{ override ? override.hex : hex }}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -238,6 +273,9 @@ export default {
     },
   },
   computed: {
+    hasOverrides() {
+      return !_.isEqual(this.overrides, this.defaultOverrides())
+    },
     resultBaseShade() {
       return this.result.color.hex
     },
@@ -272,10 +310,14 @@ export default {
         // If overriden = calculate hex and text color.
         let overriden =
           override &&
-          ((override?.saturation !== -1 && override?.saturation !== hsl[1]) ||
+          ((override?.hue !== -1 && override?.hue !== hsl[0]) ||
+            (override?.saturation !== -1 && override?.saturation !== hsl[1]) ||
             (override?.lightness !== -1 && override?.lightness !== lightness))
         if (overriden) {
           let overrideHSL = [hsl[0], hsl[1], lightness]
+          if (override.hue !== -1 && override.hue !== hsl[0]) {
+            overrideHSL[0] = override.hue
+          }
           if (override.saturation !== -1 && override.saturation !== hsl[1]) {
             overrideHSL[1] = override.saturation
           }
@@ -307,17 +349,25 @@ export default {
     },
   },
   mounted() {
-    for (let i in this.stops) {
-      this.$set(this.overrides, [this.stops[i]], this.defaultOverridable())
-    }
-
+    this.resetOverrides()
     if (!this.parseURLHash()) {
       this.hsl = [...this.initialHSL]
     }
   },
   methods: {
+    resetOverrides() {
+      this.overrides = Object.assign({}, this.overrides, this.defaultOverrides())
+    },
+    defaultOverrides() {
+      let o = {}
+      for (let i in this.stops) {
+        o[this.stops[i]] = this.defaultOverridable()
+      }
+
+      return o
+    },
     defaultOverridable() {
-      return { saturation: -1, lightness: -1 }
+      return { hue: -1, saturation: -1, lightness: -1 }
     },
     updateURLHash() {
       clearTimeout(this.delay.hash.n)
@@ -446,7 +496,7 @@ export default {
       this.$set(this.overrides, String(stop), this.defaultOverridable())
     },
     overrideValue(event, stop, attribute) {
-      if (this.overrides[String(stop)][attribute]) {
+      if (this.overrides[String(stop)][attribute] !== undefined) {
         this.overrides[String(stop)][attribute] = event
       }
     },

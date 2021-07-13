@@ -5,6 +5,9 @@ module.exports = {
       center: true,
     },
     extend: {
+      screens: {
+        '2xl': '1536px',
+      },
       opacity: {
         '10': 0.1,
         '20': 0.2,
