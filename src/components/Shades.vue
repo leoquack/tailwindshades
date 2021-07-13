@@ -10,7 +10,7 @@
       >
         <div class="flex flex-col w-full md:w-2/3 px-2 md:h-full">
           <div class="flex flex-col h-full mt-4">
-            <div class="flex text-xs select-none">
+            <div class="flex text-xs select-none text-center">
               <div class="w-5/12 xl:3/12 2xl:w-2/12 px-2 border border-theme-600 border-r-0 border-b-0 flex justify-between">
                 <p>Fine tune (do this last)</p>
                 <a
@@ -19,7 +19,7 @@
                   @click="resetOverrides"
                 >reset</a>
               </div>
-              <div class="w-7/12 xl:9/12 2xl:w-10/12 px-2 border border-theme-600 border-b-0">Result</div>
+              <div class="w-7/12 xl:9/12 2xl:w-10/12 px-2 border border-theme-600 border-b-0"></div>
             </div>
             <div
               v-for="{ stop, hex, hsl, override, textColor } in result.shades"
@@ -35,7 +35,7 @@
                   >
                     <div class="w-3/12 flex">
                       <div
-                        class="px-2 py-3 ml-2 bg-theme-900 cursor-pointer text-white border border-theme-800"
+                        class="px-2 py-3 ml-2 bg-theme-700 cursor-pointer text-white"
                         :class="{ 'opacity-10': !override }"
                         @click="resetOverride(stop)"
                       >
