@@ -34,7 +34,7 @@
     "postcss-loader": "^3.0.0",
     "postcss-nested": "^4.1.2",
     "serialize-javascript": "^3.1.0",
-    "tailwindcss": "^1.8.12",
+    "tailwindcss": "^1.9.0",
     "vue-template-compiler": "2.6.11"
   },
   "eslintConfig": {
