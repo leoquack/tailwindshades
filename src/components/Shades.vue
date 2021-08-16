@@ -18,6 +18,11 @@
                   class="underline cursor-pointer hover:bg-theme text-blue hover:text-blue-600 px-2"
                   @click="resetOverrides"
                 >reset</a>
+                <!-- <a
+                  v-if="!hasOverrides"
+                  class="underline cursor-pointer hover:bg-theme text-blue hover:text-blue-600 px-2"
+                  @click="auto"
+                >auto</a> -->
               </div>
               <div class="w-7/12 xl:9/12 2xl:w-10/12 px-2 border border-theme-600 border-b-0"></div>
             </div>
@@ -237,8 +242,8 @@ export default {
       stops: [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       hsl: [],
       groupOptions: {
-        stepUp: 10,
-        stepDown: 10,
+        stepUp: 8,
+        stepDown: 11,
       },
       code: {
         visible: true,
@@ -307,7 +312,6 @@ export default {
 
         let override = this.overrides[String(stop)]
 
-        // If overriden = calculate hex and text color.
         let overriden =
           override &&
           ((override?.hue !== -1 && override?.hue !== hsl[0]) ||
@@ -355,6 +359,35 @@ export default {
     }
   },
   methods: {
+    mod(n, m) {
+      return ((n % m) + m) % m
+    },
+    auto() {
+      // Just playing around.
+      const baseShade = this.result.shades[5]
+      const HSLNames = ['hue', 'saturation', 'lightness']
+
+      for (let i in this.result.shades) {
+        let currentShade = this.result.shades[i]
+        if (currentShade.stop == 5) {
+          continue
+        }
+
+        i = parseInt(i)
+        let scale = Math.abs(i - 5)
+
+        // Looping HSL values here [h, s, l].
+        for (let j = 0; j <= 2; j++) {
+          let diff = Math.abs(currentShade.hsl[j] - baseShade.hsl[j]) || baseShade.hsl[j] / scale
+          let add = Math.log(scale) / Math.log(diff)
+          add = Math.exp(add * scale)
+          if (j === 2) {
+            console.log(i, add)
+          }
+          this.overrideValue(currentShade.hsl[j] + add, currentShade.stop, HSLNames[j])
+        }
+      }
+    },
     resetOverrides() {
       this.overrides = Object.assign({}, this.overrides, this.defaultOverrides())
     },
@@ -412,7 +445,6 @@ export default {
         return
       }
 
-      // Validate values.
       let color = parts.find(p => p[0] === 'color')[1]
       let hexPattern = new RegExp(/^#?[a-f0-9]{6}$/i)
       if (!hexPattern.test(color)) {
@@ -442,7 +474,6 @@ export default {
         this.overrides = Object.assign({}, this.overrides, urlOverrides)
       }
 
-      // Set shades.
       this.hsl = converter.rgb.hsl.raw(converter.hex.rgb('#' + color))
       this.groupOptions.stepUp = stepUp
       this.groupOptions.stepDown = stepDown
@@ -492,12 +523,20 @@ export default {
         return
       }
 
-      // Set default values.
       this.$set(this.overrides, String(stop), this.defaultOverridable())
     },
-    overrideValue(event, stop, attribute) {
+    overrideValue(value, stop, attribute) {
+      if (value < 0) {
+        value = 0
+      } else if (attribute === 'hue' && value > 360) {
+        value = 360
+      } else if (attribute === 'saturation' && value > 100) {
+        value = 100
+      } else if (attribute === 'lightness' && value > 100) {
+        value = 100
+      }
       if (this.overrides[String(stop)][attribute] !== undefined) {
-        this.overrides[String(stop)][attribute] = event
+        this.overrides[String(stop)][attribute] = value
       }
     },
   },

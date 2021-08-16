@@ -51,12 +51,11 @@
           <div class="flex justify-between h-12 mt-2">
             <div
               class="flex-grow cursor-pointer"
-              :class="{ 'border-2 light:border-black': hex === color.hex}"
-              :style="`background-color: ${color.hex};`"
+              :class="{ 'border-2 light:border-black': hex === color}"
+              :style="`background-color: ${color};`"
               v-for="color in defaultTailwindPaletteBaseColors"
-              :key="'tailwind-default-base-' + color.name"
-              :title="color.name"
-              @click="hex = color.hex, focus = 'suggestion'"
+              :key="'tailwind-default-base-' + color"
+              @click="hex = color, focus = 'suggestion'"
             ></div>
           </div>
         </div>
@@ -138,16 +137,14 @@ export default {
       step: 'base',
       hex: '',
       defaultTailwindPaletteBaseColors: [
-        { name: 'gray', hex: '#A0AEC0' },
-        { name: 'red', hex: '#F56565' },
-        { name: 'orange', hex: '#ED8936' },
-        { name: 'yellow', hex: '#ECC94B' },
-        { name: 'green', hex: '#48BB78' },
-        { name: 'teal', hex: '#38B2AC' },
-        { name: 'blue', hex: '#4299E1' },
-        { name: 'indigo', hex: '#667EEA' },
-        { name: 'purple', hex: '#9F7AEA' },
-        { name: 'pink', hex: '#ED64A6' },
+        '#6B7280',
+        '#EF4444',
+        '#F59E0B',
+        '#10B981',
+        '#3B82F6',
+        '#6366F1',
+        '#8B5CF6',
+        '#EC4899',
       ],
       hasURLHash: window.location.hash.length > 2,
     }

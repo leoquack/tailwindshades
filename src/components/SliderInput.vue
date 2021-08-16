@@ -38,7 +38,7 @@
           v-if="slim"
           style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"
           class="select-none text-xs pointer-events-none text-theme-300 light:text-theme-800"
-        >{{ title }}</div>
+        >{{ title }} - {{ Number(value).toFixed(0) }}</div>
         <input
           class="flex-grow"
           :class="{ 'slim': slim }"
