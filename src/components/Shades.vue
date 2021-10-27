@@ -362,8 +362,8 @@ export default {
     mod(n, m) {
       return ((n % m) + m) % m
     },
+    // auto is not used currently.
     auto() {
-      // Just playing around.
       const baseShade = this.result.shades[5]
       const HSLNames = ['hue', 'saturation', 'lightness']
 
@@ -410,7 +410,7 @@ export default {
     },
     urlHash() {
       let parts = {
-        color: this.result.color.hex,
+        color: this.result.color.hsl,
         'step-up': this.groupOptions.stepUp,
         'step-down': this.groupOptions.stepDown,
         name: this.code.name,
@@ -435,20 +435,29 @@ export default {
     },
     parseURLHash() {
       if (window.location.hash.length < 2) {
-        return
+        return false
       }
       let h = window.location.hash.substring(1)
       let parts = h.split('&').map(part => part.split('=').map(decodeURIComponent))
 
       // All "parameters" should have value.
       if (!parts.every(p => p[1]?.length > 0)) {
-        return
+        return false
       }
 
-      let color = parts.find(p => p[0] === 'color')[1]
-      let hexPattern = new RegExp(/^#?[a-f0-9]{6}$/i)
-      if (!hexPattern.test(color)) {
-        return
+      // color must be a valid hsl (3 numbers, comma separated).
+      let color = parts
+        .find(p => p[0] === 'color')[1]
+        ?.split(',')
+        ?.map(Number)
+      if (!color || color.length < 2) {
+        // accepting HEX value only for backwards compatible URLs.
+        let color = parts.find(p => p[0] === 'color')[1]
+        let hexPattern = new RegExp(/^#?[a-f0-9]{6}$/i)
+        if (!hexPattern.test(color)) {
+          return false
+        }
+        color = converter.rgb.hsl.raw(converter.hex.rgb('#' + color))
       }
 
       let stepUp = parts.find(p => p[0] === 'step-up')[1]
@@ -460,7 +469,7 @@ export default {
       let name = parts.find(p => p[0] === 'name')[1]
       let namePattern = new RegExp(/[A-z /]+$/i)
       if (!namePattern.test(name)) {
-        return
+        return false
       }
 
       let urlOverridesRaw = parts.find(p => p[0] === 'overrides')
@@ -469,12 +478,12 @@ export default {
         try {
           urlOverrides = JSON.parse(window.atob(urlOverridesRaw[1]))
         } catch {
-          return
+          return false
         }
         this.overrides = Object.assign({}, this.overrides, urlOverrides)
       }
 
-      this.hsl = converter.rgb.hsl.raw(converter.hex.rgb('#' + color))
+      this.hsl = color
       this.groupOptions.stepUp = stepUp
       this.groupOptions.stepDown = stepDown
       this.$nextTick(() => (this.code.name = name))
