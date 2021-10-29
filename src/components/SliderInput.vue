@@ -1,10 +1,11 @@
 <template>
-  <div>
-    <label
+  <div class="select-none">
+    <div
       class="block text-xs select-none"
       :class="numberInputEnabled ? 'ml-1 font-bold' : 'text-center font-normal'"
       v-if="!slim"
     >
+      <slot></slot>
       {{ title }}
       <span
         class="font-normal"
@@ -14,7 +15,7 @@
         class="font-normal"
         v-else
       >{{ Number(value).toFixed(2) }}</span>
-    </label>
+    </div>
     <div class="flex flex-wrap relative">
       <input
         v-if="numberInputEnabled"
@@ -38,7 +39,7 @@
           v-if="slim"
           style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"
           class="select-none text-xs pointer-events-none text-theme-300 light:text-theme-800"
-        >{{ title }} - {{ Number(value).toFixed(0) }}</div>
+        >{{ title }}: {{ Number(value).toFixed(0) }}</div>
         <input
           class="flex-grow"
           :class="{ 'slim': slim }"
@@ -55,6 +56,13 @@
           @click="step(1)"
         >
           <i class="fas fa-angle-right"></i>
+        </div>
+        <div
+          class="ml-1 text-theme-200 light:text-theme-800 hover:text-blue cursor-pointer rounded-lg text-xs"
+          v-if="restorable"
+          @click="$emit('input', restoreValue)"
+        >
+          <i class="fas fa-undo"></i>
         </div>
       </div>
     </div>
@@ -74,11 +82,27 @@ export default {
       default: true,
     },
     slim: Boolean,
+    restorable: Boolean,
+    restoreTo: Number,
+  },
+  data() {
+    return {
+      initialValue: null,
+    }
   },
   computed: {
     kebabTitle() {
       return this.toKebabCase(this.title)
     },
+    restoreValue() {
+      if (isNaN(this.restoreTo)) {
+        return this.initialValue
+      }
+      return Number(this.restoreTo)
+    },
+  },
+  mounted() {
+    this.initialValue = this.value
   },
   methods: {
     step(amount) {

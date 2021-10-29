@@ -189,6 +189,23 @@
                 :max="20"
               />
             </div>
+            <div class="mb-2 px-2">
+
+              <slider-input
+                title="Hue shift"
+                restorable
+                :restore-to="0"
+                :value="groupOptions.hueShift"
+                @input="groupOptions.hueShift = $event"
+                :min="-100"
+                :max="100"
+              >
+                <span
+                  class="bg-theme-200 text-theme-lighter px-1 text-xs font-bold"
+                  style="font-size: .6rem"
+                >NEW</span>
+              </slider-input>
+            </div>
           </div>
 
           <div
@@ -250,6 +267,7 @@ export default {
       groupOptions: {
         stepUp: 8,
         stepDown: 11,
+        hueShift: 0,
       },
       code: {
         visible: true,
@@ -311,10 +329,20 @@ export default {
       let rgb = converter.hsl.rgb(hsl)
 
       let shades = this.stops.map(stop => {
-        let distance = 5 - stop
+        const distance = 5 - stop
         let direction = distance > 0 ? stepUp : stepDown
         let lightness = this.clamp(hsl[2] + direction * distance, 0, 100)
-        let hex = converter.rgb.hex(converter.hsl.rgb([hsl[0], hsl[1], lightness]))
+
+        let hue = hsl[0]
+        if (this.groupOptions.hueShift !== 0) {
+          const hsh = (this.groupOptions.hueShift * distance) / 10
+          if (hue + hsh < 0) {
+            hue += 360
+          }
+          hue += hsh
+        }
+
+        const hex = converter.rgb.hex(converter.hsl.rgb([hue, hsl[1], lightness]))
 
         let override = this.overrides[String(stop)]
 
@@ -343,7 +371,7 @@ export default {
           stop: stop,
           hex,
           override: overriden ? override : false,
-          hsl: [hsl[0], hsl[1], lightness],
+          hsl: [hue, hsl[1], lightness],
           textColor: this.textColorFromBrightness(hex),
         }
       })
@@ -416,6 +444,7 @@ export default {
         color: this.result.color.hsl,
         'step-up': this.groupOptions.stepUp,
         'step-down': this.groupOptions.stepDown,
+        'hue-shift': this.groupOptions.hueShift,
         name: this.code.name,
       }
 
@@ -463,11 +492,26 @@ export default {
         color = converter.rgb.hsl.raw(converter.hex.rgb('#' + color))
       }
 
-      let stepUp = parts.find(p => p[0] === 'step-up')[1]
-      stepUp = this.clamp(parseInt(stepUp), 0, 12)
+      let lookup = parts.find(p => p[0] === 'step-up')
+      if (lookup?.length) {
+        let stepUp = lookup[1]
+        stepUp = this.clamp(parseInt(stepUp), 0, 12)
+        this.groupOptions.stepUp = stepUp
+      }
 
-      let stepDown = parts.find(p => p[0] === 'step-down')[1]
-      stepDown = this.clamp(parseInt(stepDown), 0, 12)
+      lookup = parts.find(p => p[0] === 'step-down')
+      if (lookup?.length) {
+        let stepDown = lookup[1]
+        stepDown = this.clamp(parseInt(stepDown), 0, 12)
+        this.groupOptions.stepDown = stepDown
+      }
+
+      lookup = parts.find(p => p[0] === 'hue-shift')
+      if (lookup?.length) {
+        let hueShift = lookup[1]
+        hueShift = this.clamp(parseInt(hueShift), -100, 100)
+        this.groupOptions.hueShift = hueShift
+      }
 
       let name = parts.find(p => p[0] === 'name')[1]
       let namePattern = new RegExp(/[A-z /]+$/i)
@@ -487,8 +531,6 @@ export default {
       }
 
       this.hsl = color
-      this.groupOptions.stepUp = stepUp
-      this.groupOptions.stepDown = stepDown
       this.$nextTick(() => (this.code.name = name))
 
       return true
