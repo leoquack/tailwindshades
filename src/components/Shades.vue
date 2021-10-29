@@ -11,7 +11,7 @@
         <div class="flex flex-col w-full md:w-2/3 px-2 md:h-full">
           <div class="flex flex-col h-full mt-4">
             <div class="flex text-xs select-none text-center">
-              <div class="w-5/12 xl:3/12 2xl:w-2/12 px-2 border border-theme-600 border-r-0 border-b-0 flex justify-between">
+              <div class="w-80 px-2 border border-theme-600 border-r-0 border-b-0 flex justify-between">
                 <p>Fine tune (do this last)</p>
                 <a
                   v-if="hasOverrides"
@@ -24,19 +24,25 @@
                   @click="auto"
                 >auto</a> -->
               </div>
-              <div class="w-7/12 xl:9/12 2xl:w-10/12 px-2 border border-theme-600 border-b-0"></div>
+              <div class="flex-grow px-2 border border-theme-600 border-b-0"></div>
             </div>
             <div
               v-for="{ stop, hex, hsl, override, textColor } in result.shades"
               :key="'shade-' + stop * 100"
-              :class="[ 'flex flex-grow', { 'font-black': stop === 5 } ]"
+              class="border-l border-r border-theme-600"
+              :class="[
+                'flex flex-grow',
+                { 'font-black': stop === 5 },
+                { 'border-t': stops[0] === stop},
+                { 'border-b': stops[stops.length - 1] === stop}
+              ]"
               :style="`background-color: #${(override ? override.hex : hex)}; color: ${(override ? override.textColor : textColor)};`"
             >
               <div class="flex w-full justify-between items-center">
-                <div class="w-5/12 xl:3/12 2xl:w-2/12 h-full">
+                <div class="w-80 h-full">
                   <div
-                    class="flex justify-center items-center h-full text-theme bg-theme border border-theme-600"
-                    :class="{'border-t-0': stops[0] !== stop }"
+                    class="flex justify-center items-center h-full text-theme bg-theme"
+                    :class="[{'border-t-0': stops[0] !== stop}, (override ? 'opacity-100': 'opacity-90 hover:opacity-100') ]"
                   >
                     <div class="w-3/12 flex">
                       <div
@@ -87,7 +93,7 @@
                   </div>
                 </div>
 
-                <div class="w-7/12 xl:9/12 2xl:w-10/12 text-center">
+                <div class="flex-grow text-center">
                   <div class="px-2">
                     <p class="text-xs leading-2">
                       {{ stop * 100 }}
