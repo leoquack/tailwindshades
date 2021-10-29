@@ -452,7 +452,7 @@ export default {
         ?.map(Number)
       if (!color || color.length < 2) {
         // accepting HEX value only for backwards compatible URLs.
-        let color = parts.find(p => p[0] === 'color')[1]
+        color = parts.find(p => p[0] === 'color')[1]
         let hexPattern = new RegExp(/^#?[a-f0-9]{6}$/i)
         if (!hexPattern.test(color)) {
           return false
