@@ -387,9 +387,6 @@ export default {
           let diff = Math.abs(currentShade.hsl[j] - baseShade.hsl[j]) || baseShade.hsl[j] / scale
           let add = Math.log(scale) / Math.log(diff)
           add = Math.exp(add * scale)
-          if (j === 2) {
-            console.log(i, add)
-          }
           this.overrideValue(currentShade.hsl[j] + add, currentShade.stop, HSLNames[j])
         }
       }
