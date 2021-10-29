@@ -14,7 +14,7 @@ module.exports = {
       },
       colors: {
         theme: {
-          default: 'var(--color-theme)',
+          DEFAULT: 'var(--color-theme)',
           lighter: 'var(--color-theme-lighter)',
           darker: 'var(--color-theme-darker)',
           '100': 'var(--color-theme-100)',
@@ -28,7 +28,7 @@ module.exports = {
           '900': 'var(--color-theme-900)',
         },
         blue: {
-          default: '#49BBE9',
+          DEFAULT: '#49BBE9',
           '100': '#FFFFFF',
           '200': '#D2EEF9',
           '300': '#A4DDF4',
@@ -42,7 +42,7 @@ module.exports = {
       },
       textColor: {
         theme: {
-          default: 'var(--color-text-theme)',
+          DEFAULT: 'var(--color-text-theme)',
           lighter: 'var(--color-text-theme-lighter)',
           darker: 'var(--color-text-theme-darker)',
           '100': 'var(--color-theme-100)',
