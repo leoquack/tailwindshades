@@ -336,10 +336,8 @@ export default {
         let hue = hsl[0]
         if (this.groupOptions.hueShift !== 0) {
           const hsh = (this.groupOptions.hueShift * distance) / 10
-          if (hue + hsh < 0) {
-            hue += 360
-          }
-          hue += hsh
+          const max = 360
+          hue = (hue + hsh + max) % max // Clamp number in the hue wheel.
         }
 
         const hex = converter.rgb.hex(converter.hsl.rgb([hue, hsl[1], lightness]))
