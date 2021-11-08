@@ -18,6 +18,14 @@
                   class="underline cursor-pointer hover:bg-theme text-blue hover:text-blue-600 px-2"
                   @click="resetOverrides"
                 >reset</a>
+                <label class="flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    class="form-checkbox"
+                    v-model="fineTuneLimitLightness"
+                  />
+                  <span class="ml-1">limit lightness</span>
+                </label>
                 <!-- <a
                   v-if="!hasOverrides"
                   class="underline cursor-pointer hover:bg-theme text-blue hover:text-blue-600 px-2"
@@ -84,8 +92,8 @@
                             :title="(overrides[String(stop)].lightness !== -1 ? '* ' : '') + 'Lightness'"
                             :value="overrides[String(stop)].lightness !== -1 ? overrides[String(stop)].lightness : hsl[2]"
                             @input="overrideValue($event, stop, 'lightness')"
-                            :min="0"
-                            :max="100"
+                            :min="!fineTuneLimitLightness ? 0 : hslValueAtStop(stops.indexOf(stop) + 1, 2, 0)"
+                            :max="!fineTuneLimitLightness ? 100 : hslValueAtStop(stops.indexOf(stop) - 1, 2, 100)"
                           />
                         </div>
                       </div>
@@ -285,6 +293,8 @@ export default {
         },
       },
       overrides: {},
+      hslNames: ['hue', 'saturation', 'lightness'],
+      fineTuneLimitLightness: false,
     }
   },
   watch: {
@@ -391,13 +401,31 @@ export default {
     }
   },
   methods: {
+    hslValueAtStop(stopIndex, hslIndex, fallback) {
+      if (!this.stops[stopIndex]) {
+        return fallback || 0
+      }
+      const stop = this.stops[stopIndex]
+
+      if (!this.result.shades[stopIndex]) {
+        return fallback || 0
+      }
+
+      if (this.overrides[String(stop)]) {
+        const override = this.overrides[String(stop)][this.hslNames[hslIndex]]
+        if (override !== -1) {
+          return override
+        }
+      }
+
+      return this.result.shades[stopIndex].hsl[hslIndex]
+    },
     mod(n, m) {
       return ((n % m) + m) % m
     },
     // auto is not used currently.
     auto() {
       const baseShade = this.result.shades[5]
-      const HSLNames = ['hue', 'saturation', 'lightness']
 
       for (let i in this.result.shades) {
         let currentShade = this.result.shades[i]
@@ -413,7 +441,7 @@ export default {
           let diff = Math.abs(currentShade.hsl[j] - baseShade.hsl[j]) || baseShade.hsl[j] / scale
           let add = Math.log(scale) / Math.log(diff)
           add = Math.exp(add * scale)
-          this.overrideValue(currentShade.hsl[j] + add, currentShade.stop, HSLNames[j])
+          this.overrideValue(currentShade.hsl[j] + add, currentShade.stop, this.hslNames[j])
         }
       }
     },
