@@ -281,7 +281,7 @@ export default {
       delay: {
         hash: {
           n: null,
-          t: 150,
+          t: 350,
         },
       },
       overrides: {},
