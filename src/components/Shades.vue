@@ -356,12 +356,12 @@ export default {
 
         let overriden =
           override &&
-          ((override?.hue !== -1 && override?.hue !== hsl[0]) ||
+          ((override?.hue !== -1 && override?.hue !== hue) ||
             (override?.saturation !== -1 && override?.saturation !== hsl[1]) ||
             (override?.lightness !== -1 && override?.lightness !== lightness))
         if (overriden) {
-          let overrideHSL = [hsl[0], hsl[1], lightness]
-          if (override.hue !== -1 && override.hue !== hsl[0]) {
+          let overrideHSL = [hue, hsl[1], lightness]
+          if (override.hue !== -1 && override.hue !== hue) {
             overrideHSL[0] = override.hue
           }
           if (override.saturation !== -1 && override.saturation !== hsl[1]) {
