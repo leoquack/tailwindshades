@@ -26,9 +26,9 @@ Vue.prototype.$supabase = createClient(
 
 const theme = localStorage.getItem('theme')
 if (theme === 'light') {
-  store.dispatch('config/changeTheme', 'light')
+  store.commit('setTheme', 'light')
 } else {
-  store.dispatch('config/changeTheme', 'dark')
+  store.commit('setTheme', 'dark')
 }
 
 new Vue({

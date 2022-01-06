@@ -12,14 +12,14 @@
           <button
             type="button"
             class="btn py-1 text-xs md:text-sm focus:outline-none"
-            :class="config.theme === 'light' ? 'bg-blue-400 text-blue-100' : 'border border-theme-600'"
-            @click="changeTheme('light')"
+            :class="theme === 'light' ? 'bg-blue-400 text-blue-100' : 'border border-theme-600'"
+            @click="setTheme('light')"
           >Light</button>
           <button
             type="button"
             class="btn py-1 text-xs md:text-sm focus:outline-none ml-1 md:ml-2"
-            :class="config.theme === 'dark' ? 'bg-blue-600 text-white' : 'border border-theme-600'"
-            @click="changeTheme('dark')"
+            :class="theme === 'dark' ? 'bg-blue-600 text-white' : 'border border-theme-600'"
+            @click="setTheme('dark')"
           >Dark</button>
           <div class="inline-block ml-2 md:ml-8">
             <a
@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import ShadesComponent from '@/components/Shades'
 import CarbonAds from '@/components/CarbonAds'
 import LoginHeaderButton from '@/components/LoginHeaderButton'
@@ -161,7 +161,7 @@ export default {
       return /^#[0-9A-F]{6}$/i.test(hex)
     },
     ...mapGetters({
-      config: 'config/config',
+      theme: 'theme',
     }),
   },
   mounted() {
@@ -228,10 +228,9 @@ export default {
       let brightness = (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000
       return brightness > 125 ? 'black' : 'white'
     },
-    changeTheme(theme) {
-      this['config/changeTheme'](theme)
+    setTheme(theme) {
+      this.$store.commit('setTheme', theme)
     },
-    ...mapActions(['config/changeTheme']),
   },
 }
 </script>

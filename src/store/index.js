@@ -1,11 +1,23 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import modules from './modules'
-
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  modules,
-  // strict: process.env.NODE_ENV !== 'production'
+  state: {
+    theme: 'light',
+    user: {
+      isLoggedIn: false,
+      email: '',
+    },
+  },
+  mutations: {
+    setTheme(state, theme) {
+      state.theme = theme
+    },
+  },
+  actions: {},
+  getters: {
+    theme: state => state.theme,
+  },
 })

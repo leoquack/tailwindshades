@@ -2,7 +2,7 @@
   <div
     id="root"
     class="h-full"
-    :class="'theme-' + config.theme"
+    :class="'theme-' + theme"
   >
     <base-component class="flex flex-col h-full" />
   </div>
@@ -19,7 +19,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      config: 'config/config',
+      theme: 'theme',
     }),
   },
 }
