@@ -2,7 +2,7 @@
   <div>
     <notifications position="bottom right" />
 
-    <div class="bg-theme-lighter px-4 py-4 text-theme">
+    <div class="bg-theme-lighter px-4 py-3 text-theme">
       <div class="flex flex-wrap justify-between items-center">
         <div>
           <p class="text-lg md:text-2xl font-black mb-0 leading-none tracking-wide inline-block logo-text cursor-default">tailwindshades</p>
@@ -38,7 +38,11 @@
               class="text-2xl cursor-pointer text-theme-lighter hover:text-theme"
               target="_blank"
             >
-              <i class="fab fa-github"></i>
+              <img
+                src="/icon/github.svg"
+                alt="Github logo"
+                class="h-8"
+              >
             </a>
           </div>
         </div>
