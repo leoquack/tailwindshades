@@ -9,6 +9,7 @@ import Notifications from 'vue-notification'
 import Maska from 'maska'
 import 'prismjs'
 import '@/assets/css/prism-vsc-dark-plus.css'
+import { createClient } from '@supabase/supabase-js'
 
 Vue.use(VueMeta)
 Vue.use(VueAnalytics, {
@@ -16,8 +17,12 @@ Vue.use(VueAnalytics, {
 })
 Vue.use(Maska)
 Vue.use(Notifications)
-
 Vue.config.productionTip = false
+
+Vue.prototype.$supabase = createClient(
+  'https://tsmcdgolhhtzzotghypz.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MTQ2MDU1MiwiZXhwIjoxOTU3MDM2NTUyfQ.wKYvxV79TzOi82vwodfZjJqf2IRR7hYhxaWyj8cA-lk'
+)
 
 const theme = localStorage.getItem('theme')
 if (theme === 'light') {

@@ -8,6 +8,7 @@
           <p class="text-lg md:text-2xl font-black mb-0 leading-none tracking-wide inline-block logo-text cursor-default">tailwindshades</p>
         </div>
         <div class="w-1/3 text-right flex justify-end items-center">
+          <LoginHeaderButton class="text-left" />
           <button
             type="button"
             class="btn py-1 text-xs md:text-sm focus:outline-none"
@@ -115,12 +116,14 @@
 import { mapGetters, mapActions } from 'vuex'
 import ShadesComponent from '@/components/Shades'
 import CarbonAds from '@/components/CarbonAds'
+import LoginHeaderButton from '@/components/LoginHeaderButton'
 import converter from 'color-convert'
 
 export default {
   components: {
     ShadesComponent,
     CarbonAds,
+    LoginHeaderButton,
   },
   metaInfo: {
     title: 'Tailwind Shades',
