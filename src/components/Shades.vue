@@ -281,11 +281,6 @@ export default {
         visible: true,
         name: '',
       },
-      doubleKey: {
-        t: null,
-        d: 275,
-        k: '',
-      },
       delay: {
         hash: {
           n: null,
@@ -497,6 +492,11 @@ export default {
       }
       let h = window.location.hash.substring(1)
       let parts = h.split('&').map(part => part.split('=').map(decodeURIComponent))
+
+      // Skip parse on authentication redirection.
+      if (parts.find(p => p[0] === 'access_token').length) {
+        return false
+      }
 
       // All "parameters" should have value.
       if (!parts.every(p => p[1]?.length > 0)) {

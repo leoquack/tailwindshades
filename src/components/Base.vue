@@ -108,14 +108,26 @@
           back to base color selection.
         </button>
 
-        <button
-          class="text-theme text-sm hover:text-blue-400 focus:outline-none"
-          @click="copyShareLink"
-          title="Copy share link"
-        >
-          <i class="fas fa-share"></i>
-          share
-        </button>
+        <div>
+          <button
+            v-if="isLoggedIn && shadeIsUnsaved"
+            class="text-theme text-sm hover:text-blue-400 focus:outline-none mr-6"
+            @click="saveShade"
+            title="Save shade"
+          >
+            <i class="fas fa-save"></i>
+            save
+          </button>
+
+          <button
+            class="text-theme text-sm hover:text-blue-400 focus:outline-none"
+            @click="copyShareLink"
+            title="Copy share link"
+          >
+            <i class="fas fa-share"></i>
+            share
+          </button>
+        </div>
       </div>
 
       <shades-component
@@ -153,6 +165,11 @@ export default {
     return {
       isProduction: process.env.NODE_ENV === 'production',
       step: 'base',
+      // shade used for cloud storage.
+      shade: {
+        id: null,
+        code: '',
+      },
       hex: '',
       defaultTailwindPaletteBaseColors: [
         '#6B7280',
@@ -168,6 +185,12 @@ export default {
     }
   },
   computed: {
+    shadeHasUnsavedChanges() {
+      return this.shade.code !== this.$refs.shadesComponent.urlHash()
+    },
+    shadeIsUnsaved() {
+      return !this.shade.id || this.shadeHasUnsavedChanges
+    },
     validHex() {
       let hex = this.hex
       if (this.hex.charAt(0) !== '#') {
@@ -175,7 +198,7 @@ export default {
       }
       return /^#[0-9A-F]{6}$/i.test(hex)
     },
-    ...mapGetters(['theme']),
+    ...mapGetters(['theme', 'user', 'isLoggedIn']),
   },
   mounted() {
     if (process.env.NODE_ENV === 'production') {
@@ -188,6 +211,60 @@ export default {
     window.removeEventListener('hashchange', this.handleHashChange)
   },
   methods: {
+    saveShade() {
+      if (this.shade.id) {
+        this.dbUpdateShade()
+        return
+      }
+      this.dbInsertShade()
+    },
+    async dbUpdateShade() {
+      const { data, error } = await this.$supabase
+        .from('shades')
+        .update({
+          user_id: this.user.id,
+          code: window.location.hash.substring(1),
+        })
+        .match({
+          id: this.shade.id,
+        })
+      if (error) {
+        this.$notify({
+          text: "Couldn't update shade",
+          type: 'error',
+          duration: 4000,
+        })
+        return
+      }
+
+      this.shade = Object.assign({}, this.shade, data[0])
+      this.$notify({
+        text: 'Shade updated successfully',
+        type: 'info',
+        duration: 2000,
+      })
+    },
+    async dbInsertShade() {
+      const { data, error } = await this.$supabase.from('shades').insert({
+        user_id: this.user.id,
+        code: window.location.hash.substring(1),
+      })
+      if (error) {
+        this.$notify({
+          text: "Couldn't save shade",
+          type: 'error',
+          duration: 4000,
+        })
+        return
+      }
+
+      this.shade = Object.assign({}, this.shade, data[0])
+      this.$notify({
+        text: 'Shade saved successfully',
+        type: 'info',
+        duration: 2000,
+      })
+    },
     handleHashChange() {
       this.hasURLHash = window.location.hash.length > 2
       if (!this.hasURLHash) {

@@ -73,7 +73,7 @@
           <div class="px-3 py-2 my-1 cursor-pointer rounded hover:bg-purple-500 hover:text-white">My colors</div>
 
           <div
-            class="px-3 py-1 text-xs mb-1 mt-4 cursor-pointer rounded hover:bg-theme-500 hover:text-white"
+            class="px-3 py-1 text-xs mb-1 mt-4 cursor-pointer rounded hover:bg-theme-500 hover:text-theme"
             @click="signOut"
           >
             <i class="fas fa-sign-out-alt mr-2"></i>
@@ -104,13 +104,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['user']),
-    isLoggedIn() {
-      if (!this.user) {
-        return false
-      }
-      return Object.entries(this.user).length > 0
-    },
+    ...mapGetters(['user', 'isLoggedIn']),
   },
   methods: {
     async signIn3rdParty(provider) {
@@ -118,14 +112,22 @@ export default {
         provider,
       })
       if (error) {
-        console.log(`there was an error in sign in with ${provider}`, error)
+        this.$notify({
+          text: `Couldn't login with ${provider}`,
+          type: 'error',
+          duration: 4000,
+        })
         return
       }
     },
     async signOut() {
       const { error } = await this.$supabase.auth.signOut()
       if (error) {
-        console.log('there was an error in sign out', error)
+        this.$notify({
+          text: "Couldn't sign out",
+          type: 'error',
+          duration: 4000,
+        })
         return
       }
 

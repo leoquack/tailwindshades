@@ -20,5 +20,11 @@ export default new Vuex.Store({
   getters: {
     theme: state => state.theme,
     user: state => state.user,
+    isLoggedIn: state => {
+      if (!state.user) {
+        return false
+      }
+      return Object.entries(state.user).length > 0
+    },
   },
 })
