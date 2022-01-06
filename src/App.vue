@@ -18,9 +18,7 @@ export default {
     BaseComponent,
   },
   computed: {
-    ...mapGetters({
-      theme: 'theme',
-    }),
+    ...mapGetters(['theme']),
   },
 }
 </script>

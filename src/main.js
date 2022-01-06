@@ -19,10 +19,16 @@ Vue.use(Maska)
 Vue.use(Notifications)
 Vue.config.productionTip = false
 
-Vue.prototype.$supabase = createClient(
+const supabase = createClient(
   'https://tsmcdgolhhtzzotghypz.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MTQ2MDU1MiwiZXhwIjoxOTU3MDM2NTUyfQ.wKYvxV79TzOi82vwodfZjJqf2IRR7hYhxaWyj8cA-lk'
 )
+Vue.prototype.$supabase = supabase
+
+supabase.auth.onAuthStateChange((event, session) => {
+  const user = session?.user
+  store.commit('setUser', user)
+})
 
 const theme = localStorage.getItem('theme')
 if (theme === 'light') {
