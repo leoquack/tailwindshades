@@ -1,5 +1,6 @@
 module.exports = {
-  purge: false,
+  mode: 'jit',
+  purge: ['./public/**/*.html', './src/**/*.{js,jsx,ts,tsx,vue}'],
   theme: {
     container: {
       center: true,
