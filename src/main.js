@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+import router from '@/router/index'
 import store from '@/store/index'
 import VueMeta from 'vue-meta'
 import VueAnalytics from 'vue-analytics'
@@ -37,7 +38,18 @@ if (theme === 'light') {
   store.commit('setTheme', 'dark')
 }
 
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.auth) && !store.getters.isLoggedIn) {
+    alert('You need to be logged in to access this page')
+    next('/')
+    return
+  }
+
+  next()
+})
+
 new Vue({
+  router,
   store,
   render: h => h(App),
 }).$mount('#app')
