@@ -9,8 +9,12 @@
 
     <div class="bg-theme-lighter px-4 py-3 text-theme">
       <div class="flex flex-wrap justify-between items-center">
-        <div>
-          <p class="text-lg md:text-2xl font-black mb-0 leading-none tracking-wide inline-block logo-text cursor-default">tailwindshades</p>
+        <div class="text-lg md:text-2xl font-black mb-0 leading-none tracking-wide inline-block logo-text">
+          <router-link
+            v-if="$route.path != '/'"
+            to="/"
+          >tailwindshades</router-link>
+          <p v-else>tailwindshades</p>
         </div>
         <div class="w-2/3 text-right flex justify-end items-center">
           <UserControl

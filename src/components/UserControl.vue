@@ -70,7 +70,13 @@
         </div>
 
         <div slot="content">
-          <div class="px-3 py-2 my-1 cursor-pointer rounded hover:bg-purple-500 hover:text-white">My colors</div>
+
+          <router-link
+            to="/my-colors"
+            class="block px-3 py-2 my-1 cursor-pointer rounded hover:bg-purple-500 hover:text-white"
+          >
+            My colors
+          </router-link>
 
           <div
             class="px-3 py-1 text-xs mb-1 mt-4 cursor-pointer rounded hover:bg-theme-500 hover:text-theme"
