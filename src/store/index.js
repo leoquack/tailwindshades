@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     theme: 'light',
     user: {},
+    loginFeatures: true,
   },
   mutations: {
     setTheme(state, theme) {
@@ -26,5 +27,6 @@ export default new Vuex.Store({
       }
       return Object.entries(state.user).length > 0
     },
+    loginFeatures: state => state.loginFeatures,
   },
 })

@@ -61,14 +61,20 @@
 
         <div class="flex items-center">
           <div
-            v-if="shade.id"
+            v-if="loginFeatures && (shadeHasUnsavedChanges || shade.id)"
             class="text-theme font-bold text-sm bg-theme-500 h-full flex items-center"
           >
-            <p class="px-4">my shade #{{ shade.id }}</p>
+            <p
+              v-if="shade.id"
+              class="px-4"
+            >my shade #{{ shade.id }}</p>
 
             <div
               class="text-sm focus:outline-none flex items-center justify-between bg-theme-600 h-full pl-4 select-none"
-              :class="shadeHasUnsavedChanges ? 'text-theme hover:text-theme' : 'text-theme-500'"
+              :class="[
+              shadeHasUnsavedChanges ? 'text-theme hover:text-theme' : 'text-theme-500',
+              { 'pr-4' : !shade.id },
+              ]"
             >
               <div
                 class="mr-2 cursor-pointer"
@@ -85,6 +91,7 @@
                 class="h-full"
                 placement="right"
                 :disabled="!shadeHasUnsavedChanges"
+                v-if="shade.id"
               >
                 <div
                   slot="button"
@@ -190,7 +197,7 @@ export default {
       }
       return /^#[0-9A-F]{6}$/i.test(hex)
     },
-    ...mapGetters(['theme', 'user', 'isLoggedIn']),
+    ...mapGetters(['theme', 'user', 'isLoggedIn', 'loginFeatures']),
   },
   mounted() {
     if (process.env.NODE_ENV === 'production') {

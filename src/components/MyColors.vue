@@ -39,8 +39,11 @@
                   ></div>
                 </div>
               </div>
-              <div class="flex justify-between px-2 text-xs bg-theme-600 py-1">
-                <div class="flex">
+              <div class="flex justify-end px-2 text-xs bg-theme-600 py-1">
+                <div
+                  class="flex"
+                  v-if="publishActive"
+                >
                   <div
                     v-if="shade.is_public"
                     class="mr-4"
@@ -96,6 +99,7 @@ export default {
       shades: [],
       confirmDeleteShade: null,
       loading: false,
+      publishActive: false,
     }
   },
   mounted() {

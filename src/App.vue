@@ -18,7 +18,7 @@
           </div>
           <div class="w-2/3 text-right flex justify-end items-center">
             <UserControl
-              v-if="!isProduction"
+              v-if="loginFeatures"
               class="text-left mr-6"
             />
             <div
@@ -78,7 +78,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['theme']),
+    ...mapGetters(['theme', 'loginFeatures']),
   },
   methods: {
     toggleTheme() {
