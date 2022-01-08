@@ -1,21 +1,21 @@
 <template>
-  <div class="px-2 flex flex-col items-center w-full">
+  <div class="px-2 flex flex-col items-center w-full text-theme">
     <div class="flex py-4 -mx-2">
 
       <div class="mx-2">
-        <!-- <p class="text-lg text-center text-theme font-bold">My collections</p> -->
+        <!-- <p class="text-lg text-center font-bold">My collections</p> -->
       </div>
 
       <div class="mx-2">
-        <!-- <p class="text-lg text-center text-theme font-bold">My shades</p> -->
+        <!-- <p class="text-lg text-center font-bold">My shades</p> -->
         <div class="flex flex-col items-center">
           <div
             v-for="(shade, shadeIndex) in shades"
             :key="`shade-${shadeIndex}`"
-            class="mb-4 rounded-lg"
+            class="mb-4 border border-theme-600 rounded-lg"
           >
             <div
-              class="cursor-pointer bg-theme-500 hover:bg-theme-700 text-theme rounded-lg"
+              class="cursor-pointer bg-theme-500 hover:bg-theme-700 rounded-lg"
               @click="editShade(shade)"
             >
               <div class="flex justify-between items-end px-2 py-1">
@@ -34,7 +34,7 @@
                 ></div>
               </div>
             </div>
-            <div class="flex justify-between px-4">
+            <div class="flex justify-between px-2 text-xs bg-theme-600 py-1">
               <div class="flex">
                 <div
                   v-if="shade.is_public"
@@ -61,12 +61,11 @@
                   Make public
                 </div>
               </div>
-              <div
-                class="cursor-pointer text-right"
-                @click="deleteShade(shade)"
-              >
-                <p>
-
+              <div class="text-right">
+                <p
+                  class="cursor-pointer delete-handle"
+                  @click="deleteShade(shade)"
+                >
                   <i class="fas fa-trash mr-1"></i>
                   Delete
                 </p>
@@ -96,6 +95,11 @@ export default {
     if (!this.shades.length) {
       this.getShades()
     }
+
+    document.addEventListener('click', this.resetConfirm)
+  },
+  beforeDestroy() {
+    document.removeEventListener('click', this.resetConfirm)
   },
   methods: {
     formatDate(rawDate) {
@@ -177,6 +181,12 @@ export default {
         type: 'info',
         duration: 4000,
       })
+    },
+    resetConfirm(event) {
+      if (event?.target.classList.contains('delete-handle')) {
+        return false
+      }
+      this.confirmDeleteShade = null
     },
   },
 }
