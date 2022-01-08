@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <button
-      class="z-10 relative flex items-center focus:outline-none select-none"
+      class="z-10 relative flex items-center focus:outline-none select-none h-full"
       @click="open = !open"
     >
       <slot name="button"></slot>
@@ -10,7 +10,7 @@
     <!-- to close when clicked on space around it-->
     <button
       class="fixed inset-0 h-full w-full cursor-default focus:outline-none"
-      v-if="open"
+      v-if="open && !disabled"
       @click="open = false"
       tabindex="-1"
     ></button>
@@ -27,7 +27,7 @@
       <div
         class="absolute shadow-lg w-36 rounded py-1 px-2 text-sm mt-1 bg-theme-600 text-theme z-10"
         :class="placement === 'right' ? 'right-0' : 'left-0'"
-        v-if="open"
+        v-if="open && !disabled"
         @click="open = false"
       >
         <slot name="content"></slot>
@@ -38,17 +38,18 @@
 
 <script>
 export default {
-  data() {
-    return {
-      open: false,
-    }
-  },
   props: {
     placement: {
       type: String,
       default: 'right',
       validator: value => ['right', 'left'].indexOf(value) !== -1,
     },
+    disabled: Boolean,
+  },
+  data() {
+    return {
+      open: false,
+    }
   },
   mounted() {
     const onEscape = e => {

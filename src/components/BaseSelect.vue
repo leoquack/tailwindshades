@@ -49,9 +49,9 @@
       class="flex flex-col"
       v-if="step === 'shades' || hasURLHash"
     >
-      <div class="flex justify-between bg-theme-lighter border-t border-theme py-2 px-2">
+      <div class="flex justify-between bg-theme-lighter border-t border-theme">
         <button
-          class="text-theme text-sm hover:text-blue-400 focus:outline-none"
+          class="text-theme text-sm hover:text-blue-400 focus:outline-none p-2"
           @click="backToBaseSelection"
           title="Back to base selection"
         >
@@ -59,32 +59,62 @@
           back to base color selection.
         </button>
 
-        <div class="flex">
+        <div class="flex items-center">
           <div
-            class="flex"
-            v-if="isLoggedIn && shadeIsUnsaved"
+            v-if="shade.id"
+            class="text-theme font-bold text-sm bg-theme-500 h-full flex items-center"
           >
-            <button
-              class="text-theme text-sm hover:text-blue-400 focus:outline-none mr-6"
-              @click="saveShade"
+            <p class="px-4">my shade #{{ shade.id }}</p>
+
+            <div
+              class="text-sm focus:outline-none flex items-center justify-between bg-theme-600 h-full pl-4 select-none"
+              :class="shadeHasUnsavedChanges ? 'text-theme hover:text-theme' : 'text-theme-500'"
             >
-              <i class="fas fa-save mr-1"></i>
-              <span v-if="shade.id">update #{{ shade.id }}</span>
-              <span v-else>save</span>
-            </button>
-            <button
-              v-if="shade.id"
-              class="text-theme text-sm hover:text-blue-400 focus:outline-none mr-6"
-              @click="dbInsertShade"
-            >
-              <i class="fas fa-save"></i>
-              save new
-            </button>
+              <div
+                class="mr-2 cursor-pointer"
+                @click="saveShade"
+              >
+                <span
+                  class="text-sm"
+                  v-if="shadeHasUnsavedChanges"
+                >*</span>
+                <!-- <i class="fas fa-save mr-1"></i> -->
+                save
+              </div>
+              <DropdownComponent
+                class="h-full"
+                placement="right"
+                :disabled="!shadeHasUnsavedChanges"
+              >
+                <div
+                  slot="button"
+                  class="flex h-full items-center bg-theme-600 text-theme px-1"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    :fill="shadeHasUnsavedChanges ? '#FFFFFF' : '#262626'"
+                  >
+                    <path d="M4.516 7.548c.436-.446 1.043-.481 1.576 0L10 11.295l3.908-3.747c.533-.481 1.141-.446 1.574 0 .436.445.408 1.197 0 1.615-.406.418-4.695 4.502-4.695 4.502a1.095 1.095 0 0 1-1.576 0S4.924 9.581 4.516 9.163c-.409-.418-.436-1.17 0-1.615z" />
+                  </svg>
+                </div>
+
+                <div slot="content">
+                  <div
+                    class="block px-2 my-1 cursor-pointer rounded hover:bg-purple-500 hover:text-white"
+                    @click="dbInsertShade"
+                  >
+                    Save as new
+                  </div>
+                </div>
+              </DropdownComponent>
+            </div>
 
           </div>
 
           <button
-            class="text-theme text-sm hover:text-blue-400 focus:outline-none"
+            class="text-theme text-sm hover:text-blue-400 focus:outline-none ml-2 p-2"
             @click="copyShareLink"
             title="Copy share link"
           >
@@ -110,11 +140,13 @@ import { mapGetters } from 'vuex'
 import ShadesComponent from '@/components/Shades'
 import CarbonAds from '@/components/CarbonAds'
 import converter from 'color-convert'
+import DropdownComponent from '@/components/Dropdown'
 
 export default {
   components: {
     ShadesComponent,
     CarbonAds,
+    DropdownComponent,
   },
   metaInfo: {
     title: 'Tailwind Shades',
@@ -179,6 +211,10 @@ export default {
   },
   methods: {
     saveShade() {
+      if (!this.shadeHasUnsavedChanges) {
+        return
+      }
+
       if (this.shade.id) {
         this.dbUpdateShade()
         return

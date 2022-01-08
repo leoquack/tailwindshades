@@ -7,7 +7,7 @@
       <div
         slot="title"
         class="text-sm"
-      >Authentication</div>
+      >Login to save your shades!</div>
       <div class="flex flex-col p-4 select-none">
         <div
           class="flex items-center mt-3 rounded-lg py-2 px-4 cursor-pointer"
