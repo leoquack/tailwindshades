@@ -399,7 +399,7 @@ export default {
     this.resetOverrides()
 
     let parsed = false
-    if (this.dbShade) {
+    if (this.dbShade?.id) {
       parsed = this.parseURLHash(this.dbShade?.code)
       this.updateURLHash()
     } else if (window.location.hash.length > 1) {
