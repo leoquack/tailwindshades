@@ -10,7 +10,7 @@
       >Login to save your shades!</div>
       <div class="flex flex-col p-4 select-none">
         <div
-          class="flex items-center mt-3 rounded-lg py-2 px-4 cursor-pointer"
+          class="flex items-center mt-3 rounded-lg py-2 px-4 cursor-pointer text-white"
           style="background-color:#333"
           @click="signIn3rdParty('github')"
         >
