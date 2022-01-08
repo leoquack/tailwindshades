@@ -3,32 +3,78 @@
     <div class="flex py-4 -mx-2">
 
       <div class="mx-2">
-        <p class="text-xl text-center">My collections</p>
+        <!-- <p class="text-lg text-center text-theme font-bold">My collections</p> -->
       </div>
 
       <div class="mx-2">
-        <p class="text-xl text-center">My shades</p>
-        <div class="flex items-center">
+        <!-- <p class="text-lg text-center text-theme font-bold">My shades</p> -->
+        <div class="flex flex-col items-center">
           <div
             v-for="(shade, shadeIndex) in shades"
             :key="`shade-${shadeIndex}`"
-            class="bg-theme-200 hover:bg-theme-300 rounded-lg px-4 pt-4 pb-6 cursor-pointer"
-            @click="editShade(shade)"
+            class="mb-4 rounded-lg"
           >
-            <div class="flex justify-between items-end">
-              <p class="font-bold text-2xl">
-                #{{ shade.id }}
-                <span>{{ getColorName(shade.code) }}</span>
-              </p>
-              <p class="text-sm">{{ formatDate(shade.created_at) }}</p>
+            <div
+              class="cursor-pointer bg-theme-500 hover:bg-theme-700 text-theme rounded-lg"
+              @click="editShade(shade)"
+            >
+              <div class="flex justify-between items-end px-2 py-1">
+                <p class="font-bold text-xl">
+                  #{{ shade.id }}
+                  <span>{{ getColorName(shade.code) }}</span>
+                </p>
+                <p class="text-sm">{{ formatDate(shade.created_at) }}</p>
+              </div>
+              <div class="flex">
+                <div
+                  v-for="(color, colorIndex) in shade.colors"
+                  :key="`shade-${shadeIndex}-color-${colorIndex}`"
+                  class="w-12 h-12"
+                  :style="'background-color: ' + color"
+                ></div>
+              </div>
             </div>
-            <div class="flex">
+            <div class="flex justify-between px-4">
+              <div class="flex">
+                <div
+                  v-if="shade.is_public"
+                  class="mr-4"
+                >
+                  <i class="fas fa-heart"></i>
+                  {{ shade.likes }}
+                  Likes
+                </div>
+                <div
+                  v-if="shade.is_public"
+                  class="cursor-pointer"
+                  @click="setIsPublic(shade, false)"
+                >
+                  <i class="fas fa-globe mr-1"></i>
+                  Make private
+                </div>
+                <div
+                  v-else
+                  class="cursor-pointer"
+                  @click="setIsPublic(shade, true)"
+                >
+                  <i class="fas fa-globe mr-1"></i>
+                  Make public
+                </div>
+              </div>
               <div
-                v-for="(color, colorIndex) in shade.colors"
-                :key="`shade-${shadeIndex}-color-${colorIndex}`"
-                class="w-12 h-12"
-                :style="'background-color: ' + color"
-              ></div>
+                class="cursor-pointer text-right"
+                @click="deleteShade(shade)"
+              >
+                <p>
+
+                  <i class="fas fa-trash mr-1"></i>
+                  Delete
+                </p>
+                <p
+                  class="text-xs text-red-600"
+                  v-if="confirmDeleteShade === shade.id"
+                >Click again to confirm</p>
+              </div>
             </div>
           </div>
         </div>
@@ -42,34 +88,13 @@
 export default {
   data() {
     return {
-      shades: [
-        {
-          id: 21,
-          user_id: 'f5096129-5fd6-4930-8854-c723a65b26ff',
-          collection_id: null,
-          is_public: false,
-          likes: 0,
-          created_at: '2022-01-08T11:24:04.866108+00:00',
-          code: 'color=229%2C72%2C61&step-up=6&step-down=13&hue-shift=-35&name=royal-blue&overrides=e30%3D',
-          colors: [
-            '#CADEF6',
-            '#BDD4F4',
-            '#A3BFF0',
-            '#89A6EC',
-            '#6E8CE7',
-            '#546EE3',
-            '#2238D3',
-            '#19229A',
-            '#101060',
-            '#080627',
-          ],
-        },
-      ],
+      shades: [],
+      confirmDeleteShade: null,
     }
   },
   mounted() {
     if (!this.shades.length) {
-      // this.getShades()
+      this.getShades()
     }
   },
   methods: {
@@ -110,6 +135,47 @@ export default {
       this.$router.push({
         name: 'shade',
         params: { shade },
+      })
+    },
+    async setIsPublic(shade, value) {
+      const { error } = await this.$supabase
+        .from('shades')
+        .update({ is_public: value })
+        .match({ id: shade.id })
+      if (error) {
+        this.$notify({
+          text: "Couldn't change is_public",
+          type: 'error',
+          duration: 4000,
+        })
+      }
+      shade.is_public = value
+    },
+    async deleteShade(shade) {
+      if (this.confirmDeleteShade !== shade.id) {
+        this.confirmDeleteShade = shade.id
+        return
+      }
+      const { error } = await this.$supabase
+        .from('shades')
+        .delete()
+        .match({ id: shade.id })
+      if (error) {
+        this.$notify({
+          text: "Couldn't delete shade",
+          type: 'error',
+          duration: 4000,
+        })
+      }
+
+      this.shades = Object.assign(
+        [],
+        this.shades.filter(s => s.id !== shade.id)
+      )
+      this.$notify({
+        text: 'Shade deleted successfully',
+        type: 'info',
+        duration: 4000,
       })
     },
   },

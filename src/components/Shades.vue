@@ -400,7 +400,6 @@ export default {
 
     let parsed = false
     if (this.dbShade) {
-      console.log('what', this.dbShade?.code, parsed)
       parsed = this.parseURLHash(this.dbShade?.code)
       this.updateURLHash()
     } else if (window.location.hash.length > 1) {

@@ -59,16 +59,29 @@
           back to base color selection.
         </button>
 
-        <div>
-          <button
+        <div class="flex">
+          <div
+            class="flex"
             v-if="isLoggedIn && shadeIsUnsaved"
-            class="text-theme text-sm hover:text-blue-400 focus:outline-none mr-6"
-            @click="saveShade"
-            title="Save shade"
           >
-            <i class="fas fa-save"></i>
-            save
-          </button>
+            <button
+              class="text-theme text-sm hover:text-blue-400 focus:outline-none mr-6"
+              @click="saveShade"
+            >
+              <i class="fas fa-save mr-1"></i>
+              <span v-if="shade.id">update #{{ shade.id }}</span>
+              <span v-else>save</span>
+            </button>
+            <button
+              v-if="shade.id"
+              class="text-theme text-sm hover:text-blue-400 focus:outline-none mr-6"
+              @click="dbInsertShade"
+            >
+              <i class="fas fa-save"></i>
+              save new
+            </button>
+
+          </div>
 
           <button
             class="text-theme text-sm hover:text-blue-400 focus:outline-none"
@@ -117,10 +130,7 @@ export default {
       isProduction: process.env.NODE_ENV === 'production',
       step: 'base',
       // shade used for cloud storage.
-      shade: {
-        id: null,
-        code: '',
-      },
+      shade: this.emptyShade(),
       colors: [],
       hex: '',
       defaultTailwindPaletteBaseColors: [
@@ -134,12 +144,10 @@ export default {
         '#EC4899',
       ],
       hasURLHash: window.location.hash.length > 2,
+      shadeHasUnsavedChanges: false,
     }
   },
   computed: {
-    shadeHasUnsavedChanges() {
-      return this.shade.code !== this.$refs.shadesComponent?.urlHash()
-    },
     shadeIsUnsaved() {
       return !this.shade.id || this.shadeHasUnsavedChanges
     },
@@ -159,7 +167,6 @@ export default {
 
     const shade = this.$route.params.shade
     if (shade) {
-      console.log('has shade', shade)
       this.shade = shade
       this.hex = shade.colors[5]
       this.step = 'shades'
@@ -199,6 +206,7 @@ export default {
       }
 
       this.shade = Object.assign({}, this.shade, data[0])
+      this.shadeHasUnsavedChanges = this.shade.code !== window.location.hash.substring(1)
       this.$notify({
         text: 'Shade updated successfully',
         type: 'info',
@@ -221,6 +229,8 @@ export default {
       }
 
       this.shade = Object.assign({}, this.shade, data[0])
+      this.shadeHasUnsavedChanges = this.shade.code !== window.location.hash.substring(1)
+
       this.$notify({
         text: 'Shade saved successfully',
         type: 'info',
@@ -235,6 +245,7 @@ export default {
 
       // Force reload in case the URL hash changes manually.
       let h = window.location.hash.substring(1)
+      this.shadeHasUnsavedChanges = this.shade.code !== h
       if (h !== this.$refs.shadesComponent.urlHash()) {
         window.location.reload()
       }
@@ -268,7 +279,15 @@ export default {
     backToBaseSelection() {
       window.location.hash = ''
       history.pushState('', document.title, window.location.pathname + window.location.search)
+      this.shade = this.emptyShade()
+      this.hex = ''
       this.step = 'base'
+    },
+    emptyShade() {
+      return {
+        id: null,
+        code: '',
+      }
     },
     textColorByBrightness() {
       if (!this.validHex) {
