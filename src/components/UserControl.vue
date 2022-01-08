@@ -70,7 +70,6 @@
         </div>
 
         <div slot="content">
-
           <router-link
             to="/my-colors"
             class="block px-3 py-2 my-1 cursor-pointer rounded hover:bg-purple-500 hover:text-white"

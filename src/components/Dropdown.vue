@@ -28,6 +28,7 @@
         class="absolute shadow-lg w-36 rounded py-1 px-2 text-sm mt-1 bg-theme-600 text-theme z-10"
         :class="placement === 'right' ? 'right-0' : 'left-0'"
         v-if="open"
+        @click="open = false"
       >
         <slot name="content"></slot>
       </div>

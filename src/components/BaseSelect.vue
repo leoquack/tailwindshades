@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="flex flex-col">
     <div
       v-if="step === 'base' && !hasURLHash"
-      class="px-2 md:px-0 h-full text-center flex items-center justify-center"
+      class="px-2 md:px-0 text-center flex items-center justify-center flex-grow"
     >
       <div class="leading-none text-theme-lighter -mt-12">
         <p class="text-lg md:text-xl text-left">Start by</p>
@@ -46,7 +46,7 @@
     </div>
 
     <div
-      class="flex flex-col h-full"
+      class="flex flex-col"
       v-if="step === 'shades' || hasURLHash"
     >
       <div class="flex justify-between bg-theme-lighter border-t border-theme py-2 px-2">
@@ -82,7 +82,9 @@
       </div>
 
       <shades-component
-        :initial="hex"
+        :initialHEX="hex"
+        :dbShade="shade"
+        :colors.sync="colors"
         ref="shadesComponent"
       />
     </div>
@@ -119,6 +121,7 @@ export default {
         id: null,
         code: '',
       },
+      colors: [],
       hex: '',
       defaultTailwindPaletteBaseColors: [
         '#6B7280',
@@ -135,7 +138,7 @@ export default {
   },
   computed: {
     shadeHasUnsavedChanges() {
-      return this.shade.code !== this.$refs.shadesComponent.urlHash()
+      return this.shade.code !== this.$refs.shadesComponent?.urlHash()
     },
     shadeIsUnsaved() {
       return !this.shade.id || this.shadeHasUnsavedChanges
@@ -152,6 +155,14 @@ export default {
   mounted() {
     if (process.env.NODE_ENV === 'production') {
       this.$ga.page('/')
+    }
+
+    const shade = this.$route.params.shade
+    if (shade) {
+      console.log('has shade', shade)
+      this.shade = shade
+      this.hex = shade.colors[5]
+      this.step = 'shades'
     }
 
     window.addEventListener('hashchange', this.handleHashChange)
@@ -173,6 +184,7 @@ export default {
         .update({
           user_id: this.user.id,
           code: window.location.hash.substring(1),
+          colors: this.colors,
         })
         .match({
           id: this.shade.id,
@@ -197,6 +209,7 @@ export default {
       const { data, error } = await this.$supabase.from('shades').insert({
         user_id: this.user.id,
         code: window.location.hash.substring(1),
+        colors: this.colors,
       })
       if (error) {
         this.$notify({

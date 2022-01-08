@@ -1,15 +1,15 @@
 <template>
-  <div class="flex flex-col h-full pb-2">
+  <div class="flex flex-col pb-2">
     <div
-      class="flex flex-col rounded text-theme h-full px-2"
+      class="flex flex-col rounded text-theme px-2"
       v-if="result.shades && result.shades.length"
     >
       <div
-        class="flex flex-wrap -mx-2 h-full"
+        class="flex flex-wrap -mx-2"
         v-if="Object.entries(overrides).length"
       >
-        <div class="flex flex-col w-full md:w-2/3 px-2 md:h-full">
-          <div class="flex flex-col h-full mt-4">
+        <div class="flex flex-col flex-grow w-full md:w-2/3 px-2">
+          <div class="flex flex-col flex-grow mt-4">
             <div class="flex text-xs select-none text-center">
               <div class="w-80 px-2 border border-theme-600 border-r-0 border-b-0 flex justify-between">
                 <p>Fine tune (do this last)</p>
@@ -49,7 +49,7 @@
               <div class="flex w-full justify-between items-center">
                 <div class="w-80 h-full">
                   <div
-                    class="flex justify-center items-center h-full text-theme bg-theme"
+                    class="h-full flex justify-center items-center text-theme bg-theme"
                     :class="[{'border-t-0': stops[0] !== stop}, (override ? 'opacity-100': 'opacity-90 hover:opacity-100') ]"
                   >
                     <div class="w-3/12 flex">
@@ -116,7 +116,7 @@
           </div>
         </div>
 
-        <div class="w-full md:w-1/3 pr-6 pl-2 mt-4">
+        <div class="flex-grow w-full md:w-1/3 pr-6 pl-2 mt-4">
           <div class="border border-theme-600 pb-2">
             <div class="flex items-center leading-none border-b border-theme-600">
               <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">1</p>
@@ -139,7 +139,7 @@
                         class="underline cursor-pointer hover:bg-theme hover:text-theme-lighter"
                         title="reset"
                         @click="reset"
-                      >{{ initial }}</a>
+                      >{{ initialHEX }}</a>
                     </p>
                   </div>
                 </div>
@@ -262,7 +262,9 @@ import _ from 'lodash'
 
 export default {
   props: {
-    initial: String,
+    initialHEX: String,
+    colors: Array,
+    dbShade: {},
   },
   components: {
     SliderInput,
@@ -295,6 +297,10 @@ export default {
   watch: {
     'result.shades'() {
       this.updateURLHash()
+      this.$emit(
+        'update:colors',
+        this.result.shades.map(s => (s.override ? '#' + s.override.hex : '#' + s.hex))
+      )
     },
     'code.name'() {
       this.updateURLHash()
@@ -325,7 +331,7 @@ export default {
       return `{\n${shades.join(',\n')}\n},`
     },
     initialHSL() {
-      return converter.rgb.hsl.raw(converter.hex.rgb(this.initial))
+      return converter.rgb.hsl.raw(converter.hex.rgb(this.initialHEX))
     },
     result() {
       let hsl = this.hsl
@@ -391,7 +397,17 @@ export default {
   },
   mounted() {
     this.resetOverrides()
-    if (!this.parseURLHash()) {
+
+    let parsed = false
+    if (this.dbShade) {
+      console.log('what', this.dbShade?.code, parsed)
+      parsed = this.parseURLHash(this.dbShade?.code)
+      this.updateURLHash()
+    } else if (window.location.hash.length > 1) {
+      parsed = this.parseURLHash(window.location.hash.substring(1))
+    }
+
+    if (!parsed) {
       this.hsl = [...this.initialHSL]
     }
   },
@@ -486,15 +502,14 @@ export default {
         .map(part => part.map(encodeURIComponent).join('='))
         .join('&')
     },
-    parseURLHash() {
-      if (window.location.hash.length < 2) {
+    parseURLHash(hash) {
+      if (!hash) {
         return false
       }
-      let h = window.location.hash.substring(1)
-      let parts = h.split('&').map(part => part.split('=').map(decodeURIComponent))
+      let parts = hash.split('&').map(part => part.split('=').map(decodeURIComponent))
 
       // Skip parse on authentication redirection.
-      if (parts.find(p => p[0] === 'access_token').length) {
+      if (parts.find(p => p[0] === 'access_token') !== undefined) {
         return false
       }
 
