@@ -61,7 +61,7 @@
 
         <div class="flex items-center">
           <div
-            v-if="loginFeatures && (shadeHasUnsavedChanges || shade.id)"
+            v-if="isLoggedIn && loginFeatures && (shadeHasUnsavedChanges || shade.id)"
             class="text-theme font-bold text-sm bg-theme-500 h-full flex items-center"
           >
             <p
