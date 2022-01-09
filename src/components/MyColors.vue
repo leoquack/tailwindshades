@@ -35,18 +35,19 @@
                 class="cursor-pointer bg-theme-500 hover:bg-theme-700 rounded-lg"
                 @click="editShade(shade)"
               >
-                <div class="flex justify-between items-end px-2 py-1">
+                <div class="flex justify-between items-end px-2 pt-1">
                   <p class="font-bold text-xl">
                     #{{ shade.id }}
                     <span>{{ getColorName(shade.code) }}</span>
                   </p>
                   <p class="text-sm">{{ formatDate(shade.created_at) }}</p>
                 </div>
-                <div class="flex">
+                <div class="flex items-end">
                   <div
                     v-for="(color, colorIndex) in shade.colors"
                     :key="`shade-${shadeIndex}-color-${colorIndex}`"
-                    class="w-12 h-12"
+                    class="w-12"
+                    :class="colorIndex === 5 ? 'h-14' : 'h-12'"
                     :style="'background-color: ' + color"
                   ></div>
                 </div>
