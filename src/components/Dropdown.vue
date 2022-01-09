@@ -2,7 +2,7 @@
   <div class="relative">
     <button
       class="z-10 relative flex items-center focus:outline-none select-none h-full"
-      @click="open = !open"
+      @click="set(!open)"
     >
       <slot name="button"></slot>
     </button>
@@ -11,7 +11,7 @@
     <button
       class="fixed inset-0 h-full w-full cursor-default focus:outline-none"
       v-if="open && !disabled"
-      @click="open = false"
+      @click="set(false)"
       tabindex="-1"
     ></button>
 
@@ -28,7 +28,7 @@
         class="absolute shadow-lg w-36 rounded py-1 px-2 text-sm mt-1 bg-theme-600 text-theme z-10"
         :class="placement === 'right' ? 'right-0' : 'left-0'"
         v-if="open && !disabled"
-        @click="open = false"
+        @click="set(false)"
       >
         <slot name="content"></slot>
       </div>
@@ -63,6 +63,14 @@ export default {
     this.$once('hook:beforeDestroy', () => {
       document.removeEventListener('keydown', onEscape)
     })
+  },
+  methods: {
+    set(value) {
+      if (this.disabled) {
+        return
+      }
+      this.open = value
+    },
   },
 }
 </script>

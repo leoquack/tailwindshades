@@ -1,9 +1,15 @@
 <template>
   <div class="text-theme">
-    <div class="text-center font-bold text-2xl py-8">
-      <div v-if="loading">Loading...</div>
-      <div v-else-if="!this.shades.length">
-        <p>No colors</p>
+    <div class="text-center font-bold text-2xl">
+      <div
+        class="py-8"
+        v-if="loading"
+      >Loading...</div>
+      <div
+        class="py-8"
+        v-else-if="!this.shades.length"
+      >
+        <p>No saved colors</p>
         <router-link
           to="/"
           class="text-sm text-blue-600 hover:text-blue-700"
