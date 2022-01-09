@@ -1,9 +1,15 @@
 <template>
   <div class="text-theme">
-    <div
-      class="text-center font-bold text-2xl"
-      v-if="loading"
-    >Loading...</div>
+    <div class="text-center font-bold text-2xl py-8">
+      <div v-if="loading">Loading...</div>
+      <div v-else-if="!this.shades.length">
+        <p>No colors</p>
+        <router-link
+          to="/"
+          class="text-sm text-blue-600 hover:text-blue-700"
+        >Go back to add one!</router-link>
+      </div>
+    </div>
     <div class="px-2 flex flex-col items-center w-full">
       <div class="flex py-4 -mx-2">
 
