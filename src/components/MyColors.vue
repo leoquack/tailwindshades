@@ -150,7 +150,7 @@ export default {
     },
     async getShades() {
       this.loading = true
-      const { data, error } = await this.$supabase.from('shades').select()
+      const { data, error } = await this.$supabase.from('shades').select().order('id')
       this.loading = false
       if (error) {
         this.$notify({
