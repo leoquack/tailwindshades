@@ -13,7 +13,7 @@
     "core-js": "^3.6.5",
     "global": "^4.4.0",
     "maska": "^1.2.0",
-    "prismjs": "^1.25.0",
+    "prismjs": "^1.27.0",
     "vue": "^2.6.11",
     "vue-analytics": "^5.17.2",
     "vue-color": "^2.7.0",
