@@ -2,14 +2,16 @@
   <div class="bg-theme-600 px-4 py-3 flex items-center justify-between border-t border-theme-reverse sm:px-6 text-theme">
     <div class="flex-1 flex justify-between sm:hidden">
       <a
-        href="#"
-        class="relative inline-flex items-center px-4 py-2 border border-theme-reverse text-sm font-medium rounded-md bg-theme-600 hover:bg-theme-300"
+        class="relative inline-flex items-center px-4 py-2 border border-theme-reverse text-sm font-medium rounded-md"
+        :class="page === 1 ? 'bg-theme-400 text-theme-500' : 'bg-theme-600 hover:bg-theme-300'"
+        @click="$emit('change', page-1)"
       >
         Previous
       </a>
       <a
-        href="#"
         class="ml-3 relative inline-flex items-center px-4 py-2 border border-theme-reverse text-sm font-medium rounded-md bg-theme-600 hover:bg-theme-300"
+        :class="page === lastPage ? 'bg-theme-400 text-theme-500' : 'bg-theme-600 hover:bg-theme-300'"
+        @click="$emit('change', page+1)"
       >
         Next
       </a>

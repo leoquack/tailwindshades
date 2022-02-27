@@ -138,6 +138,11 @@ export default {
       loading: false,
     }
   },
+  watch: {
+    mode() {
+      this.getShades()
+    },
+  },
   computed: {
     ...mapGetters(['user', 'isLoggedIn']),
   },

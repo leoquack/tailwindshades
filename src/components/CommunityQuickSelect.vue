@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col">
-    <div class="md:max-w-[300px] md:self-end">
+    <div class="max-w-[300px] self-center md:self-end">
       <div class="text-xl font-bold flex items-center justify-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
