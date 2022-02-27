@@ -265,6 +265,8 @@
         </div>
       </div>
 
+      <router-link to="/community/shades">See all</router-link>
+
     </div>
   </div>
 </template>
