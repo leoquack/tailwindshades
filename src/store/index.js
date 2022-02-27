@@ -8,6 +8,7 @@ export default new Vuex.Store({
     theme: 'light',
     user: {},
     loginFeatures: true,
+    cache: {},
   },
   mutations: {
     setTheme(state, theme) {
@@ -16,11 +17,34 @@ export default new Vuex.Store({
     setUser(state, user) {
       state.user = user
     },
+    setCacheValue(state, { key, value }) {
+      state.cache[key] = {
+        value,
+        createdAt: Date.now(),
+      }
+    },
   },
-  actions: {},
+  actions: {
+    fromCache({ state }, { key, expiry }) {
+      return new Promise(resolve => {
+        if (!state.cache[key]) {
+          return resolve({ error: "doesn't exist" })
+        }
+        if (!state.cache[key]?.value) {
+          return resolve({ error: 'empty' })
+        }
+        if (state.cache[key]?.createdAt < expiry) {
+          return resolve({ error: 'expired' })
+        }
+
+        return resolve({ data: state.cache[key].value })
+      })
+    },
+  },
   getters: {
     theme: state => state.theme,
     user: state => state.user,
+    cache: state => state.cache,
     isLoggedIn: state => {
       if (!state.user) {
         return false

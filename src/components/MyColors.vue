@@ -80,8 +80,7 @@
                     class="mr-4"
                   >
                     <i class="fas fa-heart"></i>
-                    {{ shade.likes }}
-                    Likes
+                    {{ `${shade.likes} ${(shade.likes > 1 ? 'Likes' : 'Like')}` }}
                   </div>
                   <div
                     v-if="shade.is_public"
@@ -124,7 +123,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   data() {
@@ -149,6 +148,7 @@ export default {
     document.removeEventListener('click', this.resetConfirm)
   },
   methods: {
+    ...mapActions(['fromCache']),
     formatDate(rawDate) {
       const date = new Date(rawDate)
 
@@ -172,22 +172,33 @@ export default {
       return params.get('name')
     },
     async getShades() {
-      this.loading = true
-      const { data, error } = await this.$supabase
-        .from('shades')
-        .select()
-        .eq('user_id', this.user.id)
-        .order('id')
-      this.loading = false
+      const cacheKey = 'shades.mine'
+      const { data: cache, error } = await this.fromCache({
+        key: cacheKey,
+        expiry: new Date(+new Date() - 15 * 60000), // - 15 minutes
+      })
       if (error) {
-        this.$notify({
-          text: "Couldn't get shades",
-          type: 'error',
-          duration: 4000,
-        })
+        this.loading = true
+        const { data, error } = await this.$supabase
+          .from('shades')
+          .select()
+          .eq('user_id', this.user.id)
+          .order('id')
+        this.loading = false
+        if (error) {
+          this.$notify({
+            text: "Couldn't get shades",
+            type: 'error',
+            duration: 4000,
+          })
+          return
+        }
+        this.$store.commit('setCacheValue', { key: cacheKey, value: data })
+        this.shades = data
         return
       }
-      this.shades = data
+
+      this.shades = cache
     },
     editShade(shade) {
       this.$router.push({
@@ -209,6 +220,7 @@ export default {
         return
       }
       shade.is_public = value
+      this.$store.commit('setCacheValue', { key: 'shades.mine', value: null })
     },
     async deleteShade(shade) {
       if (this.confirmDeleteShade !== shade.id) {
@@ -237,6 +249,7 @@ export default {
         type: 'info',
         duration: 4000,
       })
+      this.$store.commit('setCacheValue', { key: 'shades.mine', value: null })
     },
     resetConfirm(event) {
       if (event?.target.classList.contains('delete-handle')) {

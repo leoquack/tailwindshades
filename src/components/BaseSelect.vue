@@ -1,10 +1,11 @@
 <template>
   <div class="flex flex-col">
+
     <div
       v-if="step === 'base' && !hasURLHash"
-      class="px-2 md:px-0 text-center flex items-center justify-center flex-grow"
+      class="px-2 md:px-0 text-center flex-grow grid md:grid-cols-2 lg:grid-cols-3 md:space-x-3 lg:space-x-6"
     >
-      <div class="leading-none text-theme-lighter -mt-12">
+      <div class="leading-none text-theme-lighter flex flex-col justify-center lg:-mt-12 lg:col-start-2">
         <p class="text-lg md:text-xl text-left">Start by</p>
         <p class="text-3xl md:text-4xl font-bold mt-1 text-left">selecting a <u>base</u> color</p>
         <input
@@ -42,6 +43,9 @@
           v-if="isProduction"
           class="flex justify-center items-center mt-24"
         />
+      </div>
+      <div class="py-4 px-4 text-theme">
+        <CommunityQuickSelect />
       </div>
     </div>
 
@@ -148,12 +152,14 @@ import ShadesComponent from '@/components/Shades'
 import CarbonAds from '@/components/CarbonAds'
 import converter from 'color-convert'
 import DropdownComponent from '@/components/Dropdown'
+import CommunityQuickSelect from '@/components/CommunityQuickSelect'
 
 export default {
   components: {
     ShadesComponent,
     CarbonAds,
     DropdownComponent,
+    CommunityQuickSelect,
   },
   metaInfo: {
     title: 'Tailwind Shades',
@@ -255,6 +261,7 @@ export default {
         type: 'info',
         duration: 2000,
       })
+      this.$store.commit('setCacheValue', { key: 'shades.mine', value: null })
     },
     async dbInsertShade() {
       const { data, error } = await this.$supabase.from('shades').insert({
@@ -279,6 +286,7 @@ export default {
         type: 'info',
         duration: 2000,
       })
+      this.$store.commit('setCacheValue', { key: 'shades.mine', value: null })
     },
     handleHashChange() {
       this.hasURLHash = window.location.hash.length > 2
@@ -289,7 +297,7 @@ export default {
       // Force reload in case the URL hash changes manually.
       let h = window.location.hash.substring(1)
       this.shadeHasUnsavedChanges = this.shade.code !== h
-      if (h !== this.$refs.shadesComponent.urlHash()) {
+      if (this.$refs.shadesComponent && h !== this.$refs.shadesComponent.urlHash()) {
         window.location.reload()
       }
     },
