@@ -17,42 +17,60 @@
       </div>
     </div>
     <div class="px-2 flex flex-col items-center w-full">
-      <div class="flex py-4 -mx-2">
+      <div class="flex py-4 -mx-2 w-full">
 
-        <div class="mx-2">
-          <!-- <p class="text-lg text-center font-bold">My collections</p> -->
-        </div>
+        <!-- <div class="mx-2">
+          <p class="text-lg text-center font-bold">My collections</p>
+        </div> -->
 
-        <div class="mx-2">
+        <div class="mx-2 flex flex-wrap w-full">
           <!-- <p class="text-lg text-center font-bold">My shades</p> -->
-          <div class="flex flex-col items-center">
+          <div class="flex flex-wrap justify-center">
             <div
               v-for="(shade, shadeIndex) in shades"
               :key="`shade-${shadeIndex}`"
-              class="mb-4 border border-theme-600 rounded-lg"
+              class="mb-8 mx-6 bor32der border-theme-600 rounded-lg overflow-hidden shadow-lg"
             >
               <div
-                class="cursor-pointer bg-theme-500 hover:bg-theme-700 rounded-lg"
+                class="cursor-pointer hover:bg-theme-600 rounded-lg"
                 @click="editShade(shade)"
               >
-                <div class="flex justify-between items-end px-2 pt-1">
-                  <p class="font-bold text-xl">
+                <div class="flex justify-between items-center px-2 pt-1">
+                  <p class="font-bold text-lg">
                     #{{ shade.id }}
                     <span>{{ getColorName(shade.code) }}</span>
                   </p>
-                  <p class="text-sm">{{ formatDate(shade.created_at) }}</p>
+                  <p class="text-xs">{{ formatDate(shade.created_at) }}</p>
                 </div>
                 <div class="flex items-end">
                   <div
                     v-for="(color, colorIndex) in shade.colors"
                     :key="`shade-${shadeIndex}-color-${colorIndex}`"
-                    class="w-12"
-                    :class="colorIndex === 5 ? 'h-14' : 'h-12'"
+                    class="w-12 h-12"
                     :style="'background-color: ' + color"
-                  ></div>
+                  >
+                    <div
+                      class="-mt-2 flex justify-center"
+                      v-if="colorIndex === 5"
+                    ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-2 w-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="flex justify-end px-2 text-xs bg-theme-600 py-1">
+              <div class="flex justify-between px-2 text-xs py-1">
                 <div
                   class="flex"
                   v-if="publishActive"
@@ -112,7 +130,7 @@ export default {
       shades: [],
       confirmDeleteShade: null,
       loading: false,
-      publishActive: false,
+      publishActive: true,
     }
   },
   mounted() {
@@ -150,7 +168,10 @@ export default {
     },
     async getShades() {
       this.loading = true
-      const { data, error } = await this.$supabase.from('shades').select().order('id')
+      const { data, error } = await this.$supabase
+        .from('shades')
+        .select()
+        .order('id')
       this.loading = false
       if (error) {
         this.$notify({

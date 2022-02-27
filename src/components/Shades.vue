@@ -355,12 +355,12 @@ export default {
 
         let override = this.overrides[String(stop)]
 
-        let overriden =
+        let overridden =
           override &&
           ((override?.hue !== -1 && override?.hue !== hue) ||
             (override?.saturation !== -1 && override?.saturation !== hsl[1]) ||
             (override?.lightness !== -1 && override?.lightness !== lightness))
-        if (overriden) {
+        if (overridden) {
           let overrideHSL = [hue, hsl[1], lightness]
           if (override.hue !== -1 && override.hue !== hue) {
             overrideHSL[0] = override.hue
@@ -379,7 +379,7 @@ export default {
         return {
           stop: stop,
           hex,
-          override: overriden ? override : false,
+          override: overridden ? override : false,
           hsl: [hue, hsl[1], lightness],
           textColor: this.textColorFromBrightness(hex),
         }

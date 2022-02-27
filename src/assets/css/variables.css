@@ -16,6 +16,7 @@
   --color-text-theme: #dddddd;
   --color-text-theme-lighter: #eeeeee;
   --color-text-theme-darker: #c6c6c6;
+  --color-text-theme-reverse: #262626;
 }
 
 .theme-light {
@@ -36,4 +37,5 @@
   --color-text-theme: #262626;
   --color-text-theme-lighter: #4D4D4D;
   --color-text-theme-darker: #0D0D0D;
-}
+  --color-text-theme-reverse: #dddddd;
+  }
