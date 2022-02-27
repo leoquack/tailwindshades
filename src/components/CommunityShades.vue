@@ -10,13 +10,6 @@
           class="cursor-pointer hover:bg-theme-600 rounded-lg"
           @click="editCommunityShade(shade)"
         >
-          <div class="flex justify-between items-center px-2 pt-1">
-            <p class="font-bold text-lg">
-              #{{ shade.id }}
-              <span>{{ getColorName(shade.code) }}</span>
-            </p>
-            <p class="text-xs">{{ formatCreatedAt(shade.created_at) }}</p>
-          </div>
           <div class="flex items-end">
             <div
               v-for="(color, colorIndex) in shade.colors"
@@ -100,6 +93,7 @@
               </div>
             </div>
           </popper>
+          <p class="text-xs">{{ formatCreatedAt(shade.created_at) }}</p>
         </div>
       </div>
     </div>
@@ -131,8 +125,14 @@ export default {
       myLikedShades: [],
       pagination: {
         page: 1,
-        maxPerPage: 5,
+        maxPerPage: 12,
         total: 0,
+      },
+      delay: {
+        shade: {
+          n: null,
+          t: 150,
+        },
       },
     }
   },
@@ -160,10 +160,6 @@ export default {
     },
     formatCreatedAt(date) {
       return timeago.format(date)
-    },
-    getColorName(code) {
-      const params = new URLSearchParams(code)
-      return params.get('name')
     },
     toggleLikeShade(shade) {
       if (!this.isLoggedIn) {
@@ -274,37 +270,37 @@ export default {
         this.getShades()
       }, this.delay.refreshShades.t)
     },
-    async getShades() {
-      const cacheKey = 'shades.community.shades'
-      const { data: cache, error } = await this.fromCache({
-        key: cacheKey,
-        expiry: new Date(+new Date() - 15 * 60000), // - 15 minutes
-      })
-      if (error) {
-        this.loading = true
-        const { data, error, count } = await this.$supabase
-          .from('shades')
-          .select('*', { count: 'exact' })
-          .eq('is_public', true)
-          .range(this.pagination.page - 1 * this.pagination.maxPerPage, this.pagination.maxPerPage)
-          .order('id', { ascending: false })
-        this.loading = false
-        if (error) {
-          this.$notify({
-            text: "Couldn't get most liked shades",
-            type: 'error',
-            duration: 4000,
-          })
-          return
-        }
-        this.$store.commit('setCacheValue', { key: cacheKey, value: { data, count } })
-        this.shades = data
-        this.pagination.total = count
-        return
+    getShades() {
+      clearTimeout(this.delay.shade.n)
+      this.delay.shade.n = setTimeout(() => {
+        this._getShades()
+      }, this.delay.shade.t)
+    },
+    async _getShades() {
+      this.loading = true
+      const from = (this.pagination.page - 1) * this.pagination.maxPerPage
+      let to = (this.pagination.page - 1) * this.pagination.maxPerPage + this.pagination.maxPerPage - 1
+      if (this.pagination.total !== 0 && to > this.pagination.total) {
+        to = this.pagination.total
       }
 
-      this.shades = cache.data
-      this.pagination.total = cache.count
+      const { data, error, count } = await this.$supabase
+        .from('shades')
+        .select('*', { count: 'exact' })
+        .eq('is_public', true)
+        .range(from, to)
+        .order('id', { ascending: false })
+      this.loading = false
+      if (error) {
+        this.$notify({
+          text: "Couldn't get most liked shades",
+          type: 'error',
+          duration: 4000,
+        })
+        return
+      }
+      this.shades = data
+      this.pagination.total = count
     },
   },
 }
