@@ -22,7 +22,7 @@
               class="text-left mr-6"
             />
             <div
-              class="btn bg-theme-500 hover:bg-theme-700"
+              class="btn bg-theme-500 hover:bg-theme-700 select-none"
               @click="toggleTheme"
             >
               <i

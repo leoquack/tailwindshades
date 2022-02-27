@@ -3,10 +3,9 @@
 
     <div
       v-if="step === 'base' && !hasURLHash"
-      class="px-2 md:px-0 text-center flex-grow grid grid-cols-3 space-x-6"
+      class="px-2 md:px-0 text-center flex-grow grid md:grid-cols-2 lg:grid-cols-3 md:space-x-3 lg:space-x-6"
     >
-      <div></div>
-      <div class="leading-none text-theme-lighter flex flex-col justify-center -mt-12">
+      <div class="leading-none text-theme-lighter flex flex-col justify-center lg:-mt-12 lg:col-start-2">
         <p class="text-lg md:text-xl text-left">Start by</p>
         <p class="text-3xl md:text-4xl font-bold mt-1 text-left">selecting a <u>base</u> color</p>
         <input

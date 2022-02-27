@@ -1,60 +1,42 @@
 <template>
-  <div class="text-right flex flex-col">
-    <p class="text-xl font-bold">Community Shades</p>
-
-    <div class="flex items-center self-end">
-      <p class="text-sm font-bold">
-        Most liked
-      </p>
-
-      <div
-        @click="refreshMostLikedShades"
-        class="ml-2 hover:text-purple-500 cursor-pointer"
-      >
+  <div class="flex flex-col">
+    <div class="md:max-w-[300px] md:self-end">
+      <div class="text-xl font-bold flex items-center justify-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+          class="h-5 w-5"
+          viewBox="0 0 20 20"
+          fill="currentColor"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-          />
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
+
+        <span class="mx-2">
+          Community shades
+        </span>
+
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
         </svg>
       </div>
-    </div>
-    <div
-      v-for="(shade, shadeIndex) in mostLikedShades"
-      :key="`most-liked-shade-${shadeIndex}`"
-      @click="editCommunityShade(shade)"
-      class="py-2 mb-2 cursor-pointer max-w-[300px] self-end px-2 rounded shadow-lg hover:bg-theme-700"
-    >
-      <div class="flex items-center justify-between">
+
+      <div class="flex items-center justify-between px-2 border-b border-theme-reverse mx-2 py-1 mt-3 mb-1">
+        <p class="text-sm font-bold">
+          Most liked
+        </p>
+
         <div
-          @click.stop="toggleLikeShade(shade)"
-          class="flex items-start hover:text-purple-500"
+          @click="refreshMostLikedShades"
+          class="ml-2 hover:text-purple-500 cursor-pointer"
         >
           <svg
-            v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)"
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-purple-500"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <svg
-            v-else
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
+            class="h-4 w-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -63,103 +45,118 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
             />
           </svg>
-
-          <span class="ml-2 text-sm">
-            {{ `${shade.likes} ${(shade.likes > 1 ? 'Likes' : 'Like')}` }}
-          </span>
-        </div>
-
-        <div class="text-xs">
-          {{ formatCreatedAt(shade.created_at) }}
         </div>
       </div>
-
-      <div class="flex items-end mt-1">
-        <div
-          v-for="(color, colorIndex) in shade.colors"
-          :key="`shade-${shadeIndex}-color-${colorIndex}`"
-          class="w-8 h-8"
-          :style="'background-color: ' + color"
-        >
+      <div
+        v-for="(shade, shadeIndex) in mostLikedShades"
+        :key="`most-liked-shade-${shadeIndex}`"
+        @click="editCommunityShade(shade)"
+        class="pt-2 pb-[2px] mb-1 cursor-pointer px-2 rounded hover:bg-theme-600"
+      >
+        <div class="flex items-end">
           <div
-            class="-mt-2 flex justify-center"
-            v-if="colorIndex === 5"
-          ><svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-2 w-2"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+            v-for="(color, colorIndex) in shade.colors"
+            :key="`shade-${shadeIndex}-color-${colorIndex}`"
+            class="w-8 h-8"
+            :style="'background-color: ' + color"
+          >
+            <div
+              class="-mt-2 flex justify-center"
+              v-if="colorIndex === 5"
+            ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-2 w-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <popper>
+            <div class="popper">
+              <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)">
+                Unlike shade
+              </span>
+              <span v-else>
+                Like shade
+              </span>
+            </div>
+
+            <div
+              slot="reference"
+              class="bottom"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
+
+              <div
+                @click.stop="toggleLikeShade(shade)"
+                class="flex items-center hover:text-purple-500"
+              >
+                <svg
+                  v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 text-purple-500"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <svg
+                  v-else
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+
+                <span class="ml-1 text-xs">
+                  {{ `${shade.likes} ${(shade.likes > 1 ? 'Likes' : 'Like')}` }}
+                </span>
+              </div>
+            </div>
+          </popper>
+          <div class="text-xs">
+            {{ formatCreatedAt(shade.created_at) }}
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="flex items-center self-end">
-      <p class="text-sm font-bold">
-        Recent
-      </p>
+      <div class="flex items-center justify-between px-2 border-b border-theme-reverse mx-2 py-1 mt-8 mb-1">
+        <p class="text-sm font-bold">
+          Recent
+        </p>
 
-      <div
-        @click="refreshRecentShades"
-        class="ml-2 hover:text-purple-500 cursor-pointer"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-          />
-        </svg>
-      </div>
-    </div>
-
-    <div
-      v-for="(shade, shadeIndex) in recentShades"
-      :key="`recent-shade-${shadeIndex}`"
-      @click="editCommunityShade(shade)"
-      class="py-2 mb-2 cursor-pointer max-w-[300px] self-end px-2 rounded shadow-lg hover:bg-theme-700"
-    >
-      <div class="flex items-center justify-between">
         <div
-          @click.stop="toggleLikeShade(shade)"
-          class="flex items-start hover:text-purple-500"
+          @click="refreshRecentShades"
+          class="ml-2 hover:text-purple-500 cursor-pointer"
         >
           <svg
-            v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)"
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-purple-500"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
-              d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <svg
-            v-else
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
+            class="h-4 w-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -168,47 +165,106 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
             />
           </svg>
-
-          <span class="ml-2 text-sm">
-            {{ `${shade.likes} ${(shade.likes > 1 ? 'Likes' : 'Like')}` }}
-          </span>
-        </div>
-
-        <div class="text-xs">
-          {{ formatCreatedAt(shade.created_at) }}
         </div>
       </div>
-
-      <div class="flex items-end mt-1">
-        <div
-          v-for="(color, colorIndex) in shade.colors"
-          :key="`shade-${shadeIndex}-color-${colorIndex}`"
-          class="w-8 h-8"
-          :style="'background-color: ' + color"
-        >
+      <div
+        v-for="(shade, shadeIndex) in recentShades"
+        :key="`recent-shade-${shadeIndex}`"
+        @click="editCommunityShade(shade)"
+        class="pt-2 pb-[2px] mb-1 cursor-pointer px-2 rounded hover:bg-theme-600"
+      >
+        <div class="flex items-end">
           <div
-            class="-mt-2 flex justify-center"
-            v-if="colorIndex === 5"
-          ><svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-2 w-2"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+            v-for="(color, colorIndex) in shade.colors"
+            :key="`shade-${shadeIndex}-color-${colorIndex}`"
+            class="w-8 h-8"
+            :style="'background-color: ' + color"
+          >
+            <div
+              class="-mt-2 flex justify-center"
+              v-if="colorIndex === 5"
+            ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-2 w-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <popper>
+            <div class="popper">
+              <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)">
+                Unlike shade
+              </span>
+              <span v-else>
+                Like shade
+              </span>
+            </div>
+
+            <div
+              slot="reference"
+              class="bottom"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
+
+              <div
+                @click.stop="toggleLikeShade(shade)"
+                class="flex items-center hover:text-purple-500"
+              >
+                <svg
+                  v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5 text-purple-500"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <svg
+                  v-else
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
+                </svg>
+
+                <span class="ml-1 text-xs">
+                  {{ `${shade.likes} ${(shade.likes > 1 ? 'Likes' : 'Like')}` }}
+                </span>
+              </div>
+            </div>
+          </popper>
+          <div class="text-xs">
+            {{ formatCreatedAt(shade.created_at) }}
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -216,8 +272,13 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import * as timeago from 'timeago.js'
+import Popper from 'vue-popperjs'
+import 'vue-popperjs/dist/vue-popper.css'
 
 export default {
+  components: {
+    popper: Popper,
+  },
   data() {
     return {
       recentShades: [],
@@ -366,7 +427,7 @@ export default {
           .from('shades')
           .select()
           .eq('is_public', true)
-          .limit(5)
+          .limit(4)
           .order('id')
         this.loading = false
         if (error) {
@@ -403,7 +464,8 @@ export default {
           .from('shades')
           .select()
           .eq('is_public', true)
-          .limit(5)
+          .gt('likes', 0)
+          .limit(4)
           .order('likes', { ascending: false })
         this.loading = false
         if (error) {
