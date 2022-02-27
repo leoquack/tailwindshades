@@ -80,8 +80,7 @@
                     class="mr-4"
                   >
                     <i class="fas fa-heart"></i>
-                    {{ shade.likes }}
-                    Likes
+                    {{ `${shade.likes} ${(shade.likes > 1 ? 'Likes' : 'Like')}` }}
                   </div>
                   <div
                     v-if="shade.is_public"

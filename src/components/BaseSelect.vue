@@ -45,7 +45,7 @@
           class="flex justify-center items-center mt-24"
         />
       </div>
-      <div class="bg-theme-900">
+      <div class="py-4 px-4 text-theme">
         <CommunityQuickSelect />
       </div>
     </div>
@@ -298,7 +298,7 @@ export default {
       // Force reload in case the URL hash changes manually.
       let h = window.location.hash.substring(1)
       this.shadeHasUnsavedChanges = this.shade.code !== h
-      if (h !== this.$refs.shadesComponent.urlHash()) {
+      if (this.$refs.shadesComponent && h !== this.$refs.shadesComponent.urlHash()) {
         window.location.reload()
       }
     },
