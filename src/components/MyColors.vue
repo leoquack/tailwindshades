@@ -124,6 +124,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
@@ -132,6 +134,9 @@ export default {
       loading: false,
       publishActive: true,
     }
+  },
+  computed: {
+    ...mapGetters(['user']),
   },
   mounted() {
     if (!this.shades.length) {
@@ -171,6 +176,7 @@ export default {
       const { data, error } = await this.$supabase
         .from('shades')
         .select()
+        .eq('user_id', this.user.id)
         .order('id')
       this.loading = false
       if (error) {
