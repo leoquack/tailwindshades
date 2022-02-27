@@ -37,6 +37,21 @@ export default [
       auth: false,
       title: 'Community shades',
     },
+    props: {
+      mode: 'all',
+    },
+    component: CommunityShades,
+  },
+  {
+    path: '/community/my-liked-shades',
+    name: 'my-liked-shades',
+    meta: {
+      auth: false,
+      title: 'My liked shades',
+    },
+    props: {
+      mode: 'my-liked',
+    },
     component: CommunityShades,
   },
 ]

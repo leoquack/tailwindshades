@@ -4,12 +4,10 @@
       <div
         v-for="(shade, shadeIndex) in shades"
         :key="`shade-${shadeIndex}`"
-        class="mb-8 mx-6 bor32der border-theme-600 rounded-lg overflow-hidden shadow-lg"
+        class="mb-8 mx-6 bor32der border-theme-600 rounded-lg overflow-hidden shadow-lg cursor-pointer"
+        @click="editCommunityShade(shade)"
       >
-        <div
-          class="cursor-pointer hover:bg-theme-600 rounded-lg"
-          @click="editCommunityShade(shade)"
-        >
+        <div class="hover:bg-theme-600 rounded-lg">
           <div class="flex items-end">
             <div
               v-for="(color, colorIndex) in shade.colors"
@@ -93,7 +91,7 @@
               </div>
             </div>
           </popper>
-          <p class="text-xs">{{ formatCreatedAt(shade.created_at) }}</p>
+          <p class="text-xs">Created {{ formatCreatedAt(shade.created_at) }}</p>
         </div>
       </div>
     </div>
@@ -115,6 +113,9 @@ import Popper from 'vue-popperjs'
 import 'vue-popperjs/dist/vue-popper.css'
 
 export default {
+  props: {
+    mode: String,
+  },
   components: {
     Pagination,
     popper: Popper,
@@ -134,6 +135,7 @@ export default {
           t: 150,
         },
       },
+      loading: false,
     }
   },
   computed: {
@@ -168,6 +170,7 @@ export default {
           type: 'error',
           duration: 4000,
         })
+        return
       }
 
       if (this.myLikedShades && this.myLikedShades.find(l => l.shade_id === shade.id)) {
@@ -228,6 +231,9 @@ export default {
       shade.likes--
     },
     async getMyLikedShades() {
+      if (!this.isLoggedIn) {
+        return
+      }
       const cacheKey = 'shades.myLikedShades'
       const { data: cache, error } = await this.fromCache({
         key: cacheKey,
@@ -256,6 +262,9 @@ export default {
       this.myLikedShades = cache
     },
     paginationChange(event) {
+      if (this.loading) {
+        return
+      }
       if (Math.ceil(this.pagination.total / this.pagination.maxPerPage) < event || event < 1) {
         return
       }
@@ -284,12 +293,25 @@ export default {
         to = this.pagination.total
       }
 
-      const { data, error, count } = await this.$supabase
-        .from('shades')
-        .select('*', { count: 'exact' })
-        .eq('is_public', true)
-        .range(from, to)
-        .order('id', { ascending: false })
+      let query = {}
+      if (this.mode === 'my-liked') {
+        query = this.$supabase
+          .from('liked_shades')
+          .select('shades!inner(*)', { count: 'exact' })
+          .eq('user_id', this.user.id)
+          .eq('shades.is_public', true)
+          .range(from, to)
+          .order('id', { ascending: false })
+      } else {
+        query = this.$supabase
+          .from('shades')
+          .select('*', { count: 'exact' })
+          .eq('is_public', true)
+          .range(from, to)
+          .order('id', { ascending: false })
+      }
+
+      const { data, error, count } = await query
       this.loading = false
       if (error) {
         this.$notify({
@@ -299,7 +321,13 @@ export default {
         })
         return
       }
-      this.shades = data
+
+      if (this.mode === 'my-liked') {
+        this.shades = data.map(d => d.shades)
+      } else {
+        this.shades = data
+      }
+
       this.pagination.total = count
     },
   },
