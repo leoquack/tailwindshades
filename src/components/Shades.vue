@@ -40,9 +40,9 @@
               class="border-l border-r border-theme-600"
               :class="[
                 'flex flex-grow',
-                { 'font-black': stop === 5 },
-                { 'border-t': stops[0] === stop},
-                { 'border-b': stops[stops.length - 1] === stop}
+                { 'font-black': stop === baseShadeStop },
+                { 'border-t': stops[0] === stop },
+                { 'border-b': stops[stops.length - 1] === stop },
               ]"
               :style="`background-color: #${(override ? override.hex : hex)}; color: ${(override ? override.textColor : textColor)};`"
             >
@@ -264,6 +264,7 @@ export default {
   props: {
     initialHEX: String,
     colors: Array,
+    baseShadeStop: Number,
     dbShade: {},
   },
   components: {
@@ -338,9 +339,10 @@ export default {
       let stepUp = this.groupOptions.stepUp
       let stepDown = this.groupOptions.stepDown
       let rgb = converter.hsl.rgb(hsl)
+      let baseShadeStop = this.baseShadeStop
 
       let shades = this.stops.map(stop => {
-        const distance = 5 - stop
+        const distance = baseShadeStop - stop
         let direction = distance > 0 ? stepUp : stepDown
         let lightness = this.clamp(hsl[2] + direction * distance, 0, 100)
 
@@ -435,16 +437,16 @@ export default {
     },
     // auto is not used currently.
     auto() {
-      const baseShade = this.result.shades[5]
+      const baseShade = this.result.shades[this.baseShadeStop]
 
       for (let i in this.result.shades) {
         let currentShade = this.result.shades[i]
-        if (currentShade.stop == 5) {
+        if (currentShade.stop == this.baseShadeStop) {
           continue
         }
 
         i = parseInt(i)
-        let scale = Math.abs(i - 5)
+        let scale = Math.abs(i - this.baseShadeStop)
 
         // Looping HSL values here [h, s, l].
         for (let j = 0; j <= 2; j++) {
