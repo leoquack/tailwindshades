@@ -216,10 +216,6 @@
                 :min="-100"
                 :max="100"
               >
-                <span
-                  class="bg-theme-200 text-theme-lighter px-1 text-xs font-bold"
-                  style="font-size: .6rem"
-                >NEW</span>
               </slider-input>
             </div>
           </div>
