@@ -27,6 +27,12 @@
             ></div>
           </div>
         </div>
+        <BaseStopSelect
+          class="mt-8"
+          v-show="validHex"
+          :base-shade-stop="baseShadeStop"
+          @set-base-shade-stop="baseShadeStop = $event"
+        />
         <transition name="fade">
           <div
             class="btn mt-8 py-4 px-8"
@@ -139,10 +145,11 @@
         :initialHEX="hex"
         :dbShade="shade"
         :colors.sync="colors"
+        :baseShadeStop="baseShadeStop"
+        @set-base-shade-stop="baseShadeStop = $event"
         ref="shadesComponent"
       />
     </div>
-
   </div>
 </template>
 
@@ -153,6 +160,7 @@ import CarbonAds from '@/components/CarbonAds'
 import converter from 'color-convert'
 import DropdownComponent from '@/components/Dropdown'
 import CommunityQuickSelect from '@/components/CommunityQuickSelect'
+import BaseStopSelect from '@/components/BaseStopSelect'
 
 export default {
   components: {
@@ -160,6 +168,7 @@ export default {
     CarbonAds,
     DropdownComponent,
     CommunityQuickSelect,
+    BaseStopSelect,
   },
   metaInfo: {
     title: 'Tailwind Shades',
@@ -190,6 +199,7 @@ export default {
       ],
       hasURLHash: window.location.hash.length > 2,
       shadeHasUnsavedChanges: false,
+      baseShadeStop: 5,
     }
   },
   computed: {
@@ -213,7 +223,7 @@ export default {
     const shade = this.$route.params.shade
     if (shade) {
       this.shade = shade
-      this.hex = shade.colors[5]
+      this.hex = shade.colors[this.baseShadeStop]
       this.step = 'shades'
     }
 
