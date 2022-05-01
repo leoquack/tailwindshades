@@ -170,7 +170,15 @@
                     />
                   </div>
                 </div>
+
               </div>
+              <BaseStopSelect
+                class="mt-2"
+                :base-shade-stop="baseShadeStop"
+                title="Move base stop"
+                :small="true"
+                @set-base-shade-stop="$emit('set-base-shade-stop', $event)"
+              />
             </div>
           </div>
 
@@ -223,16 +231,17 @@
             <div class="mb-2">
               <div class="flex items-center leading-none border-b border-theme-600">
                 <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">3</p>
-                <p class="text-xl py-2 px-2 text-theme-darker font-bold">Get code</p>
+                <p class="text-xl py-2 px-2 text-theme-darker font-bold w-1/3">Get code</p>
+                <div class="px-4 flex-grow">
+                  <input
+                    class="form-control"
+                    type="text"
+                    v-model="code.name"
+                  />
+                </div>
               </div>
             </div>
             <div class="px-2 relative">
-              <label class="text-sm font-bold">Color name:</label>
-              <input
-                class="form-control"
-                type="text"
-                v-model="code.name"
-              />
               <prism-component language="javascript">{{ code.name | appendColon }}{{ codeDisplay }}</prism-component>
               <input
                 type="hidden"
@@ -257,6 +266,7 @@
 import converter from 'color-convert'
 import { ntc } from '@/lib/ntc.js'
 import SliderInput from '@/components/SliderInput'
+import BaseStopSelect from '@/components/BaseStopSelect'
 import PrismComponent from 'vue-prism-component'
 import _ from 'lodash'
 
@@ -270,6 +280,7 @@ export default {
   components: {
     SliderInput,
     PrismComponent,
+    BaseStopSelect,
   },
   data() {
     return {
@@ -484,6 +495,7 @@ export default {
         'step-down': this.groupOptions.stepDown,
         'hue-shift': this.groupOptions.hueShift,
         name: this.code.name,
+        'base-stop': this.baseShadeStop,
       }
 
       let defaultOverridable = this.defaultOverridable()
@@ -559,6 +571,17 @@ export default {
       let namePattern = new RegExp(/[A-z /]+$/i)
       if (!namePattern.test(name)) {
         return false
+      }
+
+      lookup = parts.find(p => p[0] === 'base-step')
+      if (lookup?.length) {
+        let baseStep = lookup[1]
+        if (this.stops.includes(baseStep)) {
+          this.$emit('set-base-shade-stop', baseStep)
+        }
+      } else {
+        // for backwards-compatible URLs.
+        this.$emit('set-base-shade-stop', 5)
       }
 
       let urlOverridesRaw = parts.find(p => p[0] === 'overrides')

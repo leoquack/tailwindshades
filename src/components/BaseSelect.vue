@@ -27,15 +27,12 @@
             ></div>
           </div>
         </div>
-        <div class="mt-8">
-          <p class="text-left">Select which shade step you want the base color to apply at (default 500)</p>
-          <div class="flex mt-3">
-            <div v-for="stop in stops" :key="'stop-' + stop">
-              <input type="radio" v-model="baseShadeStop" name="baseShadeStop" :value="stop" class="ml-2" />
-              <label for="baseShadeStop" class="pl-2">{{ stop * 100 }}</label>
-            </div>
-          </div>
-        </div>
+        <BaseStopSelect
+          class="mt-8"
+          v-show="validHex"
+          :base-shade-stop="baseShadeStop"
+          @set-base-shade-stop="baseShadeStop = $event"
+        />
         <transition name="fade">
           <div
             class="btn mt-8 py-4 px-8"
@@ -149,6 +146,7 @@
         :dbShade="shade"
         :colors.sync="colors"
         :baseShadeStop="baseShadeStop"
+        @set-base-shade-stop="baseShadeStop = $event"
         ref="shadesComponent"
       />
     </div>
@@ -162,6 +160,7 @@ import CarbonAds from '@/components/CarbonAds'
 import converter from 'color-convert'
 import DropdownComponent from '@/components/Dropdown'
 import CommunityQuickSelect from '@/components/CommunityQuickSelect'
+import BaseStopSelect from '@/components/BaseStopSelect'
 
 export default {
   components: {
@@ -169,6 +168,7 @@ export default {
     CarbonAds,
     DropdownComponent,
     CommunityQuickSelect,
+    BaseStopSelect,
   },
   metaInfo: {
     title: 'Tailwind Shades',
@@ -199,7 +199,6 @@ export default {
       ],
       hasURLHash: window.location.hash.length > 2,
       shadeHasUnsavedChanges: false,
-      stops: [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       baseShadeStop: 5,
     }
   },
