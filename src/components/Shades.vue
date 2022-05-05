@@ -512,6 +512,9 @@ export default {
         currentHash = this.urlHash()
       }
       let hashParts = hash.split('&').map(part => part.split('=').map(decodeURIComponent))
+      if (!hashParts.find(p => p[0] === 'base-stop')?.length) {
+        hashParts.push(['base-stop', '5'])
+      }
 
       let currentHashParts = currentHash.split('&').map(part => part.split('=').map(decodeURIComponent))
       for (let hashPart of hashParts) {
