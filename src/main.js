@@ -15,6 +15,9 @@ import VTooltip from 'v-tooltip'
 
 Vue.use(VTooltip, {
   defaultContainer: '#root',
+  popover: {
+    defaultContainer: '#root',
+  },
 })
 Vue.use(VueMeta)
 Vue.use(VueAnalytics, {
