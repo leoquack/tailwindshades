@@ -63,10 +63,9 @@
         <button
           class="text-theme text-sm hover:text-blue-400 focus:outline-none p-2"
           @click="backToBaseSelection"
-          title="Back to base selection"
         >
           <i class="fas fa-angle-left"></i>
-          back to base color selection.
+          Back to base color selection.
         </button>
 
         <div class="flex items-center">

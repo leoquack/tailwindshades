@@ -14,6 +14,7 @@
     "global": "^4.4.0",
     "maska": "^1.2.0",
     "prismjs": "^1.27.0",
+    "v-tooltip": "^2.1.3",
     "vue": "^2.6.11",
     "vue-analytics": "^5.17.2",
     "vue-color": "^2.7.0",

@@ -11,7 +11,11 @@ import Maska from 'maska'
 import 'prismjs'
 import '@/assets/css/prism-vsc-dark-plus.css'
 import { createClient } from '@supabase/supabase-js'
+import VTooltip from 'v-tooltip'
 
+Vue.use(VTooltip, {
+  defaultContainer: '#root',
+})
 Vue.use(VueMeta)
 Vue.use(VueAnalytics, {
   id: 'UA-145441695-1',

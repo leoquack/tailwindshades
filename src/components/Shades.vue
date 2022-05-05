@@ -12,11 +12,12 @@
           <div class="flex flex-col flex-grow mt-4">
             <div class="flex text-xs select-none text-center">
               <div class="w-80 px-2 border border-theme-600 border-r-0 border-b-0 flex justify-between">
-                <p>Fine tune (do this last)</p>
+                <p>Fine tune</p>
                 <a
                   v-if="hasOverrides"
                   class="underline cursor-pointer hover:bg-theme text-blue hover:text-blue-600 px-2"
                   @click="resetOverrides"
+                  v-tooltip="'⚠️ reset ALL fine tunings ⚠️'"
                 >reset</a>
                 <label class="flex items-center cursor-pointer">
                   <input
@@ -24,7 +25,10 @@
                     class="form-checkbox"
                     v-model="fineTuneLimitLightness"
                   />
-                  <span class="ml-1">limit lightness</span>
+                  <span
+                    class="ml-1"
+                    v-tooltip="'* limit between the lightness of the previous and next shades'"
+                  >limit lightness</span>
                 </label>
                 <!-- <a
                   v-if="!hasOverrides"
@@ -133,11 +137,11 @@
                     <p><strong>HEX:</strong> {{ result.color.hex | displayHEX }}</p>
                     <p><strong>RGB:</strong> {{ result.color.rgb | displayRGB }}</p>
                     <p><strong>HSL:</strong> {{ result.color.hsl | displayHSL }}</p>
-                    <p>
-                      <strong>Initial selection: </strong>
+                    <p v-if="initialHEX && initialHEX !== $options.filters.displayHEX(result.color.hex)">
+                      <strong>Initial: </strong>
                       <a
                         class="underline cursor-pointer hover:bg-theme hover:text-theme-lighter"
-                        title="reset"
+                        v-tooltip="'⚠️ click to reset to initial base selection ⚠️'"
                         @click="reset"
                       >{{ initialHEX }}</a>
                     </p>
