@@ -105,7 +105,11 @@
                   </div>
                 </div>
 
-                <div class="flex-grow text-center">
+                <div class="flex flex-grow text-center items-center justify-center">
+                  <div
+                    class="text-3xl font-normal"
+                    v-if="stop === baseShadeStop"
+                  >[</div>
                   <div class="px-2">
                     <p class="text-xs leading-2">
                       {{ stop * 100 }}
@@ -114,6 +118,10 @@
                       #{{ override ? override.hex : hex }}
                     </p>
                   </div>
+                  <div
+                    class="text-3xl font-normal"
+                    v-if="stop === baseShadeStop"
+                  >]</div>
                 </div>
               </div>
             </div>
