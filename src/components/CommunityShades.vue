@@ -86,7 +86,7 @@
                 </svg>
 
                 <span class="ml-1 text-xs">
-                  {{ `${shade.likes} ${(shade.likes > 1 ? 'Likes' : 'Like')}` }}
+                  {{ `${shade.likes} ${(shade.likes === 1 ? 'Like' : 'Likes')}` }}
                 </span>
               </div>
             </div>
@@ -108,9 +108,10 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import * as timeago from 'timeago.js'
-import Pagination from '@/components/Pagination'
+import Pagination from '@/components/Pagination.vue'
 import Popper from 'vue-popperjs'
 import 'vue-popperjs/dist/vue-popper.css'
+import community from '@/composables/community.js'
 
 export default {
   props: {
@@ -120,10 +121,10 @@ export default {
     Pagination,
     popper: Popper,
   },
+  mixins: [community],
   data() {
     return {
       shades: [],
-      myLikedShades: [],
       pagination: {
         page: 1,
         maxPerPage: 12,
@@ -135,7 +136,6 @@ export default {
           t: 150,
         },
       },
-      loading: false,
     }
   },
   watch: {
@@ -157,6 +157,7 @@ export default {
   methods: {
     ...mapActions(['fromCache']),
     editCommunityShade(shade) {
+      this.$store.commit('setOriginShade', shade)
       this.$router
         .push({
           name: 'shade',
@@ -167,104 +168,6 @@ export default {
     },
     formatCreatedAt(date) {
       return timeago.format(date)
-    },
-    toggleLikeShade(shade) {
-      if (!this.isLoggedIn) {
-        this.$notify({
-          text: 'Please login to access this feature',
-          type: 'error',
-          duration: 4000,
-        })
-        return
-      }
-
-      if (this.myLikedShades && this.myLikedShades.find(l => l.shade_id === shade.id)) {
-        this.unlikeShade(shade)
-        return
-      }
-      this.likeShade(shade)
-    },
-    async likeShade(shade) {
-      const row = {
-        user_id: this.user.id,
-        shade_id: shade.id,
-        recorded_shade_code: shade.code,
-        recorded_shade_colors: shade.colors,
-      }
-      const { error } = await this.$supabase.from('liked_shades').insert(row)
-      if (error) {
-        this.$notify({
-          text: "Couldn't like shade",
-          type: 'error',
-          duration: 4000,
-        })
-        return
-      }
-
-      this.$notify({
-        text: 'Shade saved in liked shades',
-        type: 'info',
-        duration: 2000,
-      })
-      this.myLikedShades.push(row)
-      shade.likes++
-    },
-    async unlikeShade(shade) {
-      const { error } = await this.$supabase
-        .from('liked_shades')
-        .delete()
-        .match({
-          user_id: this.user.id,
-          shade_id: shade.id,
-        })
-      if (error) {
-        this.$notify({
-          text: "Couldn't unlike shade",
-          type: 'error',
-          duration: 4000,
-        })
-        return
-      }
-
-      this.$notify({
-        text: 'Shade removed from liked shades',
-        type: 'info',
-        duration: 2000,
-      })
-
-      this.myLikedShades = this.myLikedShades.filter(l => l.shade_id !== shade.id)
-      shade.likes--
-    },
-    async getMyLikedShades() {
-      if (!this.isLoggedIn) {
-        return
-      }
-      const cacheKey = 'shades.myLikedShades'
-      const { data: cache, error } = await this.fromCache({
-        key: cacheKey,
-        expiry: new Date(+new Date() - 15 * 60000), // - 15 minutes
-      })
-      if (error) {
-        this.loading = true
-        const { data, error } = await this.$supabase
-          .from('liked_shades')
-          .select()
-          .eq('user_id', this.user.id)
-        this.loading = false
-        if (error) {
-          this.$notify({
-            text: "Couldn't get my liked shades",
-            type: 'error',
-            duration: 4000,
-          })
-          return
-        }
-        this.$store.commit('setCacheValue', { key: cacheKey, value: data })
-        this.myLikedShades = data
-        return
-      }
-
-      this.myLikedShades = cache
     },
     paginationChange(event) {
       if (this.loading) {

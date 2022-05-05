@@ -263,10 +263,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import converter from 'color-convert'
 import { ntc } from '@/lib/ntc.js'
-import SliderInput from '@/components/SliderInput'
-import BaseStopSelect from '@/components/BaseStopSelect'
+import SliderInput from '@/components/SliderInput.vue'
+import BaseStopSelect from '@/components/BaseStopSelect.vue'
 import PrismComponent from 'vue-prism-component'
 import _ from 'lodash'
 
@@ -325,6 +326,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters(['originShade']),
     hasOverrides() {
       return !_.isEqual(this.overrides, this.defaultOverrides())
     },
@@ -485,8 +487,38 @@ export default {
     updateURLHash() {
       clearTimeout(this.delay.hash.n)
       this.delay.hash.n = setTimeout(() => {
-        window.location.hash = this.urlHash()
+        const newURLHash = this.urlHash()
+
+        if (this.originShade.id && !this.hashCompares(this.originShade.code, newURLHash)) {
+          this.$store.commit('setOriginShade', {})
+        }
+
+        window.location.hash = newURLHash
       }, this.delay.hash.t)
+    },
+    hashCompares(hash, currentHash) {
+      if (!hash) {
+        return false
+      }
+      if (!currentHash.length) {
+        currentHash = this.urlHash()
+      }
+      let hashParts = hash.split('&').map(part => part.split('=').map(decodeURIComponent))
+
+      let currentHashParts = currentHash.split('&').map(part => part.split('=').map(decodeURIComponent))
+      for (let hashPart of hashParts) {
+        let found = false
+        for (let currentHashPart of currentHashParts) {
+          if (currentHashPart[0] === hashPart[0] && currentHashPart[1] === hashPart[1]) {
+            found = true
+            break
+          }
+        }
+        if (!found) {
+          return false
+        }
+      }
+      return true
     },
     urlHash() {
       let parts = {

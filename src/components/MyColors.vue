@@ -80,7 +80,7 @@
                     class="mr-4"
                   >
                     <i class="fas fa-heart"></i>
-                    {{ `${shade.likes} ${(shade.likes > 1 ? 'Likes' : 'Like')}` }}
+                    {{ `${shade.likes} ${(shade.likes === 1 ? 'Like' : 'Likes')}` }}
                   </div>
                   <div
                     v-if="shade.is_public"
@@ -201,6 +201,7 @@ export default {
       this.shades = cache
     },
     editShade(shade) {
+      this.$store.commit('setOriginShade', shade)
       this.$router.push({
         name: 'shade',
         params: { shade },

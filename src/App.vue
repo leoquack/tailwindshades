@@ -65,7 +65,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import UserControl from '@/components/UserControl'
+import UserControl from '@/components/UserControl.vue'
 
 export default {
   name: 'app',

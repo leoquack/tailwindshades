@@ -9,6 +9,7 @@ export default new Vuex.Store({
     user: {},
     loginFeatures: true,
     cache: {},
+    originShade: {},
   },
   mutations: {
     setTheme(state, theme) {
@@ -22,6 +23,9 @@ export default new Vuex.Store({
         value,
         createdAt: Date.now(),
       }
+    },
+    setOriginShade(state, shade) {
+      state.originShade = shade
     },
   },
   actions: {
@@ -52,5 +56,6 @@ export default new Vuex.Store({
       return Object.entries(state.user).length > 0
     },
     loginFeatures: state => state.loginFeatures,
+    originShade: state => state.originShade,
   },
 })

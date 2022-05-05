@@ -93,7 +93,6 @@
                   class="text-sm"
                   v-if="shadeHasUnsavedChanges"
                 >*</span>
-                <!-- <i class="fas fa-save mr-1"></i> -->
                 save
               </div>
               <DropdownComponent
@@ -137,6 +136,61 @@
             <i class="fas fa-share"></i>
             share
           </button>
+
+          <div
+            class="flex justify-between px-2 text-xs py-1"
+            v-if="loginFeatures && originShade.id"
+          >
+            <popper>
+              <div class="popper">
+                <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === originShade.id)">
+                  Unlike shade
+                </span>
+                <span v-else>
+                  Like shade
+                </span>
+              </div>
+
+              <div
+                slot="reference"
+                class="bottom"
+              >
+                <div
+                  @click.stop="toggleLikeShade(originShade)"
+                  class="flex items-center hover:text-purple-500 cursor-pointer"
+                >
+                  <svg
+                    v-if="myLikedShades && myLikedShades.find(l => l.shade_id === originShade.id)"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-purple-500"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <svg
+                    v-else
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-theme"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </popper>
+          </div>
         </div>
       </div>
 
@@ -154,12 +208,16 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import ShadesComponent from '@/components/Shades'
-import CarbonAds from '@/components/CarbonAds'
+import ShadesComponent from '@/components/Shades.vue'
+import CarbonAds from '@/components/CarbonAds.vue'
 import converter from 'color-convert'
-import DropdownComponent from '@/components/Dropdown'
-import CommunityQuickSelect from '@/components/CommunityQuickSelect'
-import BaseStopSelect from '@/components/BaseStopSelect'
+import DropdownComponent from '@/components/Dropdown.vue'
+import CommunityQuickSelect from '@/components/CommunityQuickSelect.vue'
+import BaseStopSelect from '@/components/BaseStopSelect.vue'
+import community from '@/composables/community.js'
+import Popper from 'vue-popperjs'
+import 'vue-popperjs/dist/vue-popper.css'
+import * as timeago from 'timeago.js'
 
 export default {
   components: {
@@ -168,6 +226,7 @@ export default {
     DropdownComponent,
     CommunityQuickSelect,
     BaseStopSelect,
+    popper: Popper,
   },
   metaInfo: {
     title: 'Tailwind Shades',
@@ -178,6 +237,7 @@ export default {
       },
     ],
   },
+  mixins: [community],
   data() {
     return {
       isProduction: process.env.NODE_ENV === 'production',
@@ -212,7 +272,7 @@ export default {
       }
       return /^#[0-9A-F]{6}$/i.test(hex)
     },
-    ...mapGetters(['theme', 'user', 'isLoggedIn', 'loginFeatures']),
+    ...mapGetters(['theme', 'user', 'isLoggedIn', 'loginFeatures', 'originShade']),
   },
   mounted() {
     if (process.env.NODE_ENV === 'production') {
@@ -226,12 +286,19 @@ export default {
       this.step = 'shades'
     }
 
+    if (!this.myLikedShades.length) {
+      this.getMyLikedShades()
+    }
+
     window.addEventListener('hashchange', this.handleHashChange)
   },
   beforeDestroy() {
     window.removeEventListener('hashchange', this.handleHashChange)
   },
   methods: {
+    formatCreatedAt(date) {
+      return timeago.format(date)
+    },
     saveShade() {
       if (!this.shadeHasUnsavedChanges) {
         return
@@ -289,6 +356,7 @@ export default {
 
       this.shade = Object.assign({}, this.shade, data[0])
       this.shadeHasUnsavedChanges = this.shade.code !== window.location.hash.substring(1)
+      this.$store.commit('setOriginShade', this.shade)
 
       this.$notify({
         text: 'Shade saved successfully',
@@ -337,6 +405,7 @@ export default {
       window.getSelection().removeAllRanges()
     },
     backToBaseSelection() {
+      this.$store.commit('setOriginShade', {})
       window.location.hash = ''
       history.pushState('', document.title, window.location.pathname + window.location.search)
       this.shade = this.emptyShade()

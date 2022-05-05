@@ -100,8 +100,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import ModalComponent from '@/components/Modal'
-import DropdownComponent from '@/components/Dropdown'
+import ModalComponent from '@/components/Modal.vue'
+import DropdownComponent from '@/components/Dropdown.vue'
 
 export default {
   components: {
