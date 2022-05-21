@@ -118,7 +118,7 @@ export default {
       shades: [],
       pagination: {
         page: 1,
-        maxPerPage: 12,
+        maxPerPage: 18,
         total: 0,
       },
       delay: {
