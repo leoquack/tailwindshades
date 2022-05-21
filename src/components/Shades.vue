@@ -502,6 +502,7 @@ export default {
         }
 
         window.history.replaceState(null, '', `#${newURLHash}`)
+        this.$emit('hash-changed', newURLHash)
       }, this.delay.hash.t)
     },
     hashCompares(hash, currentHash) {

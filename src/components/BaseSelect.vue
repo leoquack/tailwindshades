@@ -195,6 +195,7 @@
         :colors.sync="colors"
         :baseShadeStop="baseShadeStop"
         @set-base-shade-stop="baseShadeStop = $event"
+        @hash-changed="hashChanged"
         ref="shadesComponent"
       />
     </div>
@@ -356,6 +357,12 @@ export default {
         duration: 2000,
       })
       this.$store.commit('setCacheValue', { key: 'shades.mine', value: null })
+    },
+    hashChanged(newHash) {
+      if (!this.shade.code) {
+        return
+      }
+      this.shadeHasUnsavedChanges = this.shade.code !== newHash
     },
     handleHashChange() {
       this.hasURLHash = window.location.hash.length > 2
