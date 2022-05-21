@@ -137,9 +137,9 @@
 
             <div class="md:px-2 pt-2">
               <div class="flex mt-1">
-                <div class="pr-2 flex">
+                <div class="w-1/3 pr-2 flex">
                   <div
-                    class="text-xs leading-4 flex flex-col justify-center px-1 md:px-2 select-none"
+                    class="text-xs leading-4 flex flex-col justify-center px-1 md:px-2 select-none w-full"
                     :style="'background-color: #' + result.color.hex + '; color: ' + textColorFromBrightness(result.color.hex) + ';'"
                   >
                     <p><strong>HEX:</strong> {{ result.color.hex | displayHEX }}</p>
@@ -240,7 +240,7 @@
               <div class="flex items-center leading-none border-b border-theme-600">
                 <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">3</p>
                 <p class="text-xl py-2 px-2 text-theme-darker font-bold w-1/3">Get code</p>
-                <div class="px-4 flex-grow">
+                <div class="px-4">
                   <input
                     class="form-control"
                     type="text"
@@ -257,7 +257,7 @@
                 :value="$options.filters.appendColon(code.name) + codeDisplay"
               />
               <div
-                class="absolute right-0 top-0 mt-20 mr-4 bg-theme-700 px-4 py-2 text-xl rounded-full cursor-pointer hover:bg-theme-800"
+                class="absolute right-0 top-0 mr-4 bg-theme-700 px-4 py-2 text-xl rounded-full cursor-pointer hover:bg-theme-800"
                 @click="copyCodeToClipboard"
               >
                 <i class="far fa-copy"></i>
