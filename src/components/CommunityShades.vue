@@ -138,24 +138,27 @@ export default {
     ...mapGetters(['user', 'isLoggedIn']),
   },
   mounted() {
-    if (!this.shades.length) {
-      this.getShades()
-    }
     if (!this.myLikedShades.length) {
       this.getMyLikedShades()
+    }
+
+    const queryPage = this.$route.query.page
+    if (queryPage) {
+      this.pagination.page = parseInt(queryPage)
+    }
+
+    if (!this.shades.length) {
+      this.getShades()
     }
   },
   methods: {
     ...mapActions(['fromCache']),
     editCommunityShade(shade) {
       this.$store.commit('setOriginShade', shade)
-      this.$router
-        .push({
-          name: 'shade',
-        })
-        .then(() => {
-          window.location.hash = shade.code
-        })
+      this.$router.push({
+        name: 'shade',
+        hash: `#${shade.code}`,
+      })
     },
     formatCreatedAt(date) {
       return timeago.format(date)
@@ -168,6 +171,7 @@ export default {
         return
       }
 
+      this.$router.push({ name: 'community-shades', query: { page: event } })
       this.pagination.page = event
       this.getShades()
     },

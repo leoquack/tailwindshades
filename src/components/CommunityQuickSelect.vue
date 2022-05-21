@@ -254,7 +254,7 @@
         </div>
       </div>
 
-      <router-link to="/community/shades">See all</router-link>
+      <router-link to="/community/shades?page=1">see all</router-link>
 
     </div>
   </div>

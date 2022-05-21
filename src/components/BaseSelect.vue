@@ -65,7 +65,7 @@
           @click="backToBaseSelection"
         >
           <i class="fas fa-angle-left"></i>
-          Back to base color selection.
+          base color selection
         </button>
 
         <div class="flex items-center">
@@ -399,7 +399,7 @@ export default {
     backToBaseSelection() {
       this.$store.commit('setOriginShade', {})
       window.location.hash = ''
-      history.pushState('', document.title, window.location.pathname + window.location.search)
+      window.history.replaceState(null, '', window.location.pathname + window.location.search)
       this.shade = this.emptyShade()
       this.hex = ''
       this.step = 'base'

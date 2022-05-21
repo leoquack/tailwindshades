@@ -501,7 +501,7 @@ export default {
           this.$store.commit('setOriginShade', {})
         }
 
-        window.location.hash = newURLHash
+        window.history.replaceState(null, '', `#${newURLHash}`)
       }, this.delay.hash.t)
     },
     hashCompares(hash, currentHash) {
