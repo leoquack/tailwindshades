@@ -205,7 +205,7 @@
               <slider-input
                 title="Step up %"
                 v-model="groupOptions.stepUp"
-                :min="3"
+                :min="0"
                 :max="20"
               />
             </div>
@@ -213,7 +213,7 @@
               <slider-input
                 title="Step down %"
                 v-model="groupOptions.stepDown"
-                :min="3"
+                :min="0"
                 :max="20"
               />
             </div>
@@ -593,14 +593,14 @@ export default {
       let lookup = parts.find(p => p[0] === 'step-up')
       if (lookup?.length) {
         let stepUp = lookup[1]
-        stepUp = this.clamp(parseInt(stepUp), 3, 20)
+        stepUp = this.clamp(parseInt(stepUp), 0, 20)
         this.groupOptions.stepUp = stepUp
       }
 
       lookup = parts.find(p => p[0] === 'step-down')
       if (lookup?.length) {
         let stepDown = lookup[1]
-        stepDown = this.clamp(parseInt(stepDown), 3, 20)
+        stepDown = this.clamp(parseInt(stepDown), 0, 20)
         this.groupOptions.stepDown = stepDown
       }
 
