@@ -101,8 +101,8 @@
                 :disabled="!shadeHasUnsavedChanges"
                 v-if="shade.id"
               >
-                <div
-                  slot="button"
+                <slot
+                  name="button"
                   class="flex h-full items-center bg-theme-600 text-theme px-1"
                 >
                   <svg
@@ -113,16 +113,16 @@
                   >
                     <path d="M4.516 7.548c.436-.446 1.043-.481 1.576 0L10 11.295l3.908-3.747c.533-.481 1.141-.446 1.574 0 .436.445.408 1.197 0 1.615-.406.418-4.695 4.502-4.695 4.502a1.095 1.095 0 0 1-1.576 0S4.924 9.581 4.516 9.163c-.409-.418-.436-1.17 0-1.615z" />
                   </svg>
-                </div>
+                </slot>
 
-                <div slot="content">
+                <slot name="content">
                   <div
                     class="block px-2 my-1 cursor-pointer rounded hover:bg-purple-500 hover:text-white"
                     @click="dbInsertShade"
                   >
                     Save as new
                   </div>
-                </div>
+                </slot>
               </DropdownComponent>
             </div>
 
@@ -176,14 +176,14 @@
                 </svg>
               </div>
 
-              <template slot="popover">
+              <slot name="popover">
                 <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === originShade.id)">
                   Unlike shade
                 </span>
                 <span v-else>
                   Like shade
                 </span>
-              </template>
+              </slot>
             </v-popover>
           </div>
         </div>

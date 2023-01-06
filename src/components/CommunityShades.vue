@@ -76,14 +76,14 @@
               </span>
             </div>
 
-            <div slot="popover">
+            <slot name="popover">
               <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)">
                 Unlike shade
               </span>
               <span v-else>
                 Like shade
               </span>
-            </div>
+            </slot>
           </v-popover>
           <p class="text-xs">Created {{ formatCreatedAt(shade.created_at) }}</p>
         </div>
