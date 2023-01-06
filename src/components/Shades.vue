@@ -617,11 +617,11 @@ export default {
         return false
       }
 
-      lookup = parts.find(p => p[0] === 'base-step')
+      lookup = parts.find(p => p[0] === 'base-stop')
       if (lookup?.length) {
-        let baseStep = lookup[1]
-        if (this.stops.includes(baseStep)) {
-          this.$emit('set-base-shade-stop', baseStep)
+        let baseStop = parseInt(lookup[1])
+        if (this.stops.includes(baseStop)) {
+          this.$emit('set-base-shade-stop', baseStop)
         }
       } else {
         // for backwards-compatible URLs.
