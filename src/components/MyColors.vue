@@ -144,7 +144,7 @@ export default {
 
     document.addEventListener('click', this.resetConfirm)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener('click', this.resetConfirm)
   },
   methods: {
@@ -153,10 +153,7 @@ export default {
       const date = new Date(rawDate)
 
       return (
-        date
-          .getDate()
-          .toString()
-          .padStart(2, '0') +
+        date.getDate().toString().padStart(2, '0') +
         '/' +
         (date.getMonth() + 1).toString().padStart(2, '0') +
         '/' +
@@ -179,11 +176,7 @@ export default {
       })
       if (error) {
         this.loading = true
-        const { data, error } = await this.$supabase
-          .from('shades')
-          .select()
-          .eq('user_id', this.user.id)
-          .order('id')
+        const { data, error } = await this.$supabase.from('shades').select().eq('user_id', this.user.id).order('id')
         this.loading = false
         if (error) {
           this.$notify({
@@ -208,10 +201,7 @@ export default {
       })
     },
     async setIsPublic(shade, value) {
-      const { error } = await this.$supabase
-        .from('shades')
-        .update({ is_public: value })
-        .match({ id: shade.id })
+      const { error } = await this.$supabase.from('shades').update({ is_public: value }).match({ id: shade.id })
       if (error) {
         this.$notify({
           text: "Couldn't change is_public",
@@ -228,10 +218,7 @@ export default {
         this.confirmDeleteShade = shade.id
         return
       }
-      const { error } = await this.$supabase
-        .from('shades')
-        .delete()
-        .match({ id: shade.id })
+      const { error } = await this.$supabase.from('shades').delete().match({ id: shade.id })
       if (error) {
         this.$notify({
           text: "Couldn't delete shade",

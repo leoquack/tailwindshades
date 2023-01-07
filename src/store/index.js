@@ -1,8 +1,11 @@
 import { createStore as _createStore } from 'vuex'
 
-export function createStore() {
+export function createStore(router) {
   return _createStore({
     state: {
+      get route() {
+        return router.currentRoute.value
+      },
       theme: 'light',
       user: {},
       loginFeatures: true,

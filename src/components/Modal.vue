@@ -52,7 +52,7 @@ export default {
       }
     },
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.body.style.overflow = 'visible'
   },
 }

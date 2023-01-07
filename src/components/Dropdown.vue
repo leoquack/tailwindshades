@@ -60,7 +60,7 @@ export default {
 
     document.addEventListener('keydown', onEscape)
 
-    this.$once('hook:beforeDestroy', () => {
+    this.$once('hook:beforeUnmount', () => {
       document.removeEventListener('keydown', onEscape)
     })
   },

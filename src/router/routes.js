@@ -1,11 +1,11 @@
-const _404 = resolve => require(['@/components/404.vue'], resolve)
-const Shade = resolve => require(['@/components/BaseSelect.vue'], resolve)
-const MyColors = resolve => require(['@/components/MyColors.vue'], resolve)
-const CommunityShades = resolve => require(['@/components/CommunityShades.vue'], resolve)
+const _404 = () => import('@/components/404.vue')
+const Shade = () => import('@/components/BaseSelect.vue')
+const MyColors = () => import('@/components/MyColors.vue')
+const CommunityShades = () => import('@/components/CommunityShades.vue')
 
 export default [
   {
-    path: '*',
+    path: '/:pathMatch(.*)*',
     name: '404',
     meta: {
       auth: false,

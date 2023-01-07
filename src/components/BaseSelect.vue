@@ -285,7 +285,7 @@ export default {
 
     window.addEventListener('hashchange', this.handleHashChange)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener('hashchange', this.handleHashChange)
   },
   methods: {

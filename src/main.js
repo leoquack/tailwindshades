@@ -1,25 +1,24 @@
-import { createApp } from 'vue'
+import { createApp, configureCompat } from 'vue'
 import { createStore } from './store'
 import { createRouter } from './router'
-import { sync } from 'vuex-router-sync'
 import App from './App.vue'
 import '@/assets/main.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
-import Maska from 'maska'
+// import Maska from 'maska'
 import 'prismjs'
 import '@/assets/css/prism-vsc-dark-plus.css'
 import { createClient } from '@supabase/supabase-js'
 
-const store = createStore()
-const router = createRouter()
-
-sync(store, router)
-
-const app = createApp({
-  router,
-  store,
-  ...App,
+configureCompat({
+  MODE: 2,
 })
+const router = createRouter()
+const store = createStore(router)
+
+const app = createApp(App)
+
+app.use(store)
+app.use(router)
 
 const supabase = createClient(
   'https://tsmcdgolhhtzzotghypz.supabase.co',
