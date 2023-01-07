@@ -4,7 +4,7 @@
     :class="'theme-' + theme"
   >
 
-    <notifications position="bottom right" />
+    <!-- <notifications position="bottom right" /> -->
 
     <div class="flex flex-col min-h-full">
       <div class="bg-theme-lighter px-4 py-3 text-theme flex-shrink">
