@@ -142,10 +142,10 @@
                     class="text-xs leading-4 flex flex-col justify-center px-1 md:px-2 select-none w-full"
                     :style="'background-color: #' + result.color.hex + '; color: ' + textColorFromBrightness(result.color.hex) + ';'"
                   >
-                    <p><strong>HEX:</strong> {{ result.color.hex | displayHEX }}</p>
-                    <p><strong>RGB:</strong> {{ result.color.rgb | displayRGB }}</p>
-                    <p><strong>HSL:</strong> {{ result.color.hsl | displayHSL }}</p>
-                    <p v-if="initialHEX && initialHEX !== $options.filters.displayHEX(result.color.hex)">
+                    <p><strong>HEX:</strong> {{ displayHEX(result.color.hex) }}</p>
+                    <p><strong>RGB:</strong> {{ displayRGB(result.color.rgb) }}</p>
+                    <p><strong>HSL:</strong> {{ displayHSL(result.color.hsl) }}</p>
+                    <p v-if="initialHEX && initialHEX !== displayHEX(result.color.hex)">
                       <strong>Initial: </strong>
                       <a
                         class="underline cursor-pointer hover:bg-theme hover:text-theme-lighter"
@@ -250,11 +250,10 @@
               </div>
             </div>
             <div class="px-2 relative">
-              <prism-component language="javascript">{{ code.name | appendColon }}{{ codeDisplay }}</prism-component>
               <input
                 type="hidden"
                 id="final-code"
-                :value="$options.filters.appendColon(code.name) + codeDisplay"
+                :value="appendColon(code.name) + codeDisplay"
               />
               <div
                 class="absolute right-0 top-0 mr-4 bg-theme-700 px-4 py-2 text-xl rounded-full cursor-pointer hover:bg-theme-800"
@@ -276,7 +275,6 @@ import converter from 'color-convert'
 import { ntc } from '@/lib/ntc.js'
 import SliderInput from '@/components/SliderInput.vue'
 import BaseStopSelect from '@/components/BaseStopSelect.vue'
-import PrismComponent from 'vue-prism-component'
 import _ from 'lodash'
 
 export default {
@@ -288,7 +286,6 @@ export default {
   },
   components: {
     SliderInput,
-    PrismComponent,
     BaseStopSelect,
   },
   data() {
@@ -702,8 +699,6 @@ export default {
         this.overrides[String(stop)][attribute] = value
       }
     },
-  },
-  filters: {
     displayHEX(value) {
       return `#${value}`
     },

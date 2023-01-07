@@ -1,37 +1,31 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
+import { createStore } from './store'
+import { createRouter } from './router'
+import { sync } from 'vuex-router-sync'
 import App from './App.vue'
-import router from '@/router/index'
-import store from '@/store/index'
-import VueMeta from 'vue-meta'
-import VueAnalytics from 'vue-analytics'
 import '@/assets/main.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
-// import Notifications from 'vue-notification'
 import Maska from 'maska'
 import 'prismjs'
 import '@/assets/css/prism-vsc-dark-plus.css'
 import { createClient } from '@supabase/supabase-js'
-import VTooltip from 'v-tooltip'
 
-Vue.use(VTooltip, {
-  defaultContainer: '#root',
-  popover: {
-    defaultContainer: '#root',
-  },
+const store = createStore()
+const router = createRouter()
+
+sync(store, router)
+
+const app = createApp({
+  router,
+  store,
+  ...App,
 })
-Vue.use(VueMeta)
-Vue.use(VueAnalytics, {
-  id: 'UA-145441695-1',
-})
-Vue.use(Maska)
-// Vue.use(Notifications)
-Vue.config.productionTip = false
 
 const supabase = createClient(
   'https://tsmcdgolhhtzzotghypz.supabase.co',
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MTQ2MDU1MiwiZXhwIjoxOTU3MDM2NTUyfQ.wKYvxV79TzOi82vwodfZjJqf2IRR7hYhxaWyj8cA-lk'
 )
-Vue.prototype.$supabase = supabase
+app.$supabase = supabase
 
 supabase.auth.onAuthStateChange((event, session) => {
   const user = session?.user
@@ -54,8 +48,22 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-new Vue({
-  router,
-  store,
-  render: h => h(App),
-}).$mount('#app')
+app.mount('#app')
+
+// import VueMeta from 'vue-meta'
+// import VueAnalytics from 'vue-analytics'
+// import Notifications from 'vue-notification'
+// import VTooltip from 'v-tooltip'
+
+// Vue.use(VTooltip, {
+//   defaultContainer: '#root',
+//   popover: {
+//     defaultContainer: '#root',
+//   },
+// })
+// Vue.use(VueMeta)
+// Vue.use(VueAnalytics, {
+//   id: 'UA-145441695-1',
+// })
+// Vue.use(Maska)
+// Vue.use(Notifications)

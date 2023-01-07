@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import { createVuePlugin } from 'vite-plugin-vue2'
+import createVuePlugin from '@vitejs/plugin-vue'
 
 export default defineConfig({
   resolve: {
@@ -12,7 +12,7 @@ export default defineConfig({
       template: {
         compilerOptions: {
           compatConfig: {
-            MODE: 2,
+            MODE: 3,
           },
         },
       },
