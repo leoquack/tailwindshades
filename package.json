@@ -7,6 +7,11 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
+  "engines": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^1.30.7",
     "color-convert": "^2.0.1",
@@ -39,7 +44,10 @@
     "serialize-javascript": "^3.1.0",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
     "timeago.js": "^4.0.2",
-    "vue-template-compiler": "2.6.11"
+    "vue-template-compiler": "2.6.11",
+    "vite-plugin-vue2": "^1.4.4",
+    "stylus": "^0.54.8",
+    "vite": "^2.2.3"
   },
   "eslintConfig": {
     "root": true,
