@@ -1,17 +1,18 @@
-import { createApp, configureCompat } from 'vue'
+import { createApp } from 'vue'
 import { createStore } from './store'
 import { createRouter } from './router'
 import App from './App.vue'
 import '@/assets/main.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 // import Maska from 'maska'
+// import VueMeta from 'vue-meta'
+// import VueAnalytics from 'vue-analytics'
+// // import Notifications from 'vue-notification'
+// import VTooltip from 'v-tooltip'
 import 'prismjs'
 import '@/assets/css/prism-vsc-dark-plus.css'
 import { createClient } from '@supabase/supabase-js'
 
-configureCompat({
-  MODE: 2,
-})
 const router = createRouter()
 const store = createStore(router)
 
@@ -19,6 +20,19 @@ const app = createApp(App)
 
 app.use(store)
 app.use(router)
+
+// app.use(VTooltip, {
+//   defaultContainer: '#root',
+//   popover: {
+//     defaultContainer: '#root',
+//   },
+// })
+// app.use(VueMeta)
+// app.use(VueAnalytics, {
+//   id: 'UA-145441695-1',
+// })
+// app.use(Maska)
+// app.use(Notifications)
 
 const supabase = createClient(
   'https://tsmcdgolhhtzzotghypz.supabase.co',
@@ -48,21 +62,3 @@ router.beforeEach((to, from, next) => {
 })
 
 app.mount('#app')
-
-// import VueMeta from 'vue-meta'
-// import VueAnalytics from 'vue-analytics'
-// import Notifications from 'vue-notification'
-// import VTooltip from 'v-tooltip'
-
-// Vue.use(VTooltip, {
-//   defaultContainer: '#root',
-//   popover: {
-//     defaultContainer: '#root',
-//   },
-// })
-// Vue.use(VueMeta)
-// Vue.use(VueAnalytics, {
-//   id: 'UA-145441695-1',
-// })
-// Vue.use(Maska)
-// Vue.use(Notifications)

@@ -1,7 +1,7 @@
-const _404 = () => import('@/components/404.vue')
-const Shade = () => import('@/components/BaseSelect.vue')
-const MyColors = () => import('@/components/MyColors.vue')
-const CommunityShades = () => import('@/components/CommunityShades.vue')
+import _404 from '@/components/404.vue'
+import Shade from '@/components/BaseSelect.vue'
+import MyColors from '@/components/MyColors.vue'
+import CommunityShades from '@/components/CommunityShades.vue'
 
 export default [
   {
