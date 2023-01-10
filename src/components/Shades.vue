@@ -72,8 +72,8 @@
                             :number-input-enabled="false"
                             slim
                             :title="(overrides[String(stop)].hue !== -1 ? '* ' : '') + 'Hue'"
-                            :value="overrides[String(stop)].hue !== -1 ? overrides[String(stop)].hue : hsl[0]"
-                            @input="overrideValue($event, stop, 'hue')"
+                            :modelValue="overrides[String(stop)].hue !== -1 ? overrides[String(stop)].hue : hsl[0]"
+                            @input="overrideValue($event.target.value, stop, 'hue')"
                             :min="0"
                             :max="360"
                           />
@@ -83,8 +83,8 @@
                             :number-input-enabled="false"
                             slim
                             :title="(overrides[String(stop)].saturation !== -1 ? '* ' : '') + 'Saturation'"
-                            :value="overrides[String(stop)].saturation !== -1 ? overrides[String(stop)].saturation : hsl[1]"
-                            @input="overrideValue($event, stop, 'saturation')"
+                            :modelValue="overrides[String(stop)].saturation !== -1 ? overrides[String(stop)].saturation : hsl[1]"
+                            @input="overrideValue($event.target.value, stop, 'saturation')"
                             :min="0"
                             :max="100"
                           />
@@ -94,8 +94,8 @@
                             :number-input-enabled="false"
                             slim
                             :title="(overrides[String(stop)].lightness !== -1 ? '* ' : '') + 'Lightness'"
-                            :value="overrides[String(stop)].lightness !== -1 ? overrides[String(stop)].lightness : hsl[2]"
-                            @input="overrideValue($event, stop, 'lightness')"
+                            :modelValue="overrides[String(stop)].lightness !== -1 ? overrides[String(stop)].lightness : hsl[2]"
+                            @input="overrideValue($event.target.value, stop, 'lightness')"
                             :min="!fineTuneLimitLightness ? 0 : hslValueAtStop(stops.indexOf(stop) + 1, 2, 0)"
                             :max="!fineTuneLimitLightness ? 100 : hslValueAtStop(stops.indexOf(stop) - 1, 2, 100)"
                           />
@@ -189,7 +189,7 @@
                 :base-shade-stop="baseShadeStop"
                 title="Move base stop"
                 :small="true"
-                @set-base-shade-stop="$emit('set-base-shade-stop', $event)"
+                @set-base-shade-stop="$emit('set-base-shade-stop', $event.target.value)"
               />
             </div>
           </div>
@@ -223,8 +223,8 @@
                 title="Hue shift"
                 restorable
                 :restore-to="0"
-                :value="groupOptions.hueShift"
-                @input="groupOptions.hueShift = $event"
+                :modelValue="groupOptions.hueShift"
+                @input="groupOptions.hueShift = parseInt($event.target.value)"
                 :min="-100"
                 :max="100"
               >
@@ -253,7 +253,7 @@
               <input
                 type="hidden"
                 id="final-code"
-                :value="appendColon(code.name) + codeDisplay"
+                :modelValue="appendColon(code.name) + codeDisplay"
               />
               <div
                 class="absolute right-0 top-0 mr-4 bg-theme-700 px-4 py-2 text-xl rounded-full cursor-pointer hover:bg-theme-800"
@@ -291,7 +291,7 @@ export default {
   data() {
     return {
       stops: [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-      hsl: [],
+      hsl: [0, 0, 0],
       groupOptions: {
         stepUp: 8,
         stepDown: 11,
@@ -683,7 +683,7 @@ export default {
         return
       }
 
-      this.$set(this.overrides, String(stop), this.defaultOverridable())
+      this.overrides[String(stop)] = this.defaultOverridable()
     },
     overrideValue(value, stop, attribute) {
       if (value < 0) {

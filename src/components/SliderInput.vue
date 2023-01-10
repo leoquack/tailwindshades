@@ -14,7 +14,7 @@
       <span
         class="font-normal"
         v-else
-      >{{ Number(value).toFixed(2) }}</span>
+      >{{ Number(modelValue).toFixed(2) }}</span>
     </div>
     <div class="flex flex-wrap relative">
       <input
@@ -22,10 +22,10 @@
         class="appearance-none rounded-full w-12 px-1 text-xs text-theme-lighter mr-1 bg-theme-600"
         :id="kebabTitle"
         type="number"
-        :value="value"
+        :value="modelValue"
         :min="min"
         :max="max"
-        @input="$emit('input', parseInt($event.target.value))"
+        @change="$emit('update:modelValue', parseInt($event.target.value))"
       >
       <div class="flex flex-grow items-center">
         <div
@@ -39,7 +39,7 @@
           v-if="slim"
           style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"
           class="select-none text-xs pointer-events-none text-theme-300 light:text-theme-800"
-        >{{ title }}: {{ Number(value).toFixed(0) }}</div>
+        >{{ title }}: {{ Number(modelValue).toFixed(0) }}</div>
         <input
           class="flex-grow"
           :class="{ 'slim': slim }"
@@ -47,8 +47,8 @@
           type="range"
           :min="min"
           :max="max"
-          :value="value"
-          @input="$emit('input', parseInt($event.target.value))"
+          :value="modelValue"
+          @change="$emit('update:modelValue', parseInt($event.target.value))"
         >
         <div
           class="ml-1 text-theme-200 light:text-theme-800 hover:text-blue cursor-pointer rounded-lg text-xs"
@@ -60,7 +60,7 @@
         <div
           class="ml-1 text-theme-200 light:text-theme-800 hover:text-blue cursor-pointer rounded-lg text-xs"
           v-if="restorable"
-          @click="$emit('input', restoreValue)"
+          @click="modelValue = restoreValue"
         >
           <i class="fas fa-undo"></i>
         </div>
@@ -74,7 +74,7 @@ export default {
   name: 'slider-input',
   props: {
     title: String,
-    value: Number,
+    modelValue: Number,
     min: Number,
     max: Number,
     numberInputEnabled: {
@@ -102,13 +102,13 @@ export default {
     },
   },
   mounted() {
-    this.initialValue = this.value
+    this.initialValue = this.modelValue
   },
   methods: {
     step(amount) {
-      let newValue = this.value + amount
+      let newValue = this.modelValue + amount
       if (newValue >= this.min && newValue <= this.max) {
-        this.$emit('input', newValue)
+        this.$emit('update:modelValue', newValue)
       }
     },
     toKebabCase(str) {
