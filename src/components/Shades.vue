@@ -189,7 +189,7 @@
                 :base-shade-stop="baseShadeStop"
                 title="Move base stop"
                 :small="true"
-                @set-base-shade-stop="$emit('set-base-shade-stop', $event.target.value)"
+                @set="$emit('set-base-shade-stop', $event.target.value)"
               />
             </div>
           </div>
@@ -696,7 +696,7 @@ export default {
         value = 100
       }
       if (this.overrides[String(stop)][attribute] !== undefined) {
-        this.overrides[String(stop)][attribute] = value
+        this.overrides[String(stop)][attribute] = parseInt(value)
       }
     },
     displayHEX(value) {

@@ -31,7 +31,7 @@
           class="mt-8"
           v-show="validHex"
           :base-shade-stop="baseShadeStop"
-          @set-base-shade-stop="baseShadeStop = $event.target.value"
+          @set="baseShadeStop = $event.target.value"
         />
         <transition name="fade">
           <div
@@ -194,7 +194,7 @@
         :dbShade="shade"
         :colors.sync="colors"
         :baseShadeStop="baseShadeStop"
-        @set-base-shade-stop="baseShadeStop = $event.target.value"
+        @set-base-shade-stop="baseShadeStop = $event"
         @hash-changed="handleHashChange"
         ref="shadesComponent"
       />
