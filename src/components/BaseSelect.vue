@@ -141,7 +141,7 @@
             class="flex justify-between px-2 text-xs py-1"
             v-if="loginFeatures && originShade.id"
           >
-            <v-popover trigger="hover">
+            <VDropdown :triggers="['hover']">
               <div
                 @click.stop="toggleLikeShade(originShade)"
                 class="flex items-center hover:text-purple-500 cursor-pointer"
@@ -176,15 +176,15 @@
                 </svg>
               </div>
 
-              <slot name="popover">
+              <template #popper>
                 <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === originShade.id)">
                   Unlike shade
                 </span>
                 <span v-else>
                   Like shade
                 </span>
-              </slot>
-            </v-popover>
+              </template>
+            </VDropdown>
           </div>
         </div>
       </div>

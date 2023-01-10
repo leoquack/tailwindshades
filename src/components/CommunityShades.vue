@@ -37,7 +37,7 @@
           </div>
         </div>
         <div class="flex justify-between px-2 text-xs py-1">
-          <v-popover trigger="hover">
+          <VDropdown :triggers="['hover']">
             <div
               @click.stop="toggleLikeShade(shade)"
               class="flex items-center hover:text-purple-500 cursor-pointer"
@@ -76,15 +76,15 @@
               </span>
             </div>
 
-            <slot name="popover">
+            <template #popper>
               <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)">
                 Unlike shade
               </span>
               <span v-else>
                 Like shade
               </span>
-            </slot>
-          </v-popover>
+            </template>
+          </VDropdown>
           <p class="text-xs">Created {{ formatCreatedAt(shade.created_at) }}</p>
         </div>
       </div>

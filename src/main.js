@@ -6,7 +6,7 @@ import '@/assets/main.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 // import VueMeta from 'vue-meta'
 // import VueAnalytics from 'vue-analytics'
-// // import Notifications from 'vue-notification'
+import Notifications from '@kyvg/vue3-notification'
 import FloatingVue from 'floating-vue'
 import 'floating-vue/dist/style.css'
 import 'prismjs'
@@ -20,10 +20,10 @@ const app = createApp(App)
 
 app.use(store)
 app.use(router)
-
 app.use(FloatingVue, {
   container: '#root',
 })
+app.use(Notifications)
 
 // app.use(VTooltip, {
 //   defaultContainer: '#root',

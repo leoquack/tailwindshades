@@ -85,7 +85,7 @@
         </div>
 
         <div class="flex items-center justify-between">
-          <v-popover trigger="hover">
+          <VDropdown :triggers="['hover']">
             <div
               @click.stop="toggleLikeShade(shade)"
               class="flex items-center hover:text-purple-500"
@@ -124,15 +124,15 @@
               </span>
             </div>
 
-            <slot name="popover">
+            <template #popper>
               <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)">
                 Unlike shade
               </span>
               <span v-else>
                 Like shade
               </span>
-            </slot>
-          </v-popover>
+            </template>
+          </VDropdown>
           <div class="text-xs">
             {{ formatCreatedAt(shade.created_at) }}
           </div>
@@ -199,7 +199,7 @@
         </div>
 
         <div class="flex items-center justify-between">
-          <v-popover trigger="hover">
+          <VDropdown :triggers="['hover']">
             <div
               @click.stop="toggleLikeShade(shade)"
               class="flex items-center hover:text-purple-500"
@@ -238,15 +238,15 @@
               </span>
             </div>
 
-            <slot name="popover">
+            <template #popper>
               <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)">
                 Unlike shade
               </span>
               <span v-else>
                 Like shade
               </span>
-            </slot>
-          </v-popover>
+            </template>
+          </VDropdown>
           <div class="text-xs">
             {{ formatCreatedAt(shade.created_at) }}
           </div>
