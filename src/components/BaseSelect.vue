@@ -212,6 +212,7 @@ import CommunityQuickSelect from '@/components/CommunityQuickSelect.vue'
 import BaseStopSelect from '@/components/BaseStopSelect.vue'
 import community from '@/composables/community.js'
 import * as timeago from 'timeago.js'
+import { vMaska } from 'maska'
 
 export default {
   components: {
@@ -221,6 +222,7 @@ export default {
     CommunityQuickSelect,
     BaseStopSelect,
   },
+  directives: { maska: vMaska },
   metaInfo: {
     title: 'Tailwind Shades',
     meta: [
