@@ -1,6 +1,5 @@
 <template>
   <div class="flex flex-col">
-
     <div
       v-if="step === 'base' && !hasURLHash"
       class="px-2 md:px-0 text-center flex-grow grid md:grid-cols-2 lg:grid-cols-3 md:space-x-3 lg:space-x-6"
@@ -11,19 +10,19 @@
         <input
           type="text"
           v-model="hex"
-          v-maska="{ mask: '!#HHHHHH', tokens: { 'H': { pattern: /[0-9a-fA-F]/, uppercase: true }}}"
+          v-maska="{ mask: '!#HHHHHH', tokens: { H: { pattern: /[0-9a-fA-F]/, uppercase: true } } }"
           class="form-control form-no-outline font-black text-2xl mt-6 py-6 px-8"
-        >
+        />
         <div class="mt-8">
           <p class="text-left">Default tailwindcss palette colors (*-500)</p>
           <div class="flex justify-between h-12 mt-2">
             <div
               class="flex-grow cursor-pointer"
-              :class="{ 'border-2 light:border-black': hex === color}"
+              :class="{ 'border-2 light:border-black': hex === color }"
               :style="`background-color: ${color};`"
               v-for="color in defaultTailwindPaletteBaseColors"
               :key="'tailwind-default-base-' + color"
-              @click="hex = color, focus = 'suggestion'"
+              @click=";(hex = color), (focus = 'suggestion')"
             ></div>
           </div>
         </div>
@@ -45,25 +44,16 @@
           </div>
         </transition>
 
-        <carbon-ads
-          v-if="isProduction"
-          class="flex justify-center items-center mt-24"
-        />
+        <carbon-ads v-if="isProduction" class="flex justify-center items-center mt-24" />
       </div>
       <div class="py-4 px-4 text-theme">
         <CommunityQuickSelect />
       </div>
     </div>
 
-    <div
-      class="flex flex-col"
-      v-if="step === 'shades' || hasURLHash"
-    >
+    <div class="flex flex-col" v-if="step === 'shades' || hasURLHash">
       <div class="flex justify-between bg-theme-lighter border-t border-theme">
-        <button
-          class="text-theme text-sm hover:text-blue-400 focus:outline-none p-2"
-          @click="backToBaseSelection"
-        >
+        <button class="text-theme text-sm hover:text-blue-400 focus:outline-none p-2" @click="backToBaseSelection">
           <i class="fas fa-angle-left"></i>
           base color selection
         </button>
@@ -73,45 +63,30 @@
             v-if="isLoggedIn && loginFeatures && (shadeHasUnsavedChanges || shade.id)"
             class="text-theme font-bold text-sm bg-theme-500 h-full flex items-center"
           >
-            <p
-              v-if="shade.id"
-              class="px-4"
-            >my shade #{{ shade.id }}</p>
+            <p v-if="shade.id" class="px-4">my shade #{{ shade.id }}</p>
 
             <div
               class="text-sm focus:outline-none flex items-center justify-between bg-theme-600 h-full pl-4 select-none"
               :class="[
-              shadeHasUnsavedChanges ? 'text-theme hover:text-theme' : 'text-theme-500',
-              { 'pr-4' : !shade.id },
+                shadeHasUnsavedChanges ? 'text-theme hover:text-theme' : 'text-theme-500',
+                { 'pr-4': !shade.id },
               ]"
             >
-              <div
-                class="mr-2 cursor-pointer"
-                @click="saveShade"
-              >
-                <span
-                  class="text-sm"
-                  v-if="shadeHasUnsavedChanges"
-                >*</span>
+              <div class="mr-2 cursor-pointer" @click="saveShade">
+                <span class="text-sm" v-if="shadeHasUnsavedChanges">*</span>
                 save
               </div>
-              <DropdownComponent
-                class="h-full"
-                placement="right"
-                :disabled="!shadeHasUnsavedChanges"
-                v-if="shade.id"
-              >
-                <slot
-                  name="button"
-                  class="flex h-full items-center bg-theme-600 text-theme px-1"
-                >
+              <DropdownComponent class="h-full" placement="right" :disabled="!shadeHasUnsavedChanges" v-if="shade.id">
+                <slot name="button" class="flex h-full items-center bg-theme-600 text-theme px-1">
                   <svg
                     class="w-4 h-4"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     :fill="shadeHasUnsavedChanges ? '#FFFFFF' : '#262626'"
                   >
-                    <path d="M4.516 7.548c.436-.446 1.043-.481 1.576 0L10 11.295l3.908-3.747c.533-.481 1.141-.446 1.574 0 .436.445.408 1.197 0 1.615-.406.418-4.695 4.502-4.695 4.502a1.095 1.095 0 0 1-1.576 0S4.924 9.581 4.516 9.163c-.409-.418-.436-1.17 0-1.615z" />
+                    <path
+                      d="M4.516 7.548c.436-.446 1.043-.481 1.576 0L10 11.295l3.908-3.747c.533-.481 1.141-.446 1.574 0 .436.445.408 1.197 0 1.615-.406.418-4.695 4.502-4.695 4.502a1.095 1.095 0 0 1-1.576 0S4.924 9.581 4.516 9.163c-.409-.418-.436-1.17 0-1.615z"
+                    />
                   </svg>
                 </slot>
 
@@ -125,7 +100,6 @@
                 </slot>
               </DropdownComponent>
             </div>
-
           </div>
 
           <button
@@ -137,10 +111,7 @@
             share
           </button>
 
-          <div
-            class="flex justify-between px-2 text-xs py-1"
-            v-if="loginFeatures && originShade.id"
-          >
+          <div class="flex justify-between px-2 text-xs py-1" v-if="loginFeatures && originShade.id">
             <VDropdown :triggers="['hover']">
               <div
                 @click.stop="toggleLikeShade(originShade)"
@@ -180,9 +151,7 @@
                 <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === originShade.id)">
                   Unlike shade
                 </span>
-                <span v-else>
-                  Like shade
-                </span>
+                <span v-else> Like shade </span>
               </template>
             </VDropdown>
           </div>
@@ -223,14 +192,16 @@ export default {
     BaseStopSelect,
   },
   directives: { maska: vMaska },
-  metaInfo: {
-    title: 'Tailwind Shades',
-    meta: [
-      {
-        name: 'description',
-        content: 'A tool to help generate color shades for Tailwind CSS.',
-      },
-    ],
+  head() {
+    return {
+      title: 'Tailwind Shades',
+      meta: [
+        {
+          name: 'description',
+          content: 'A tool to help generate color shades for Tailwind CSS.',
+        },
+      ],
+    }
   },
   mixins: [community],
   data() {

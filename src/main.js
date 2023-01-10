@@ -4,7 +4,6 @@ import { createRouter } from './router'
 import App from './App.vue'
 import '@/assets/main.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
-// import VueMeta from 'vue-meta'
 // import VueAnalytics from 'vue-analytics'
 import Notifications from '@kyvg/vue3-notification'
 import FloatingVue from 'floating-vue'
@@ -12,6 +11,7 @@ import 'floating-vue/dist/style.css'
 import 'prismjs'
 import '@/assets/css/prism-vsc-dark-plus.css'
 import { createClient } from '@supabase/supabase-js'
+import { createHead, VueHeadMixin } from '@unhead/vue'
 
 const router = createRouter()
 const store = createStore(router)
@@ -25,17 +25,13 @@ app.use(FloatingVue, {
 })
 app.use(Notifications)
 
-// app.use(VTooltip, {
-//   defaultContainer: '#root',
-//   popover: {
-//     defaultContainer: '#root',
-//   },
-// })
-// app.use(VueMeta)
+const head = createHead()
+app.mixin(VueHeadMixin)
+app.use(head)
+
 // app.use(VueAnalytics, {
 //   id: 'UA-145441695-1',
 // })
-// app.use(Notifications)
 
 const supabase = createClient(
   'https://tsmcdgolhhtzzotghypz.supabase.co',

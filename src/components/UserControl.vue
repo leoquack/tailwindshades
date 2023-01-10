@@ -120,7 +120,7 @@ export default {
   },
   methods: {
     async signIn3rdParty(provider) {
-      const { error } = await this.$supabase.auth.signIn({
+      const { error } = await this.$supabase.auth.signInWithOAuth({
         provider,
       })
       if (error) {

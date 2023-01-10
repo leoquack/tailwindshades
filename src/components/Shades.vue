@@ -189,7 +189,7 @@
                 :base-shade-stop="baseShadeStop"
                 title="Move base stop"
                 :small="true"
-                @set="$emit('set-base-shade-stop', $event.target.value)"
+                @set="$emit('set-base-shade-stop', $event)"
               />
             </div>
           </div>

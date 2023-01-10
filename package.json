@@ -10,6 +10,7 @@
   "dependencies": {
     "@kyvg/vue3-notification": "^2.7.0",
     "@supabase/supabase-js": "^2.2.3",
+    "@unhead/vue": "^1.0.15",
     "color-convert": "^2.0.1",
     "floating-vue": "^2.0.0-beta.20",
     "lodash": "^4.17.21",
@@ -18,7 +19,6 @@
     "vue": "^3.1.0-0",
     "vue-analytics": "^5.17.2",
     "vue-color": "^2.7.0",
-    "vue-meta": "^2.2.1",
     "vue-router": "^4.0.0",
     "vuex": "^4.0.0"
   },
