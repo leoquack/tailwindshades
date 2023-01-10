@@ -143,7 +143,6 @@ export default {
       this.$store.commit('setOriginShade', shade)
       this.$router.push({
         name: 'shade',
-        hash: `#${shade.code}`,
       })
     },
     formatCreatedAt(date) {

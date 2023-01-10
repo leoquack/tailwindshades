@@ -382,6 +382,7 @@ export default {
     },
   },
   mounted() {
+    // this.$nextTick(() => {
     this.resetOverrides()
 
     let parsed = false
@@ -395,6 +396,7 @@ export default {
     if (!parsed) {
       this.hsl = [...this.initialHSL]
     }
+    // })
   },
   methods: {
     hslValueAtStop(stopIndex, hslIndex, fallback) {
@@ -526,7 +528,14 @@ export default {
       if (!hash) {
         return false
       }
-      let parts = hash.split('&').map(part => part.split('=').map(decodeURIComponent))
+
+      let parts = hash.split('&').map(part => {
+        return part
+          .split('=')
+          .map(e => e)
+          .map(e => e)
+          .map(decodeURIComponent)
+      })
 
       // Skip parse on authentication redirection.
       if (parts.find(p => p[0] === 'access_token') !== undefined) {

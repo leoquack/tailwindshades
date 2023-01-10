@@ -161,7 +161,8 @@
       <shades-component
         :initialHEX="hex"
         :dbShade="shade"
-        :colors.sync="colors"
+        :colors="colors"
+        @update:colors="colors = $event"
         :baseShadeStop="baseShadeStop"
         @set-base-shade-stop="baseShadeStop = $event"
         @hash-changed="handleHashChange"
@@ -249,6 +250,7 @@ export default {
       this.shade = this.originShade
       this.hex = this.originShade.colors[this.baseShadeStop]
       this.step = 'shades'
+      this.$store.commit('setOriginShade', {})
     }
 
     if (!this.myLikedShades.length) {
@@ -286,6 +288,7 @@ export default {
         .match({
           id: this.shade.id,
         })
+        .select()
       if (error) {
         this.$notify({
           text: "Couldn't update shade",
@@ -305,11 +308,14 @@ export default {
       this.$store.commit('setCacheValue', { key: 'shades.mine', value: null })
     },
     async dbInsertShade() {
-      const { data, error } = await this.$supabase.from('shades').insert({
-        user_id: this.user.id,
-        code: window.location.hash.substring(1),
-        colors: this.colors,
-      })
+      const { data, error } = await this.$supabase
+        .from('shades')
+        .insert({
+          user_id: this.user.id,
+          code: window.location.hash.substring(1),
+          colors: this.colors,
+        })
+        .select()
       if (error) {
         this.$notify({
           text: "Couldn't save shade",
