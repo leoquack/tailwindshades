@@ -77,7 +77,7 @@
                 save
               </div>
               <DropdownComponent class="h-full" placement="right" :disabled="!shadeHasUnsavedChanges" v-if="shade.id">
-                <slot name="button" class="flex h-full items-center bg-theme-600 text-theme px-1">
+                <template v-slot:button class="flex h-full items-center bg-theme-600 text-theme px-1">
                   <svg
                     class="w-4 h-4"
                     xmlns="http://www.w3.org/2000/svg"
@@ -88,16 +88,16 @@
                       d="M4.516 7.548c.436-.446 1.043-.481 1.576 0L10 11.295l3.908-3.747c.533-.481 1.141-.446 1.574 0 .436.445.408 1.197 0 1.615-.406.418-4.695 4.502-4.695 4.502a1.095 1.095 0 0 1-1.576 0S4.924 9.581 4.516 9.163c-.409-.418-.436-1.17 0-1.615z"
                     />
                   </svg>
-                </slot>
+                </template>
 
-                <slot name="content">
+                <template v-slot:content>
                   <div
                     class="block px-2 my-1 cursor-pointer rounded hover:bg-purple-500 hover:text-white"
                     @click="dbInsertShade"
                   >
                     Save as new
                   </div>
-                </slot>
+                </template>
               </DropdownComponent>
             </div>
           </div>
@@ -206,7 +206,7 @@ export default {
   mixins: [community],
   data() {
     return {
-      isProduction: process.env.NODE_ENV === 'production',
+      isProduction: import.meta.env.PROD,
       step: 'base',
       // shade used for cloud storage.
       shade: this.emptyShade(),
@@ -241,14 +241,13 @@ export default {
     ...mapGetters(['theme', 'user', 'isLoggedIn', 'loginFeatures', 'originShade']),
   },
   mounted() {
-    if (process.env.NODE_ENV === 'production') {
-      this.$ga.page('/')
-    }
+    // if (import.meta.env.PROD) {
+    //   this.$ga.page('/')
+    // }
 
-    const shade = this.$route.params.shade
-    if (shade) {
-      this.shade = shade
-      this.hex = shade.colors[this.baseShadeStop]
+    if (this.originShade.id) {
+      this.shade = this.originShade
+      this.hex = this.originShade.colors[this.baseShadeStop]
       this.step = 'shades'
     }
 

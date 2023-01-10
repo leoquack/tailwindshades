@@ -7,14 +7,8 @@
     >
       <slot></slot>
       {{ title }}
-      <span
-        class="font-normal"
-        v-if="numberInputEnabled"
-      >{{ min }} - {{ max }}</span>
-      <span
-        class="font-normal"
-        v-else
-      >{{ Number(modelValue).toFixed(2) }}</span>
+      <span class="font-normal" v-if="numberInputEnabled">{{ min }} - {{ max }}</span>
+      <span class="font-normal" v-else>{{ Number(modelValue).toFixed(2) }}</span>
     </div>
     <div class="flex flex-wrap relative">
       <input
@@ -26,7 +20,7 @@
         :min="min"
         :max="max"
         @change="$emit('update:modelValue', parseInt($event.target.value))"
-      >
+      />
       <div class="flex flex-grow items-center">
         <div
           class="mr-1 text-theme-200 light:text-theme-800 hover:text-blue cursor-pointer rounded-lg text-xs"
@@ -37,19 +31,21 @@
         </div>
         <div
           v-if="slim"
-          style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+          style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)"
           class="select-none text-xs pointer-events-none text-theme-300 light:text-theme-800"
-        >{{ title }}: {{ Number(modelValue).toFixed(0) }}</div>
+        >
+          {{ title }}: {{ Number(modelValue).toFixed(0) }}
+        </div>
         <input
           class="flex-grow"
-          :class="{ 'slim': slim }"
+          :class="{ slim: slim }"
           :id="kebabTitle + '-range'"
           type="range"
           :min="min"
           :max="max"
           :value="modelValue"
           @change="$emit('update:modelValue', parseInt($event.target.value))"
-        >
+        />
         <div
           class="ml-1 text-theme-200 light:text-theme-800 hover:text-blue cursor-pointer rounded-lg text-xs"
           v-if="slim"

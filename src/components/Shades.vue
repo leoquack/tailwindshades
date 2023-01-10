@@ -1,13 +1,7 @@
 <template>
   <div class="flex flex-col pb-2">
-    <div
-      class="flex flex-col rounded text-theme px-2"
-      v-if="result.shades && result.shades.length"
-    >
-      <div
-        class="flex flex-wrap -mx-2"
-        v-if="Object.entries(overrides).length"
-      >
+    <div class="flex flex-col rounded text-theme px-2" v-if="result.shades && result.shades.length">
+      <div class="flex flex-wrap -mx-2" v-if="Object.entries(overrides).length">
         <div class="flex flex-col flex-grow w-full md:w-2/3 px-2">
           <div class="flex flex-col flex-grow mt-4">
             <div class="flex text-xs select-none text-center">
@@ -18,17 +12,13 @@
                   class="underline cursor-pointer hover:bg-theme text-blue hover:text-blue-600 px-2"
                   @click="resetOverrides"
                   v-tooltip="'⚠️ reset ALL fine tunings ⚠️'"
-                >reset</a>
+                  >reset</a
+                >
                 <label class="flex items-center cursor-pointer">
-                  <input
-                    type="checkbox"
-                    class="form-checkbox"
-                    v-model="fineTuneLimitLightness"
-                  />
-                  <span
-                    class="ml-1"
-                    v-tooltip="'* limit between the lightness of the previous and next shades'"
-                  >limit lightness</span>
+                  <input type="checkbox" class="form-checkbox" v-model="fineTuneLimitLightness" />
+                  <span class="ml-1" v-tooltip="'* limit between the lightness of the previous and next shades'"
+                    >limit lightness</span
+                  >
                 </label>
                 <!-- <a
                   v-if="!hasOverrides"
@@ -48,13 +38,18 @@
                 { 'border-t': stops[0] === stop },
                 { 'border-b': stops[stops.length - 1] === stop },
               ]"
-              :style="`background-color: #${(override ? override.hex : hex)}; color: ${(override ? override.textColor : textColor)};`"
+              :style="`background-color: #${override ? override.hex : hex}; color: ${
+                override ? override.textColor : textColor
+              };`"
             >
               <div class="flex w-full justify-between items-center">
                 <div class="w-80 h-full">
                   <div
                     class="h-full flex justify-center items-center text-theme bg-theme"
-                    :class="[{'border-t-0': stops[0] !== stop}, (override ? 'opacity-100': 'opacity-90 hover:opacity-100') ]"
+                    :class="[
+                      { 'border-t-0': stops[0] !== stop },
+                      override ? 'opacity-100' : 'opacity-90 hover:opacity-100',
+                    ]"
                   >
                     <div class="w-3/12 flex">
                       <div
@@ -83,7 +78,9 @@
                             :number-input-enabled="false"
                             slim
                             :title="(overrides[String(stop)].saturation !== -1 ? '* ' : '') + 'Saturation'"
-                            :modelValue="overrides[String(stop)].saturation !== -1 ? overrides[String(stop)].saturation : hsl[1]"
+                            :modelValue="
+                              overrides[String(stop)].saturation !== -1 ? overrides[String(stop)].saturation : hsl[1]
+                            "
                             @input="overrideValue($event.target.value, stop, 'saturation')"
                             :min="0"
                             :max="100"
@@ -94,7 +91,9 @@
                             :number-input-enabled="false"
                             slim
                             :title="(overrides[String(stop)].lightness !== -1 ? '* ' : '') + 'Lightness'"
-                            :modelValue="overrides[String(stop)].lightness !== -1 ? overrides[String(stop)].lightness : hsl[2]"
+                            :modelValue="
+                              overrides[String(stop)].lightness !== -1 ? overrides[String(stop)].lightness : hsl[2]
+                            "
                             @input="overrideValue($event.target.value, stop, 'lightness')"
                             :min="!fineTuneLimitLightness ? 0 : hslValueAtStop(stops.indexOf(stop) + 1, 2, 0)"
                             :max="!fineTuneLimitLightness ? 100 : hslValueAtStop(stops.indexOf(stop) - 1, 2, 100)"
@@ -106,22 +105,14 @@
                 </div>
 
                 <div class="flex flex-grow text-center items-center justify-center">
-                  <div
-                    class="text-3xl font-normal"
-                    v-if="stop === baseShadeStop"
-                  >[</div>
+                  <div class="text-3xl font-normal" v-if="stop === baseShadeStop">[</div>
                   <div class="px-2">
                     <p class="text-xs leading-2">
                       {{ stop * 100 }}
                     </p>
-                    <p class="leading-4">
-                      #{{ override ? override.hex : hex }}
-                    </p>
+                    <p class="leading-4">#{{ override ? override.hex : hex }}</p>
                   </div>
-                  <div
-                    class="text-3xl font-normal"
-                    v-if="stop === baseShadeStop"
-                  >]</div>
+                  <div class="text-3xl font-normal" v-if="stop === baseShadeStop">]</div>
                 </div>
               </div>
             </div>
@@ -131,7 +122,9 @@
         <div class="flex-grow w-full md:w-1/3 pr-6 pl-2 mt-4">
           <div class="border border-theme-600 pb-2">
             <div class="flex items-center leading-none border-b border-theme-600">
-              <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">1</p>
+              <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">
+                1
+              </p>
               <p class="text-xl py-2 px-2 text-theme-darker font-bold">Fine tune base color</p>
             </div>
 
@@ -140,7 +133,13 @@
                 <div class="w-1/3 pr-2 flex">
                   <div
                     class="text-xs leading-4 flex flex-col justify-center px-1 md:px-2 select-none w-full"
-                    :style="'background-color: #' + result.color.hex + '; color: ' + textColorFromBrightness(result.color.hex) + ';'"
+                    :style="
+                      'background-color: #' +
+                      result.color.hex +
+                      '; color: ' +
+                      textColorFromBrightness(result.color.hex) +
+                      ';'
+                    "
                   >
                     <p><strong>HEX:</strong> {{ displayHEX(result.color.hex) }}</p>
                     <p><strong>RGB:</strong> {{ displayRGB(result.color.rgb) }}</p>
@@ -151,38 +150,23 @@
                         class="underline cursor-pointer hover:bg-theme hover:text-theme-lighter"
                         v-tooltip="'⚠️ click to reset to initial base selection ⚠️'"
                         @click="reset"
-                      >{{ initialHEX }}</a>
+                        >{{ initialHEX }}</a
+                      >
                     </p>
                   </div>
                 </div>
 
                 <div class="flex-grow">
                   <div>
-                    <slider-input
-                      title="Hue"
-                      v-model="hsl[0]"
-                      :min="0"
-                      :max="360"
-                    />
+                    <slider-input title="Hue" v-model="hsl[0]" :min="0" :max="360" />
                   </div>
                   <div>
-                    <slider-input
-                      title="Saturation"
-                      v-model="hsl[1]"
-                      :min="0"
-                      :max="100"
-                    />
+                    <slider-input title="Saturation" v-model="hsl[1]" :min="0" :max="100" />
                   </div>
                   <div>
-                    <slider-input
-                      title="Lightness"
-                      v-model="hsl[2]"
-                      :min="0"
-                      :max="100"
-                    />
+                    <slider-input title="Lightness" v-model="hsl[2]" :min="0" :max="100" />
                   </div>
                 </div>
-
               </div>
               <BaseStopSelect
                 class="mt-2"
@@ -197,28 +181,19 @@
           <div class="border border-theme-600 mt-6">
             <div class="mb-2">
               <div class="flex items-center leading-none border-b border-theme-600">
-                <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">2</p>
+                <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">
+                  2
+                </p>
                 <p class="text-xl py-2 px-2 text-theme-darker font-bold">Uniform shades</p>
               </div>
             </div>
             <div class="mb-2 px-2">
-              <slider-input
-                title="Step up %"
-                v-model="groupOptions.stepUp"
-                :min="0"
-                :max="20"
-              />
+              <slider-input title="Step up %" v-model="groupOptions.stepUp" :min="0" :max="20" />
             </div>
             <div class="mb-2 px-2">
-              <slider-input
-                title="Step down %"
-                v-model="groupOptions.stepDown"
-                :min="0"
-                :max="20"
-              />
+              <slider-input title="Step down %" v-model="groupOptions.stepDown" :min="0" :max="20" />
             </div>
             <div class="mb-2 px-2">
-
               <slider-input
                 title="Hue shift"
                 restorable
@@ -232,29 +207,20 @@
             </div>
           </div>
 
-          <div
-            class="border border-theme-600 mt-6"
-            v-if="code.visible"
-          >
+          <div class="border border-theme-600 mt-6" v-if="code.visible">
             <div class="mb-2">
               <div class="flex items-center leading-none border-b border-theme-600">
-                <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">3</p>
+                <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">
+                  3
+                </p>
                 <p class="text-xl py-2 px-2 text-theme-darker font-bold w-1/3">Get code</p>
                 <div class="px-4">
-                  <input
-                    class="form-control"
-                    type="text"
-                    v-model="code.name"
-                  />
+                  <input class="form-control" type="text" v-model="code.name" />
                 </div>
               </div>
             </div>
             <div class="px-2 relative">
-              <input
-                type="hidden"
-                id="final-code"
-                :modelValue="appendColon(code.name) + codeDisplay"
-              />
+              <input type="hidden" id="final-code" :modelValue="appendColon(code.name) + codeDisplay" />
               <div
                 class="absolute right-0 top-0 mr-4 bg-theme-700 px-4 py-2 text-xl rounded-full cursor-pointer hover:bg-theme-800"
                 @click="copyCodeToClipboard"

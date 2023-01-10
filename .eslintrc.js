@@ -10,8 +10,8 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 2 : 0,
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    'no-console': import.meta.env.PROD ? 2 : 0,
+    'no-debugger': import.meta.env.PROD ? 2 : 0,
     indent: ['error', 2],
     'linebreak-style': ['error', 'unix'],
     quotes: [

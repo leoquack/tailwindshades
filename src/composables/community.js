@@ -57,13 +57,10 @@ export default {
       shade.likes++
     },
     async unlikeShade(shade) {
-      const { error } = await this.$supabase
-        .from('liked_shades')
-        .delete()
-        .match({
-          user_id: this.user.id,
-          shade_id: shade.id,
-        })
+      const { error } = await this.$supabase.from('liked_shades').delete().match({
+        user_id: this.user.id,
+        shade_id: shade.id,
+      })
       if (error) {
         this.$notify({
           text: "Couldn't unlike shade",
@@ -93,10 +90,7 @@ export default {
       })
       if (error) {
         this.loading = true
-        const { data, error } = await this.$supabase
-          .from('liked_shades')
-          .select()
-          .eq('user_id', this.user.id)
+        const { data, error } = await this.$supabase.from('liked_shades').select().eq('user_id', this.user.id)
         this.loading = false
         if (error) {
           this.$notify({

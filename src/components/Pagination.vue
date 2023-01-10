@@ -1,17 +1,19 @@
 <template>
-  <div class="bg-theme-600 px-4 py-3 flex items-center justify-between border-t border-theme-reverse sm:px-6 text-theme">
+  <div
+    class="bg-theme-600 px-4 py-3 flex items-center justify-between border-t border-theme-reverse sm:px-6 text-theme"
+  >
     <div class="flex-1 flex justify-between sm:hidden">
       <a
         class="relative inline-flex items-center px-4 py-2 border border-theme-reverse text-sm font-medium rounded-md"
         :class="page === 1 ? 'bg-theme-400 text-theme-500' : 'bg-theme-600 hover:bg-theme-300'"
-        @click="$emit('change', page-1)"
+        @click="$emit('change', page - 1)"
       >
         Previous
       </a>
       <a
         class="ml-3 relative inline-flex items-center px-4 py-2 border border-theme-reverse text-sm font-medium rounded-md bg-theme-600 hover:bg-theme-300"
         :class="page === lastPage ? 'bg-theme-400 text-theme-500' : 'bg-theme-600 hover:bg-theme-300'"
-        @click="$emit('change', page+1)"
+        @click="$emit('change', page + 1)"
       >
         Next
       </a>
@@ -29,13 +31,10 @@
         </p>
       </div>
       <div>
-        <nav
-          class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px select-none"
-          aria-label="Pagination"
-        >
+        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px select-none" aria-label="Pagination">
           <a
             class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-theme-reverse bg-theme-600 text-sm font-medium hover:bg-theme-300 cursor-pointer"
-            @click="$emit('change', page-1)"
+            @click="$emit('change', page - 1)"
           >
             <span class="sr-only">Previous</span>
             <!-- Heroicon name: solid/chevron-left -->
@@ -59,14 +58,18 @@
             :key="`pagination-number-list-${i}`"
             aria-current="page"
             class="relative inline-flex items-center px-4 py-2 border text-sm font-medium cursor-pointer"
-            :class="page === p ? 'z-10 bg-purple-700 border-purple-500 text-white' : 'bg-theme-600 border-theme-reverse hover:bg-theme-300'"
+            :class="
+              page === p
+                ? 'z-10 bg-purple-700 border-purple-500 text-white'
+                : 'bg-theme-600 border-theme-reverse hover:bg-theme-300'
+            "
             @click="changePage(p)"
           >
             {{ p }}
           </a>
           <a
             class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-theme-reverse bg-theme-600 text-sm font-medium hover:bg-theme-300 cursor-pointer"
-            @click="$emit('change', page+1)"
+            @click="$emit('change', page + 1)"
           >
             <span class="sr-only">Next</span>
             <!-- Heroicon name: solid/chevron-right -->
@@ -89,7 +92,6 @@
     </div>
   </div>
 </template>
-
 
 <script>
 export default {

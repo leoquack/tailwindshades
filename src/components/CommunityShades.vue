@@ -15,22 +15,15 @@
               class="w-12 h-12"
               :style="'background-color: ' + color"
             >
-              <div
-                class="-mt-2 flex justify-center"
-                v-if="colorIndex === 5"
-              ><svg
+              <div class="-mt-2 flex justify-center" v-if="colorIndex === 5">
+                <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-2 w-2"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
             </div>
@@ -38,10 +31,7 @@
         </div>
         <div class="flex justify-between px-2 text-xs py-1">
           <VDropdown :triggers="['hover']">
-            <div
-              @click.stop="toggleLikeShade(shade)"
-              class="flex items-center hover:text-purple-500 cursor-pointer"
-            >
+            <div @click.stop="toggleLikeShade(shade)" class="flex items-center hover:text-purple-500 cursor-pointer">
               <svg
                 v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)"
                 xmlns="http://www.w3.org/2000/svg"
@@ -72,17 +62,13 @@
               </svg>
 
               <span class="ml-1 text-xs">
-                {{ `${shade.likes} ${(shade.likes === 1 ? 'Like' : 'Likes')}` }}
+                {{ `${shade.likes} ${shade.likes === 1 ? 'Like' : 'Likes'}` }}
               </span>
             </div>
 
             <template #popper>
-              <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)">
-                Unlike shade
-              </span>
-              <span v-else>
-                Like shade
-              </span>
+              <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)"> Unlike shade </span>
+              <span v-else> Like shade </span>
             </template>
           </VDropdown>
           <p class="text-xs">Created {{ formatCreatedAt(shade.created_at) }}</p>
