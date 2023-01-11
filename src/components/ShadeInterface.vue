@@ -342,10 +342,13 @@
               </div>
             </div>
             <div class="px-2 relative">
+              <PrismComponent language="javascript"
+                >{{ appendColon(code.name) }}{{ codeDisplay }}</PrismComponent
+              >
               <input
                 type="hidden"
                 id="final-code"
-                :modelValue="appendColon(code.name) + codeDisplay"
+                :value="appendColon(code.name) + codeDisplay"
               />
               <div
                 class="absolute right-0 top-0 mr-4 bg-theme-700 px-4 py-2 text-xl rounded-full cursor-pointer hover:bg-theme-800"
@@ -368,6 +371,7 @@ import { ntc } from '@/lib/ntc.js'
 import SliderInput from '@/components/SliderInput.vue'
 import BaseStopSelect from '@/components/BaseStopSelect.vue'
 import _ from 'lodash'
+import PrismComponent from 'vue-prism-component'
 
 export default {
   props: {
@@ -379,6 +383,7 @@ export default {
   components: {
     SliderInput,
     BaseStopSelect,
+    PrismComponent,
   },
   data() {
     return {
