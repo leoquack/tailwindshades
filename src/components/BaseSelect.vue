@@ -221,6 +221,7 @@ import BaseStopSelect from '@/components/BaseStopSelect.vue'
 import community from '@/composables/community.js'
 import * as timeago from 'timeago.js'
 import { vMaska } from 'maska'
+import { pageview } from 'vue-gtag'
 
 export default {
   components: {
@@ -287,7 +288,7 @@ export default {
   },
   mounted() {
     if (import.meta.env.PROD) {
-      this.$gtag.pageview('/')
+      pageview('/')
     }
 
     if (this.originShade.id) {
