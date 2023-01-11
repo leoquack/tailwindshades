@@ -32,7 +32,7 @@
     </div>
 
     <div v-if="isLoggedIn">
-      <DropdownComponent placement="right">
+      <CustomDropdown placement="right">
         <template v-slot:button class="flex items-center">
           <img
             v-if="user.user_metadata.avatar_url"
@@ -78,7 +78,7 @@
             Logout
           </div>
         </template>
-      </DropdownComponent>
+      </CustomDropdown>
     </div>
   </div>
 </template>
@@ -86,12 +86,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import ModalComponent from '@/components/Modal.vue'
-import DropdownComponent from '@/components/Dropdown.vue'
+import CustomDropdown from '@/components/CustomDropdown.vue'
 
 export default {
   components: {
     ModalComponent,
-    DropdownComponent,
+    CustomDropdown,
   },
   data() {
     return {

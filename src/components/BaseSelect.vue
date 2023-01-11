@@ -95,7 +95,7 @@
                 <span class="text-sm" v-if="shadeHasUnsavedChanges">*</span>
                 save
               </div>
-              <DropdownComponent
+              <CustomDropdown
                 class="h-full"
                 placement="right"
                 :disabled="!shadeHasUnsavedChanges"
@@ -125,7 +125,7 @@
                     Save as new
                   </div>
                 </template>
-              </DropdownComponent>
+              </CustomDropdown>
             </div>
           </div>
 
@@ -196,7 +196,7 @@
         </div>
       </div>
 
-      <shades-component
+      <ShadeInterface
         :initialHEX="hex"
         :dbShade="shade"
         :colors="colors"
@@ -204,7 +204,7 @@
         :baseShadeStop="baseShadeStop"
         @set-base-shade-stop="baseShadeStop = $event"
         @hash-changed="handleHashChange"
-        ref="shadesComponent"
+        ref="shadeInterface"
       />
     </div>
   </div>
@@ -212,10 +212,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import ShadesComponent from '@/components/Shades.vue'
+import ShadeInterface from '@/components/ShadeInterface.vue'
 import CarbonAds from '@/components/CarbonAds.vue'
 import converter from 'color-convert'
-import DropdownComponent from '@/components/Dropdown.vue'
+import CustomDropdown from '@/components/CustomDropdown.vue'
 import CommunityQuickSelect from '@/components/CommunityQuickSelect.vue'
 import BaseStopSelect from '@/components/BaseStopSelect.vue'
 import community from '@/composables/community.js'
@@ -224,9 +224,9 @@ import { vMaska } from 'maska'
 
 export default {
   components: {
-    ShadesComponent,
+    ShadeInterface,
     CarbonAds,
-    DropdownComponent,
+    CustomDropdown,
     CommunityQuickSelect,
     BaseStopSelect,
   },
@@ -392,8 +392,8 @@ export default {
       let h = window.location.hash.substring(1)
       this.shadeHasUnsavedChanges = this.shade.code !== h
       if (
-        this.$refs.shadesComponent &&
-        h !== this.$refs.shadesComponent.urlHash()
+        this.$refs.shadeInterface &&
+        h !== this.$refs.shadeInterface.urlHash()
       ) {
         window.location.reload()
       }

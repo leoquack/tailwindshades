@@ -94,7 +94,7 @@
       </div>
     </div>
 
-    <Pagination
+    <CustomPagination
       :page="pagination.page"
       :max-per-page="pagination.maxPerPage"
       :total="pagination.total"
@@ -106,7 +106,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import * as timeago from 'timeago.js'
-import Pagination from '@/components/Pagination.vue'
+import CustomPagination from '@/components/CustomPagination.vue'
 import community from '@/composables/community.js'
 
 export default {
@@ -114,7 +114,7 @@ export default {
     mode: String,
   },
   components: {
-    Pagination,
+    CustomPagination,
   },
   mixins: [community],
   data() {

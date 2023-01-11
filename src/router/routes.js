@@ -1,5 +1,5 @@
-import _404 from '@/components/404.vue'
-import Shade from '@/components/BaseSelect.vue'
+import NotFound404 from '@/components/NotFound404.vue'
+import BaseSelect from '@/components/BaseSelect.vue'
 import MyColors from '@/components/MyColors.vue'
 import CommunityShades from '@/components/CommunityShades.vue'
 
@@ -10,7 +10,7 @@ export default [
     meta: {
       auth: false,
     },
-    component: _404,
+    component: NotFound404,
   },
   {
     path: '/',
@@ -19,7 +19,7 @@ export default [
       auth: false,
       title: 'Shade',
     },
-    component: Shade,
+    component: BaseSelect,
   },
   {
     path: '/my-colors',
