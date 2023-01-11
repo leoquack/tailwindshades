@@ -4,7 +4,9 @@
       <div class="py-8" v-if="loading">Loading...</div>
       <div class="py-8" v-else-if="!this.shades.length">
         <p>No saved colors</p>
-        <router-link to="/" class="text-sm text-blue-600 hover:text-blue-700">Go back to add one!</router-link>
+        <router-link to="/" class="text-sm text-blue-600 hover:text-blue-700"
+          >Go back to add one!</router-link
+        >
       </div>
     </div>
     <div class="px-2 flex flex-col items-center w-full">
@@ -21,7 +23,10 @@
               :key="`shade-${shadeIndex}`"
               class="mb-8 mx-6 bor32der border-theme-600 rounded-lg overflow-hidden shadow-lg"
             >
-              <div class="cursor-pointer hover:bg-theme-600 rounded-lg" @click="editShade(shade)">
+              <div
+                class="cursor-pointer hover:bg-theme-600 rounded-lg"
+                @click="editShade(shade)"
+              >
                 <div class="flex justify-between items-center px-2 pt-1">
                   <p class="font-bold text-lg">
                     #{{ shade.id }}
@@ -36,7 +41,10 @@
                     class="w-12 h-12"
                     :style="'background-color: ' + color"
                   >
-                    <div class="-mt-2 flex justify-center" v-if="colorIndex === 5">
+                    <div
+                      class="-mt-2 flex justify-center"
+                      v-if="colorIndex === 5"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-2 w-2"
@@ -44,7 +52,12 @@
                         viewBox="0 0 24 24"
                         stroke="currentColor"
                       >
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19 9l-7 7-7-7"
+                        />
                       </svg>
                     </div>
                   </div>
@@ -54,20 +67,38 @@
                 <div class="flex" v-if="publishActive">
                   <div v-if="shade.is_public" class="mr-4">
                     <i class="fas fa-heart"></i>
-                    {{ `${shade.likes} ${shade.likes === 1 ? 'Like' : 'Likes'}` }}
+                    {{
+                      `${shade.likes} ${shade.likes === 1 ? 'Like' : 'Likes'}`
+                    }}
                   </div>
-                  <div v-if="shade.is_public" class="cursor-pointer select-none" @click="setIsPublic(shade, false)">
+                  <div
+                    v-if="shade.is_public"
+                    class="cursor-pointer select-none"
+                    @click="setIsPublic(shade, false)"
+                  >
                     <i class="fas fa-globe mr-1"></i>
                     Make private
                   </div>
-                  <div v-else class="cursor-pointer select-none" @click="setIsPublic(shade, true)">
+                  <div
+                    v-else
+                    class="cursor-pointer select-none"
+                    @click="setIsPublic(shade, true)"
+                  >
                     <i class="fas fa-globe mr-1"></i>
                     Make public
                   </div>
                 </div>
                 <div class="text-right">
-                  <p class="text-xs text-red-600" v-if="confirmDeleteShade === shade.id">Click again to confirm</p>
-                  <p class="cursor-pointer select-none delete-handle" @click="deleteShade(shade)">
+                  <p
+                    class="text-xs text-red-600"
+                    v-if="confirmDeleteShade === shade.id"
+                  >
+                    Click again to confirm
+                  </p>
+                  <p
+                    class="cursor-pointer select-none delete-handle"
+                    @click="deleteShade(shade)"
+                  >
                     <i class="fas fa-trash mr-1"></i>
                     Delete
                   </p>
@@ -135,7 +166,11 @@ export default {
       })
       if (error) {
         this.loading = true
-        const { data, error } = await this.$supabase.from('shades').select().eq('user_id', this.user.id).order('id')
+        const { data, error } = await this.$supabase
+          .from('shades')
+          .select()
+          .eq('user_id', this.user.id)
+          .order('id')
         this.loading = false
         if (error) {
           this.$notify({
@@ -159,7 +194,10 @@ export default {
       })
     },
     async setIsPublic(shade, value) {
-      const { error } = await this.$supabase.from('shades').update({ is_public: value }).match({ id: shade.id })
+      const { error } = await this.$supabase
+        .from('shades')
+        .update({ is_public: value })
+        .match({ id: shade.id })
       if (error) {
         this.$notify({
           text: "Couldn't change is_public",
@@ -176,7 +214,10 @@ export default {
         this.confirmDeleteShade = shade.id
         return
       }
-      const { error } = await this.$supabase.from('shades').delete().match({ id: shade.id })
+      const { error } = await this.$supabase
+        .from('shades')
+        .delete()
+        .match({ id: shade.id })
       if (error) {
         this.$notify({
           text: "Couldn't delete shade",

@@ -1,3 +1,4 @@
+/* eslint-env node */
 import { defineConfig } from 'vite'
 import createVuePlugin from '@vitejs/plugin-vue'
 import path from 'path'

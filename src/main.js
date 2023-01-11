@@ -52,7 +52,10 @@ if (theme === 'light') {
 }
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.auth) && !store.getters.isLoggedIn) {
+  if (
+    to.matched.some(record => record.meta.auth) &&
+    !store.getters.isLoggedIn
+  ) {
     // alert('You need to be logged in to access this page')
     next('/')
   } else {

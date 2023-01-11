@@ -19,7 +19,8 @@ export default {
     load() {
       const s = document.createElement('script')
       s.id = '_carbonads_js'
-      s.src = '//cdn.carbonads.com/carbon.js?serve=CESDVK3W&placement=wwwtailwindshadescom'
+      s.src =
+        '//cdn.carbonads.com/carbon.js?serve=CESDVK3W&placement=wwwtailwindshadescom'
       this.$el.appendChild(s)
     },
   },

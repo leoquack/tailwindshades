@@ -25,7 +25,10 @@ export default {
         return
       }
 
-      if (this.myLikedShades && this.myLikedShades.find(l => l.shade_id === shade.id)) {
+      if (
+        this.myLikedShades &&
+        this.myLikedShades.find(l => l.shade_id === shade.id)
+      ) {
         this.unlikeShade(shade)
         return
       }
@@ -57,10 +60,13 @@ export default {
       shade.likes++
     },
     async unlikeShade(shade) {
-      const { error } = await this.$supabase.from('liked_shades').delete().match({
-        user_id: this.user.id,
-        shade_id: shade.id,
-      })
+      const { error } = await this.$supabase
+        .from('liked_shades')
+        .delete()
+        .match({
+          user_id: this.user.id,
+          shade_id: shade.id,
+        })
       if (error) {
         this.$notify({
           text: "Couldn't unlike shade",
@@ -76,7 +82,9 @@ export default {
         duration: 2000,
       })
 
-      this.myLikedShades = this.myLikedShades.filter(l => l.shade_id !== shade.id)
+      this.myLikedShades = this.myLikedShades.filter(
+        l => l.shade_id !== shade.id
+      )
       shade.likes--
     },
     async getMyLikedShades() {
@@ -90,7 +98,10 @@ export default {
       })
       if (error) {
         this.loading = true
-        const { data, error } = await this.$supabase.from('liked_shades').select().eq('user_id', this.user.id)
+        const { data, error } = await this.$supabase
+          .from('liked_shades')
+          .select()
+          .eq('user_id', this.user.id)
         this.loading = false
         if (error) {
           this.$notify({

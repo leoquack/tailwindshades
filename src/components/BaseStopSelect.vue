@@ -6,7 +6,10 @@
         v-for="stop in stops"
         :key="'base-stop-' + stop"
         class="flex-grow bg-theme-600 cursor-pointer select-none text-sm text-center"
-        :class="[small ? 'py-1' : 'py-2', { 'bg-theme-800': baseShadeStop === stop }]"
+        :class="[
+          small ? 'py-1' : 'py-2',
+          { 'bg-theme-800': baseShadeStop === stop },
+        ]"
         @click="$emit('set', stop)"
       >
         {{ stop * 100 }}

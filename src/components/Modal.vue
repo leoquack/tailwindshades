@@ -17,7 +17,10 @@
         'w-11/12': size === 'full',
       }"
     >
-      <div class="bg-theme-400 -mx-4 -mt-2 py-3 px-8 text-center font-bold text-xl" name="title">
+      <div
+        class="bg-theme-400 -mx-4 -mt-2 py-3 px-8 text-center font-bold text-xl"
+        name="title"
+      >
         <slot name="title"></slot>
       </div>
       <slot v-if="!!modelValue"></slot>

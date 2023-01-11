@@ -4,13 +4,20 @@
       v-if="step === 'base' && !hasURLHash"
       class="px-2 md:px-0 text-center flex-grow grid md:grid-cols-2 lg:grid-cols-3 md:space-x-3 lg:space-x-6"
     >
-      <div class="leading-none text-theme-lighter flex flex-col justify-center lg:-mt-12 lg:col-start-2">
+      <div
+        class="leading-none text-theme-lighter flex flex-col justify-center lg:-mt-12 lg:col-start-2"
+      >
         <p class="text-lg md:text-xl text-left">Start by</p>
-        <p class="text-3xl md:text-4xl font-bold mt-1 text-left">selecting a <u>base</u> color</p>
+        <p class="text-3xl md:text-4xl font-bold mt-1 text-left">
+          selecting a <u>base</u> color
+        </p>
         <input
           type="text"
           v-model="hex"
-          v-maska="{ mask: '!#HHHHHH', tokens: { H: { pattern: /[0-9a-fA-F]/, uppercase: true } } }"
+          v-maska="{
+            mask: '!#HHHHHH',
+            tokens: { H: { pattern: /[0-9a-fA-F]/, uppercase: true } },
+          }"
           class="form-control form-no-outline font-black text-2xl mt-6 py-6 px-8"
         />
         <div class="mt-8">
@@ -44,7 +51,10 @@
           </div>
         </transition>
 
-        <carbon-ads v-if="isProduction" class="flex justify-center items-center mt-24" />
+        <carbon-ads
+          v-if="isProduction"
+          class="flex justify-center items-center mt-24"
+        />
       </div>
       <div class="py-4 px-4 text-theme">
         <CommunityQuickSelect />
@@ -53,14 +63,21 @@
 
     <div class="flex flex-col" v-if="step === 'shades' || hasURLHash">
       <div class="flex justify-between bg-theme-lighter border-t border-theme">
-        <button class="text-theme text-sm hover:text-blue-400 focus:outline-none p-2" @click="backToBaseSelection">
+        <button
+          class="text-theme text-sm hover:text-blue-400 focus:outline-none p-2"
+          @click="backToBaseSelection"
+        >
           <i class="fas fa-angle-left"></i>
           base color selection
         </button>
 
         <div class="flex items-center">
           <div
-            v-if="isLoggedIn && loginFeatures && (shadeHasUnsavedChanges || shade.id)"
+            v-if="
+              isLoggedIn &&
+              loginFeatures &&
+              (shadeHasUnsavedChanges || shade.id)
+            "
             class="text-theme font-bold text-sm bg-theme-500 h-full flex items-center"
           >
             <p v-if="shade.id" class="px-4">my shade #{{ shade.id }}</p>
@@ -68,7 +85,9 @@
             <div
               class="text-sm focus:outline-none flex items-center justify-between bg-theme-600 h-full pl-4 select-none"
               :class="[
-                shadeHasUnsavedChanges ? 'text-theme hover:text-theme' : 'text-theme-500',
+                shadeHasUnsavedChanges
+                  ? 'text-theme hover:text-theme'
+                  : 'text-theme-500',
                 { 'pr-4': !shade.id },
               ]"
             >
@@ -76,8 +95,16 @@
                 <span class="text-sm" v-if="shadeHasUnsavedChanges">*</span>
                 save
               </div>
-              <DropdownComponent class="h-full" placement="right" :disabled="!shadeHasUnsavedChanges" v-if="shade.id">
-                <template v-slot:button class="flex h-full items-center bg-theme-600 text-theme px-1">
+              <DropdownComponent
+                class="h-full"
+                placement="right"
+                :disabled="!shadeHasUnsavedChanges"
+                v-if="shade.id"
+              >
+                <template
+                  v-slot:button
+                  class="flex h-full items-center bg-theme-600 text-theme px-1"
+                >
                   <svg
                     class="w-4 h-4"
                     xmlns="http://www.w3.org/2000/svg"
@@ -111,14 +138,20 @@
             share
           </button>
 
-          <div class="flex justify-between px-2 text-xs py-1" v-if="loginFeatures && originShade.id">
+          <div
+            class="flex justify-between px-2 text-xs py-1"
+            v-if="loginFeatures && originShade.id"
+          >
             <VDropdown :triggers="['hover']">
               <div
                 @click.stop="toggleLikeShade(originShade)"
                 class="flex items-center hover:text-purple-500 cursor-pointer"
               >
                 <svg
-                  v-if="myLikedShades && myLikedShades.find(l => l.shade_id === originShade.id)"
+                  v-if="
+                    myLikedShades &&
+                    myLikedShades.find(l => l.shade_id === originShade.id)
+                  "
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-5 w-5 text-purple-500"
                   viewBox="0 0 20 20"
@@ -148,7 +181,12 @@
               </div>
 
               <template #popper>
-                <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === originShade.id)">
+                <span
+                  v-if="
+                    myLikedShades &&
+                    myLikedShades.find(l => l.shade_id === originShade.id)
+                  "
+                >
                   Unlike shade
                 </span>
                 <span v-else> Like shade </span>
@@ -239,7 +277,13 @@ export default {
       }
       return /^#[0-9A-F]{6}$/i.test(hex)
     },
-    ...mapGetters(['theme', 'user', 'isLoggedIn', 'loginFeatures', 'originShade']),
+    ...mapGetters([
+      'theme',
+      'user',
+      'isLoggedIn',
+      'loginFeatures',
+      'originShade',
+    ]),
   },
   mounted() {
     // if (import.meta.env.PROD) {
@@ -299,7 +343,8 @@ export default {
       }
 
       this.shade = Object.assign({}, this.shade, data[0])
-      this.shadeHasUnsavedChanges = this.shade.code !== window.location.hash.substring(1)
+      this.shadeHasUnsavedChanges =
+        this.shade.code !== window.location.hash.substring(1)
       this.$notify({
         text: 'Shade updated successfully',
         type: 'info',
@@ -326,7 +371,8 @@ export default {
       }
 
       this.shade = Object.assign({}, this.shade, data[0])
-      this.shadeHasUnsavedChanges = this.shade.code !== window.location.hash.substring(1)
+      this.shadeHasUnsavedChanges =
+        this.shade.code !== window.location.hash.substring(1)
       this.$store.commit('setOriginShade', this.shade)
 
       this.$notify({
@@ -345,7 +391,10 @@ export default {
       // Force reload in case the URL hash changes manually.
       let h = window.location.hash.substring(1)
       this.shadeHasUnsavedChanges = this.shade.code !== h
-      if (this.$refs.shadesComponent && h !== this.$refs.shadesComponent.urlHash()) {
+      if (
+        this.$refs.shadesComponent &&
+        h !== this.$refs.shadesComponent.urlHash()
+      ) {
         window.location.reload()
       }
     },
@@ -378,7 +427,11 @@ export default {
     backToBaseSelection() {
       this.$store.commit('setOriginShade', {})
       window.location.hash = ''
-      window.history.replaceState(null, '', window.location.pathname + window.location.search)
+      window.history.replaceState(
+        null,
+        '',
+        window.location.pathname + window.location.search
+      )
       this.shade = this.emptyShade()
       this.hex = ''
       this.step = 'base'

@@ -5,13 +5,20 @@
     <div class="flex flex-col min-h-full">
       <div class="bg-theme-lighter px-4 py-3 text-theme flex-shrink">
         <div class="flex flex-wrap justify-between items-center">
-          <div class="text-lg md:text-2xl font-black mb-0 leading-none tracking-wide inline-block logo-text">
-            <router-link v-if="$route.path != '/'" to="/">tailwindshades</router-link>
+          <div
+            class="text-lg md:text-2xl font-black mb-0 leading-none tracking-wide inline-block logo-text"
+          >
+            <router-link v-if="$route.path != '/'" to="/"
+              >tailwindshades</router-link
+            >
             <p v-else>tailwindshades</p>
           </div>
           <div class="w-2/3 text-right flex justify-end items-center">
             <UserControl v-if="loginFeatures" class="text-left mr-6" />
-            <div class="btn bg-theme-500 hover:bg-theme-700 select-none" @click="toggleTheme">
+            <div
+              class="btn bg-theme-500 hover:bg-theme-700 select-none"
+              @click="toggleTheme"
+            >
               <i class="text-xl fas fa-moon" v-if="theme === 'light'"></i>
               <svg
                 v-show="theme === 'dark'"
@@ -28,7 +35,11 @@
             </div>
 
             <div class="inline-block ml-2 md:ml-8">
-              <a href="https://github.com/leoquack/tailwindshades" class="text-2xl cursor-pointer" target="_blank">
+              <a
+                href="https://github.com/leoquack/tailwindshades"
+                class="text-2xl cursor-pointer"
+                target="_blank"
+              >
                 <svg
                   viewBox="0 0 1024 1024"
                   class="h-8 w-8 light:text-[#1B1F23] dark:text-[#f0f6fc]"

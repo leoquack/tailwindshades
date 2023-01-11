@@ -23,7 +23,12 @@
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
                 </svg>
               </div>
             </div>
@@ -31,9 +36,15 @@
         </div>
         <div class="flex justify-between px-2 text-xs py-1">
           <VDropdown :triggers="['hover']">
-            <div @click.stop="toggleLikeShade(shade)" class="flex items-center hover:text-purple-500 cursor-pointer">
+            <div
+              @click.stop="toggleLikeShade(shade)"
+              class="flex items-center hover:text-purple-500 cursor-pointer"
+            >
               <svg
-                v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)"
+                v-if="
+                  myLikedShades &&
+                  myLikedShades.find(l => l.shade_id === shade.id)
+                "
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5 text-purple-500"
                 viewBox="0 0 20 20"
@@ -67,7 +78,14 @@
             </div>
 
             <template #popper>
-              <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)"> Unlike shade </span>
+              <span
+                v-if="
+                  myLikedShades &&
+                  myLikedShades.find(l => l.shade_id === shade.id)
+                "
+              >
+                Unlike shade
+              </span>
               <span v-else> Like shade </span>
             </template>
           </VDropdown>
@@ -152,7 +170,10 @@ export default {
       if (this.loading) {
         return
       }
-      if (Math.ceil(this.pagination.total / this.pagination.maxPerPage) < event || event < 1) {
+      if (
+        Math.ceil(this.pagination.total / this.pagination.maxPerPage) < event ||
+        event < 1
+      ) {
         return
       }
 
@@ -163,7 +184,10 @@ export default {
     refreshShades() {
       clearTimeout(this.delay.refreshShades.n)
       this.delay.refreshShades.n = setTimeout(() => {
-        this.$store.commit('setCacheValue', { key: 'shades.community.shades', value: null })
+        this.$store.commit('setCacheValue', {
+          key: 'shades.community.shades',
+          value: null,
+        })
         this.getShades()
       }, this.delay.refreshShades.t)
     },
@@ -176,7 +200,10 @@ export default {
     async _getShades() {
       this.loading = true
       const from = (this.pagination.page - 1) * this.pagination.maxPerPage
-      let to = (this.pagination.page - 1) * this.pagination.maxPerPage + this.pagination.maxPerPage - 1
+      let to =
+        (this.pagination.page - 1) * this.pagination.maxPerPage +
+        this.pagination.maxPerPage -
+        1
       if (this.pagination.total !== 0 && to > this.pagination.total) {
         to = this.pagination.total
       }

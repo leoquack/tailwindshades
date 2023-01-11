@@ -1,11 +1,16 @@
 <template>
   <div class="flex flex-col pb-2">
-    <div class="flex flex-col rounded text-theme px-2" v-if="result.shades && result.shades.length">
+    <div
+      class="flex flex-col rounded text-theme px-2"
+      v-if="result.shades && result.shades.length"
+    >
       <div class="flex flex-wrap -mx-2" v-if="Object.entries(overrides).length">
         <div class="flex flex-col flex-grow w-full md:w-2/3 px-2">
           <div class="flex flex-col flex-grow mt-4">
             <div class="flex text-xs select-none text-center">
-              <div class="w-80 px-2 border border-theme-600 border-r-0 border-b-0 flex justify-between">
+              <div
+                class="w-80 px-2 border border-theme-600 border-r-0 border-b-0 flex justify-between"
+              >
                 <p>Fine tune</p>
                 <a
                   v-if="hasOverrides"
@@ -15,8 +20,16 @@
                   >reset</a
                 >
                 <label class="flex items-center cursor-pointer">
-                  <input type="checkbox" class="form-checkbox" v-model="fineTuneLimitLightness" />
-                  <span class="ml-1" v-tooltip="'* limit between the lightness of the previous and next shades'"
+                  <input
+                    type="checkbox"
+                    class="form-checkbox"
+                    v-model="fineTuneLimitLightness"
+                  />
+                  <span
+                    class="ml-1"
+                    v-tooltip="
+                      '* limit between the lightness of the previous and next shades'
+                    "
                     >limit lightness</span
                   >
                 </label>
@@ -26,7 +39,9 @@
                   @click="auto"
                 >auto</a> -->
               </div>
-              <div class="flex-grow px-2 border border-theme-600 border-b-0"></div>
+              <div
+                class="flex-grow px-2 border border-theme-600 border-b-0"
+              ></div>
             </div>
             <div
               v-for="{ stop, hex, hsl, override, textColor } in result.shades"
@@ -38,9 +53,9 @@
                 { 'border-t': stops[0] === stop },
                 { 'border-b': stops[stops.length - 1] === stop },
               ]"
-              :style="`background-color: #${override ? override.hex : hex}; color: ${
-                override ? override.textColor : textColor
-              };`"
+              :style="`background-color: #${
+                override ? override.hex : hex
+              }; color: ${override ? override.textColor : textColor};`"
             >
               <div class="flex w-full justify-between items-center">
                 <div class="w-80 h-full">
@@ -66,9 +81,18 @@
                           <slider-input
                             :number-input-enabled="false"
                             slim
-                            :title="(overrides[String(stop)].hue !== -1 ? '* ' : '') + 'Hue'"
-                            :modelValue="overrides[String(stop)].hue !== -1 ? overrides[String(stop)].hue : hsl[0]"
-                            @input="overrideValue($event.target.value, stop, 'hue')"
+                            :title="
+                              (overrides[String(stop)].hue !== -1 ? '* ' : '') +
+                              'Hue'
+                            "
+                            :modelValue="
+                              overrides[String(stop)].hue !== -1
+                                ? overrides[String(stop)].hue
+                                : hsl[0]
+                            "
+                            @update:modelValue="
+                              overrideValue($event, stop, 'hue')
+                            "
                             :min="0"
                             :max="360"
                           />
@@ -77,11 +101,19 @@
                           <slider-input
                             :number-input-enabled="false"
                             slim
-                            :title="(overrides[String(stop)].saturation !== -1 ? '* ' : '') + 'Saturation'"
-                            :modelValue="
-                              overrides[String(stop)].saturation !== -1 ? overrides[String(stop)].saturation : hsl[1]
+                            :title="
+                              (overrides[String(stop)].saturation !== -1
+                                ? '* '
+                                : '') + 'Saturation'
                             "
-                            @input="overrideValue($event.target.value, stop, 'saturation')"
+                            :modelValue="
+                              overrides[String(stop)].saturation !== -1
+                                ? overrides[String(stop)].saturation
+                                : hsl[1]
+                            "
+                            @update:modelValue="
+                              overrideValue($event, stop, 'saturation')
+                            "
                             :min="0"
                             :max="100"
                           />
@@ -90,13 +122,33 @@
                           <slider-input
                             :number-input-enabled="false"
                             slim
-                            :title="(overrides[String(stop)].lightness !== -1 ? '* ' : '') + 'Lightness'"
-                            :modelValue="
-                              overrides[String(stop)].lightness !== -1 ? overrides[String(stop)].lightness : hsl[2]
+                            :title="
+                              (overrides[String(stop)].lightness !== -1
+                                ? '* '
+                                : '') + 'Lightness'
                             "
-                            @input="overrideValue($event.target.value, stop, 'lightness')"
-                            :min="!fineTuneLimitLightness ? 0 : hslValueAtStop(stops.indexOf(stop) + 1, 2, 0)"
-                            :max="!fineTuneLimitLightness ? 100 : hslValueAtStop(stops.indexOf(stop) - 1, 2, 100)"
+                            :modelValue="
+                              overrides[String(stop)].lightness !== -1
+                                ? overrides[String(stop)].lightness
+                                : hsl[2]
+                            "
+                            @update:modelValue="
+                              overrideValue($event, stop, 'lightness')
+                            "
+                            :min="
+                              !fineTuneLimitLightness
+                                ? 0
+                                : hslValueAtStop(stops.indexOf(stop) + 1, 2, 0)
+                            "
+                            :max="
+                              !fineTuneLimitLightness
+                                ? 100
+                                : hslValueAtStop(
+                                    stops.indexOf(stop) - 1,
+                                    2,
+                                    100
+                                  )
+                            "
                           />
                         </div>
                       </div>
@@ -104,15 +156,29 @@
                   </div>
                 </div>
 
-                <div class="flex flex-grow text-center items-center justify-center">
-                  <div class="text-3xl font-normal" v-if="stop === baseShadeStop">[</div>
+                <div
+                  class="flex flex-grow text-center items-center justify-center"
+                >
+                  <div
+                    class="text-3xl font-normal"
+                    v-if="stop === baseShadeStop"
+                  >
+                    [
+                  </div>
                   <div class="px-2">
                     <p class="text-xs leading-2">
                       {{ stop * 100 }}
                     </p>
-                    <p class="leading-4">#{{ override ? override.hex : hex }}</p>
+                    <p class="leading-4">
+                      #{{ override ? override.hex : hex }}
+                    </p>
                   </div>
-                  <div class="text-3xl font-normal" v-if="stop === baseShadeStop">]</div>
+                  <div
+                    class="text-3xl font-normal"
+                    v-if="stop === baseShadeStop"
+                  >
+                    ]
+                  </div>
                 </div>
               </div>
             </div>
@@ -121,11 +187,17 @@
 
         <div class="flex-grow w-full md:w-1/3 pr-6 pl-2 mt-4">
           <div class="border border-theme-600 pb-2">
-            <div class="flex items-center leading-none border-b border-theme-600">
-              <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">
+            <div
+              class="flex items-center leading-none border-b border-theme-600"
+            >
+              <p
+                class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center"
+              >
                 1
               </p>
-              <p class="text-xl py-2 px-2 text-theme-darker font-bold">Fine tune base color</p>
+              <p class="text-xl py-2 px-2 text-theme-darker font-bold">
+                Fine tune base color
+              </p>
             </div>
 
             <div class="md:px-2 pt-2">
@@ -141,14 +213,27 @@
                       ';'
                     "
                   >
-                    <p><strong>HEX:</strong> {{ displayHEX(result.color.hex) }}</p>
-                    <p><strong>RGB:</strong> {{ displayRGB(result.color.rgb) }}</p>
-                    <p><strong>HSL:</strong> {{ displayHSL(result.color.hsl) }}</p>
-                    <p v-if="initialHEX && initialHEX !== displayHEX(result.color.hex)">
+                    <p>
+                      <strong>HEX:</strong> {{ displayHEX(result.color.hex) }}
+                    </p>
+                    <p>
+                      <strong>RGB:</strong> {{ displayRGB(result.color.rgb) }}
+                    </p>
+                    <p>
+                      <strong>HSL:</strong> {{ displayHSL(result.color.hsl) }}
+                    </p>
+                    <p
+                      v-if="
+                        initialHEX &&
+                        initialHEX !== displayHEX(result.color.hex)
+                      "
+                    >
                       <strong>Initial: </strong>
                       <a
                         class="underline cursor-pointer hover:bg-theme hover:text-theme-lighter"
-                        v-tooltip="'⚠️ click to reset to initial base selection ⚠️'"
+                        v-tooltip="
+                          '⚠️ click to reset to initial base selection ⚠️'
+                        "
                         @click="reset"
                         >{{ initialHEX }}</a
                       >
@@ -158,13 +243,28 @@
 
                 <div class="flex-grow">
                   <div>
-                    <slider-input title="Hue" v-model="hsl[0]" :min="0" :max="360" />
+                    <slider-input
+                      title="Hue"
+                      v-model="hsl[0]"
+                      :min="0"
+                      :max="360"
+                    />
                   </div>
                   <div>
-                    <slider-input title="Saturation" v-model="hsl[1]" :min="0" :max="100" />
+                    <slider-input
+                      title="Saturation"
+                      v-model="hsl[1]"
+                      :min="0"
+                      :max="100"
+                    />
                   </div>
                   <div>
-                    <slider-input title="Lightness" v-model="hsl[2]" :min="0" :max="100" />
+                    <slider-input
+                      title="Lightness"
+                      v-model="hsl[2]"
+                      :min="0"
+                      :max="100"
+                    />
                   </div>
                 </div>
               </div>
@@ -180,18 +280,34 @@
 
           <div class="border border-theme-600 mt-6">
             <div class="mb-2">
-              <div class="flex items-center leading-none border-b border-theme-600">
-                <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">
+              <div
+                class="flex items-center leading-none border-b border-theme-600"
+              >
+                <p
+                  class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center"
+                >
                   2
                 </p>
-                <p class="text-xl py-2 px-2 text-theme-darker font-bold">Uniform shades</p>
+                <p class="text-xl py-2 px-2 text-theme-darker font-bold">
+                  Uniform shades
+                </p>
               </div>
             </div>
             <div class="mb-2 px-2">
-              <slider-input title="Step up %" v-model="groupOptions.stepUp" :min="0" :max="20" />
+              <slider-input
+                title="Step up %"
+                v-model="groupOptions.stepUp"
+                :min="0"
+                :max="20"
+              />
             </div>
             <div class="mb-2 px-2">
-              <slider-input title="Step down %" v-model="groupOptions.stepDown" :min="0" :max="20" />
+              <slider-input
+                title="Step down %"
+                v-model="groupOptions.stepDown"
+                :min="0"
+                :max="20"
+              />
             </div>
             <div class="mb-2 px-2">
               <slider-input
@@ -199,7 +315,7 @@
                 restorable
                 :restore-to="0"
                 :modelValue="groupOptions.hueShift"
-                @input="groupOptions.hueShift = parseInt($event.target.value)"
+                @update:modelValue="groupOptions.hueShift = parseInt($event)"
                 :min="-100"
                 :max="100"
               >
@@ -209,18 +325,28 @@
 
           <div class="border border-theme-600 mt-6" v-if="code.visible">
             <div class="mb-2">
-              <div class="flex items-center leading-none border-b border-theme-600">
-                <p class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center">
+              <div
+                class="flex items-center leading-none border-b border-theme-600"
+              >
+                <p
+                  class="text-xl font-black mr-3 border-r border-theme-600 w-10 h-10 flex items-center justify-center"
+                >
                   3
                 </p>
-                <p class="text-xl py-2 px-2 text-theme-darker font-bold w-1/3">Get code</p>
+                <p class="text-xl py-2 px-2 text-theme-darker font-bold w-1/3">
+                  Get code
+                </p>
                 <div class="px-4">
                   <input class="form-control" type="text" v-model="code.name" />
                 </div>
               </div>
             </div>
             <div class="px-2 relative">
-              <input type="hidden" id="final-code" :modelValue="appendColon(code.name) + codeDisplay" />
+              <input
+                type="hidden"
+                id="final-code"
+                :modelValue="appendColon(code.name) + codeDisplay"
+              />
               <div
                 class="absolute right-0 top-0 mr-4 bg-theme-700 px-4 py-2 text-xl rounded-full cursor-pointer hover:bg-theme-800"
                 @click="copyCodeToClipboard"
@@ -283,7 +409,9 @@ export default {
       this.updateURLHash()
       this.$emit(
         'update:colors',
-        this.result.shades.map(s => (s.override ? '#' + s.override.hex : '#' + s.hex))
+        this.result.shades.map(s =>
+          s.override ? '#' + s.override.hex : '#' + s.hex
+        )
       )
     },
     'code.name'() {
@@ -337,7 +465,9 @@ export default {
           hue = (hue + hsh + max) % max // Clamp number in the hue wheel.
         }
 
-        const hex = converter.rgb.hex(converter.hsl.rgb([hue, hsl[1], lightness]))
+        const hex = converter.rgb.hex(
+          converter.hsl.rgb([hue, hsl[1], lightness])
+        )
 
         let override = this.overrides[String(stop)]
 
@@ -436,15 +566,25 @@ export default {
 
         // Looping HSL values here [h, s, l].
         for (let j = 0; j <= 2; j++) {
-          let diff = Math.abs(currentShade.hsl[j] - baseShade.hsl[j]) || baseShade.hsl[j] / scale
+          let diff =
+            Math.abs(currentShade.hsl[j] - baseShade.hsl[j]) ||
+            baseShade.hsl[j] / scale
           let add = Math.log(scale) / Math.log(diff)
           add = Math.exp(add * scale)
-          this.overrideValue(currentShade.hsl[j] + add, currentShade.stop, this.hslNames[j])
+          this.overrideValue(
+            currentShade.hsl[j] + add,
+            currentShade.stop,
+            this.hslNames[j]
+          )
         }
       }
     },
     resetOverrides() {
-      this.overrides = Object.assign({}, this.overrides, this.defaultOverrides())
+      this.overrides = Object.assign(
+        {},
+        this.overrides,
+        this.defaultOverrides()
+      )
     },
     defaultOverrides() {
       let o = {}
@@ -462,7 +602,10 @@ export default {
       this.delay.hash.n = setTimeout(() => {
         const newURLHash = this.urlHash()
 
-        if (this.originShade.id && !this.hashCompares(this.originShade.code, newURLHash)) {
+        if (
+          this.originShade.id &&
+          !this.hashCompares(this.originShade.code, newURLHash)
+        ) {
           this.$store.commit('setOriginShade', {})
         }
 
@@ -477,16 +620,23 @@ export default {
       if (!currentHash.length) {
         currentHash = this.urlHash()
       }
-      let hashParts = hash.split('&').map(part => part.split('=').map(decodeURIComponent))
+      let hashParts = hash
+        .split('&')
+        .map(part => part.split('=').map(decodeURIComponent))
       if (!hashParts.find(p => p[0] === 'base-stop')?.length) {
         hashParts.push(['base-stop', '5'])
       }
 
-      let currentHashParts = currentHash.split('&').map(part => part.split('=').map(decodeURIComponent))
+      let currentHashParts = currentHash
+        .split('&')
+        .map(part => part.split('=').map(decodeURIComponent))
       for (let hashPart of hashParts) {
         let found = false
         for (let currentHashPart of currentHashParts) {
-          if (currentHashPart[0] === hashPart[0] && currentHashPart[1] === hashPart[1]) {
+          if (
+            currentHashPart[0] === hashPart[0] &&
+            currentHashPart[1] === hashPart[1]
+          ) {
             found = true
             break
           }
@@ -681,7 +831,9 @@ export default {
       return `${value[0]}, ${value[1]}, ${value[2]}`
     },
     displayHSL(value) {
-      return `${value[0]?.toFixed(2)}, ${value[1]?.toFixed(2)}%, ${value[2]?.toFixed(2)}%`
+      return `${value[0]?.toFixed(2)}, ${value[1]?.toFixed(
+        2
+      )}%, ${value[2]?.toFixed(2)}%`
     },
     appendColon(value) {
       return value ? `'${value}': ` : ''

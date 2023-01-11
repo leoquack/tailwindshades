@@ -5,14 +5,22 @@
     <div class="flex-1 flex justify-between sm:hidden">
       <a
         class="relative inline-flex items-center px-4 py-2 border border-theme-reverse text-sm font-medium rounded-md"
-        :class="page === 1 ? 'bg-theme-400 text-theme-500' : 'bg-theme-600 hover:bg-theme-300'"
+        :class="
+          page === 1
+            ? 'bg-theme-400 text-theme-500'
+            : 'bg-theme-600 hover:bg-theme-300'
+        "
         @click="$emit('change', page - 1)"
       >
         Previous
       </a>
       <a
         class="ml-3 relative inline-flex items-center px-4 py-2 border border-theme-reverse text-sm font-medium rounded-md bg-theme-600 hover:bg-theme-300"
-        :class="page === lastPage ? 'bg-theme-400 text-theme-500' : 'bg-theme-600 hover:bg-theme-300'"
+        :class="
+          page === lastPage
+            ? 'bg-theme-400 text-theme-500'
+            : 'bg-theme-600 hover:bg-theme-300'
+        "
         @click="$emit('change', page + 1)"
       >
         Next
@@ -31,7 +39,10 @@
         </p>
       </div>
       <div>
-        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px select-none" aria-label="Pagination">
+        <nav
+          class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px select-none"
+          aria-label="Pagination"
+        >
           <a
             class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-theme-reverse bg-theme-600 text-sm font-medium hover:bg-theme-300 cursor-pointer"
             @click="$emit('change', page - 1)"

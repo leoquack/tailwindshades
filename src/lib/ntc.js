@@ -43,7 +43,8 @@ export const ntc = {
 
   name: function (color) {
     color = color.toUpperCase()
-    if (color.length < 3 || color.length > 7) return ['#000000', 'Invalid Color: ' + color, false]
+    if (color.length < 3 || color.length > 7)
+      return ['#000000', 'Invalid Color: ' + color, false]
     if (color.length % 3 == 0) color = '#' + color
     if (color.length == 4)
       color =
@@ -70,10 +71,17 @@ export const ntc = {
     var df = -1
 
     for (var i = 0; i < ntc.names.length; i++) {
-      if (color == '#' + ntc.names[i][0]) return ['#' + ntc.names[i][0], ntc.names[i][1], true]
+      if (color == '#' + ntc.names[i][0])
+        return ['#' + ntc.names[i][0], ntc.names[i][1], true]
 
-      ndf1 = Math.pow(r - ntc.names[i][2], 2) + Math.pow(g - ntc.names[i][3], 2) + Math.pow(b - ntc.names[i][4], 2)
-      ndf2 = Math.pow(h - ntc.names[i][5], 2) + Math.pow(s - ntc.names[i][6], 2) + Math.pow(l - ntc.names[i][7], 2)
+      ndf1 =
+        Math.pow(r - ntc.names[i][2], 2) +
+        Math.pow(g - ntc.names[i][3], 2) +
+        Math.pow(b - ntc.names[i][4], 2)
+      ndf2 =
+        Math.pow(h - ntc.names[i][5], 2) +
+        Math.pow(s - ntc.names[i][6], 2) +
+        Math.pow(l - ntc.names[i][7], 2)
       ndf = ndf1 + ndf2 * 2
       if (df < 0 || df > ndf) {
         df = ndf
@@ -81,7 +89,9 @@ export const ntc = {
       }
     }
 
-    return cl < 0 ? ['#000000', 'Invalid Color: ' + color, false] : ['#' + ntc.names[cl][0], ntc.names[cl][1], false]
+    return cl < 0
+      ? ['#000000', 'Invalid Color: ' + color, false]
+      : ['#' + ntc.names[cl][0], ntc.names[cl][1], false]
   },
 
   // adopted from: Farbtastic 1.2

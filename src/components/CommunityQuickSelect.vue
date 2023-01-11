@@ -2,7 +2,12 @@
   <div class="flex flex-col">
     <div class="max-w-[300px] self-center md:self-end">
       <div class="text-xl font-bold flex items-center justify-center">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-2 w-2" viewBox="0 0 20 20" fill="currentColor">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-2 w-2"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
           <path
             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
           />
@@ -10,18 +15,34 @@
 
         <span class="mx-1"> Community shades </span>
 
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-2 w-2" viewBox="0 0 20 20" fill="currentColor">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-2 w-2"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
           <path
             d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
           />
         </svg>
       </div>
 
-      <div class="flex items-center justify-between px-2 border-b border-theme-reverse mx-2 py-1 mt-3 mb-1">
+      <div
+        class="flex items-center justify-between px-2 border-b border-theme-reverse mx-2 py-1 mt-3 mb-1"
+      >
         <p class="text-sm font-bold">Most liked</p>
 
-        <div @click="refreshMostLikedShades" class="ml-2 hover:text-purple-500 cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div
+          @click="refreshMostLikedShades"
+          class="ml-2 hover:text-purple-500 cursor-pointer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -52,7 +73,12 @@
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </div>
           </div>
@@ -60,9 +86,15 @@
 
         <div class="flex items-center justify-between">
           <VDropdown :triggers="['hover']">
-            <div @click.stop="toggleLikeShade(shade)" class="flex items-center hover:text-purple-500">
+            <div
+              @click.stop="toggleLikeShade(shade)"
+              class="flex items-center hover:text-purple-500"
+            >
               <svg
-                v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)"
+                v-if="
+                  myLikedShades &&
+                  myLikedShades.find(l => l.shade_id === shade.id)
+                "
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5 text-purple-500"
                 viewBox="0 0 20 20"
@@ -96,7 +128,14 @@
             </div>
 
             <template #popper>
-              <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)"> Unlike shade </span>
+              <span
+                v-if="
+                  myLikedShades &&
+                  myLikedShades.find(l => l.shade_id === shade.id)
+                "
+              >
+                Unlike shade
+              </span>
               <span v-else> Like shade </span>
             </template>
           </VDropdown>
@@ -106,11 +145,22 @@
         </div>
       </div>
 
-      <div class="flex items-center justify-between px-2 border-b border-theme-reverse mx-2 py-1 mt-8 mb-1">
+      <div
+        class="flex items-center justify-between px-2 border-b border-theme-reverse mx-2 py-1 mt-8 mb-1"
+      >
         <p class="text-sm font-bold">Recent</p>
 
-        <div @click="refreshRecentShades" class="ml-2 hover:text-purple-500 cursor-pointer">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div
+          @click="refreshRecentShades"
+          class="ml-2 hover:text-purple-500 cursor-pointer"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -141,7 +191,12 @@
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </div>
           </div>
@@ -149,9 +204,15 @@
 
         <div class="flex items-center justify-between">
           <VDropdown :triggers="['hover']">
-            <div @click.stop="toggleLikeShade(shade)" class="flex items-center hover:text-purple-500">
+            <div
+              @click.stop="toggleLikeShade(shade)"
+              class="flex items-center hover:text-purple-500"
+            >
               <svg
-                v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)"
+                v-if="
+                  myLikedShades &&
+                  myLikedShades.find(l => l.shade_id === shade.id)
+                "
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5 text-purple-500"
                 viewBox="0 0 20 20"
@@ -185,7 +246,14 @@
             </div>
 
             <template #popper>
-              <span v-if="myLikedShades && myLikedShades.find(l => l.shade_id === shade.id)"> Unlike shade </span>
+              <span
+                v-if="
+                  myLikedShades &&
+                  myLikedShades.find(l => l.shade_id === shade.id)
+                "
+              >
+                Unlike shade
+              </span>
               <span v-else> Like shade </span>
             </template>
           </VDropdown>
@@ -245,7 +313,10 @@ export default {
     refreshRecentShades() {
       clearTimeout(this.delay.refreshShades.n)
       this.delay.refreshShades.n = setTimeout(() => {
-        this.$store.commit('setCacheValue', { key: 'shades.community.recent', value: null })
+        this.$store.commit('setCacheValue', {
+          key: 'shades.community.recent',
+          value: null,
+        })
         this.getRecentShades()
       }, this.delay.refreshShades.t)
     },
@@ -282,7 +353,10 @@ export default {
     refreshMostLikedShades() {
       clearTimeout(this.delay.refreshShades.n)
       this.delay.refreshShades.n = setTimeout(() => {
-        this.$store.commit('setCacheValue', { key: 'shades.community.mostLiked', value: null })
+        this.$store.commit('setCacheValue', {
+          key: 'shades.community.mostLiked',
+          value: null,
+        })
         this.getMostLikedShades()
       }, this.delay.refreshShades.t)
     },
