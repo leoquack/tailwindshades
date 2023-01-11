@@ -286,9 +286,9 @@ export default {
     ]),
   },
   mounted() {
-    // if (import.meta.env.PROD) {
-    //   this.$ga.page('/')
-    // }
+    if (import.meta.env.PROD) {
+      this.$gtag.pageview('/')
+    }
 
     if (this.originShade.id) {
       this.shade = this.originShade

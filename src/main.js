@@ -4,7 +4,7 @@ import { createRouter } from './router'
 import App from './App.vue'
 import '@/assets/main.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
-// import VueAnalytics from 'vue-analytics'
+import VueGtag from 'vue-gtag'
 import Notifications from '@kyvg/vue3-notification'
 import FloatingVue from 'floating-vue'
 import 'floating-vue/dist/style.css'
@@ -29,9 +29,9 @@ const head = createHead()
 app.mixin(VueHeadMixin)
 app.use(head)
 
-// app.use(VueAnalytics, {
-//   id: 'UA-145441695-1',
-// })
+app.use(VueGtag, {
+  config: { id: 'G-RKC3YFFTTL' },
+})
 
 const supabase = createClient(
   'https://tsmcdgolhhtzzotghypz.supabase.co',
