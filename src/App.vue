@@ -2,7 +2,7 @@
   <div id="root" :class="'theme-' + theme">
     <notifications position="bottom right" />
 
-    <div class="flex flex-col min-h-full">
+    <div class="flex flex-col min-h-screen">
       <div class="bg-theme-lighter px-4 py-3 text-theme flex-shrink">
         <div class="flex flex-wrap justify-between items-center">
           <div
