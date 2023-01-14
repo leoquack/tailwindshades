@@ -23,7 +23,7 @@
         :value="modelValue"
         :min="min"
         :max="max"
-        @change="$emit('update:modelValue', parseInt($event.target.value))"
+        @input="$emit('update:modelValue', parseInt($event.target.value))"
       />
       <div class="flex flex-grow items-center">
         <div
@@ -53,7 +53,7 @@
           :min="min"
           :max="max"
           :value="modelValue"
-          @change="$emit('update:modelValue', parseInt($event.target.value))"
+          @input="$emit('update:modelValue', parseInt($event.target.value))"
         />
         <div
           class="ml-1 text-theme-200 light:text-theme-800 hover:text-blue cursor-pointer rounded-lg text-xs"
