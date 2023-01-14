@@ -8,8 +8,8 @@ import VueGtag from 'vue-gtag'
 import Notifications from '@kyvg/vue3-notification'
 import FloatingVue from 'floating-vue'
 import 'floating-vue/dist/style.css'
-import 'prismjs'
-import '@/assets/css/prism-vsc-dark-plus.css'
+import VueHighlightJS from 'vue3-highlightjs'
+// import 'highlight.js/styles/atom-one-dark.css'
 import { createClient } from '@supabase/supabase-js'
 import { createHead, VueHeadMixin } from '@unhead/vue'
 
@@ -28,6 +28,7 @@ app.use(Notifications)
 const head = createHead()
 app.mixin(VueHeadMixin)
 app.use(head)
+app.use(VueHighlightJS)
 
 app.use(VueGtag, {
   config: { id: 'G-RKC3YFFTTL' },

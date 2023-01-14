@@ -342,9 +342,9 @@
               </div>
             </div>
             <div class="px-2 relative">
-              <PrismComponent language="javascript"
-                >{{ appendColon(code.name) }}{{ codeDisplay }}</PrismComponent
-              >
+              <pre
+                v-highlightjs="appendColon(code.name) + codeDisplay"
+              ><code class="javascript"></code></pre>
               <input
                 type="hidden"
                 id="final-code"
@@ -371,7 +371,6 @@ import { ntc } from '@/lib/ntc.js'
 import SliderInput from '@/components/SliderInput.vue'
 import BaseStopSelect from '@/components/BaseStopSelect.vue'
 import _ from 'lodash'
-import PrismComponent from 'vue-prism-component'
 
 export default {
   props: {
@@ -383,7 +382,6 @@ export default {
   components: {
     SliderInput,
     BaseStopSelect,
-    PrismComponent,
   },
   data() {
     return {
@@ -442,7 +440,7 @@ export default {
 
       shades.push(
         ...this.result.shades.map(({ stop, hex, override }) => {
-          return `  '${stop * 100}': '#${override ? override.hex : hex}'`
+          return `  ${stop * 100}: '#${override ? override.hex : hex}'`
         })
       )
 
