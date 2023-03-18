@@ -37,7 +37,7 @@
           class="mt-8"
           v-show="validHex"
           :base-shade-stop="baseShadeStop"
-          @set="baseShadeStop = $event.target.value"
+          @set="baseShadeStop = $event"
         />
         <transition name="fade">
           <div
