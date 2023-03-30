@@ -469,6 +469,7 @@ export default {
       this.shade = this.emptyShade()
       this.hex = ''
       this.step = 'base'
+      this.$refs.shadeInterface.resetVersionChanges()
     },
     emptyShade() {
       return {
