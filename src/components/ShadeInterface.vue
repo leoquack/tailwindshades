@@ -273,6 +273,7 @@
                 :base-shade-stop="baseShadeStop"
                 title="Move base stop"
                 :small="true"
+                :stops="stops"
                 @set="$emit('set-base-shade-stop', $event)"
               />
             </div>
@@ -378,6 +379,7 @@ export default {
     colors: Array,
     baseShadeStop: Number,
     dbShade: {},
+    version: Number,
   },
   components: {
     SliderInput,
@@ -385,7 +387,8 @@ export default {
   },
   data() {
     return {
-      stops: [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      oldVersionMessages: [],
+      stops: [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9.5],
       hsl: [0, 0, 0],
       groupOptions: {
         stepUp: 8,
@@ -650,7 +653,7 @@ export default {
       }
       return true
     },
-    urlHash() {
+    urlHash(overrideParts) {
       let parts = {
         color: this.result.color.hsl,
         'step-up': this.groupOptions.stepUp,
@@ -658,6 +661,15 @@ export default {
         'hue-shift': this.groupOptions.hueShift,
         name: this.code.name,
         'base-stop': this.baseShadeStop,
+        v: this.version,
+      }
+
+      if (overrideParts) {
+        for (let part of Object.keys(overrideParts)) {
+          if (parts[part] !== undefined) {
+            parts[part] = overrideParts[part]
+          }
+        }
       }
 
       let defaultOverridable = this.defaultOverridable()
@@ -715,7 +727,14 @@ export default {
         color = converter.rgb.hsl.raw(converter.hex.rgb('#' + color))
       }
 
-      let lookup = parts.find(p => p[0] === 'step-up')
+      let lookup = parts.find(p => p[0] === 'v')
+      let version = 0
+      if (lookup?.length) {
+        version = lookup[1]
+      }
+      this.handleVersionChanges(version)
+
+      lookup = parts.find(p => p[0] === 'step-up')
       if (lookup?.length) {
         let stepUp = lookup[1]
         stepUp = this.clamp(parseInt(stepUp), 0, 20)
@@ -840,6 +859,21 @@ export default {
     },
     appendColon(value) {
       return value ? `'${value}': ` : ''
+    },
+    handleVersionChanges(version) {
+      version = parseInt(version) || 0
+      if (version < 1) {
+        // Added 9.5 to stops.
+        this.stops = [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        this.oldVersionMessages.push('Added 950 to base stops.')
+      }
+      this.$emit('update:oldVersionMessages', this.oldVersionMessages)
+    },
+    resetVersionChanges() {
+      this.stops = [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9.5]
+
+      this.oldVersionMessages = []
+      this.$emit('update:oldVersionMessages', this.oldVersionMessages)
     },
   },
 }

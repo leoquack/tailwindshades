@@ -27,11 +27,10 @@ export default {
     },
     baseShadeStop: Number,
     small: Boolean,
-  },
-  data() {
-    return {
-      stops: [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-    }
+    stops: {
+      type: Array,
+      default: () => [0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9.5],
+    },
   },
 }
 </script>

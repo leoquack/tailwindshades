@@ -82,6 +82,20 @@
           >
             <p v-if="shade.id" class="px-4">my shade #{{ shade.id }}</p>
 
+            <button
+              v-if="oldVersionMessages.length"
+              class="text-theme text-sm bg-red-500 text-red-800 hover:text-red-900 focus:outline-none p-2"
+              title="Clone"
+              @click="dbInsertShade(version)"
+              v-tooltip="{
+                content: `<strong>Click to clone to a new version.</strong><br>Changes:<br>${oldVersionDisplayMessage}`,
+                html: true,
+              }"
+            >
+              <i class="fas fa-info-circle mr-1"></i>
+              Old version
+            </button>
+
             <div
               class="text-sm focus:outline-none flex items-center justify-between bg-theme-600 h-full pl-4 select-none"
               :class="[
@@ -200,10 +214,12 @@
         :initialHEX="hex"
         :dbShade="shade"
         :colors="colors"
+        :version="version"
         @update:colors="colors = $event"
         :baseShadeStop="baseShadeStop"
         @set-base-shade-stop="baseShadeStop = $event"
         @hash-changed="handleHashChange"
+        @update:oldVersionMessages="$event => (oldVersionMessages = $event)"
         ref="shadeInterface"
       />
     </div>
@@ -265,9 +281,19 @@ export default {
       hasURLHash: window.location.hash.length > 2,
       shadeHasUnsavedChanges: false,
       baseShadeStop: 5,
+      version: 1,
+      oldVersionMessages: [],
     }
   },
   computed: {
+    oldVersionDisplayMessage() {
+      const maxLen = 10
+      let msg = this.oldVersionMessages.slice(0, maxLen)
+      if (this.oldVersionMessages.length > maxLen) {
+        msg.push('...')
+      }
+      return msg.join('<br>')
+    },
     shadeIsUnsaved() {
       return !this.shade.id || this.shadeHasUnsavedChanges
     },
@@ -353,12 +379,16 @@ export default {
       })
       this.$store.commit('setCacheValue', { key: 'shades.mine', value: null })
     },
-    async dbInsertShade() {
+    async dbInsertShade(changeVersion) {
+      let code = window.location.hash.substring(1)
+      if (changeVersion) {
+        code = this.$refs.shadeInterface.urlHash({ version: changeVersion })
+      }
       const { data, error } = await this.$supabase
         .from('shades')
         .insert({
           user_id: this.user.id,
-          code: window.location.hash.substring(1),
+          code,
           colors: this.colors,
         })
         .select()
@@ -382,6 +412,9 @@ export default {
         duration: 2000,
       })
       this.$store.commit('setCacheValue', { key: 'shades.mine', value: null })
+      if (changeVersion) {
+        this.$refs.shadeInterface.resetVersionChanges()
+      }
     },
     handleHashChange() {
       this.hasURLHash = window.location.hash.length > 2
