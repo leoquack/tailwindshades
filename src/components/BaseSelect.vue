@@ -278,7 +278,6 @@ export default {
         '#8B5CF6',
         '#EC4899',
       ],
-      hasURLHash: window.location.hash.length > 2,
       shadeHasUnsavedChanges: false,
       baseShadeStop: 5,
       version: 1,
@@ -286,6 +285,9 @@ export default {
     }
   },
   computed: {
+    hasURLHash() {
+      return window.location.hash.length > 2
+    },
     oldVersionDisplayMessage() {
       const maxLen = 10
       let msg = this.oldVersionMessages.slice(0, maxLen)
