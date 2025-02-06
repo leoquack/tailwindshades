@@ -340,17 +340,24 @@
                 <div class="px-4">
                   <input class="form-control" type="text" v-model="code.name" />
                 </div>
+                <div>
+                  <button
+                    @click="codeDisplayLegacy = !codeDisplayLegacy"
+                    :class="[
+                      codeDisplayLegacy ? 'bg-theme-800' : 'bg-theme-600',
+                      'text-white px-2 py-1 text-sm',
+                    ]"
+                  >
+                    Legacy code
+                  </button>
+                </div>
               </div>
             </div>
             <div class="px-2 relative">
               <pre
-                v-highlightjs="appendColon(code.name) + codeDisplay"
+                v-highlightjs="codeDisplay"
               ><code class="javascript"></code></pre>
-              <input
-                type="hidden"
-                id="final-code"
-                :value="appendColon(code.name) + codeDisplay"
-              />
+              <input type="hidden" id="final-code" :value="codeDisplay" />
               <div
                 class="absolute right-0 top-0 mr-4 bg-theme-700 px-4 py-2 text-xl rounded-full cursor-pointer hover:bg-theme-800"
                 @click="copyCodeToClipboard"
@@ -372,6 +379,7 @@ import { ntc } from '@/lib/ntc.js'
 import SliderInput from '@/components/SliderInput.vue'
 import BaseStopSelect from '@/components/BaseStopSelect.vue'
 import _ from 'lodash'
+import Color from 'colorjs.io'
 
 export default {
   props: {
@@ -408,6 +416,7 @@ export default {
       overrides: {},
       hslNames: ['hue', 'saturation', 'lightness'],
       fineTuneLimitLightness: false,
+      codeDisplayLegacy: false,
     }
   },
   watch: {
@@ -439,15 +448,10 @@ export default {
       return this.result.color.hex
     },
     codeDisplay() {
-      let shades = [`  DEFAULT: '#${this.result.color.hex}'`]
-
-      shades.push(
-        ...this.result.shades.map(({ stop, hex, override }) => {
-          return `  ${stop * 100}: '#${override ? override.hex : hex}'`
-        })
-      )
-
-      return `{\n${shades.join(',\n')}\n},`
+      if (this.codeDisplayLegacy) {
+        return this.codeDisplayStringLegacy()
+      }
+      return this.codeDisplayString()
     },
     initialHSL() {
       return converter.rgb.hsl.raw(converter.hex.rgb(this.initialHEX))
@@ -535,6 +539,30 @@ export default {
     // })
   },
   methods: {
+    codeDisplayString() {
+      let shades = []
+
+      shades.push(
+        ...this.result.shades.map(({ stop, hex, override }) => {
+          let c = new Color(`#${override ? override.hex : hex}`)
+          const oklch = c.to('oklch').toString()
+          return `--${this.code.name}-${stop * 100}: ${oklch};`
+        })
+      )
+
+      return `${shades.join('\n')}`
+    },
+    codeDisplayStringLegacy() {
+      let shades = [`  DEFAULT: '#${this.result.color.hex}'`]
+
+      shades.push(
+        ...this.result.shades.map(({ stop, hex, override }) => {
+          return `  ${stop * 100}: '#${override ? override.hex : hex}'`
+        })
+      )
+
+      return this.appendColon(this.code.name) + `{\n${shades.join(',\n')}\n},`
+    },
     hslValueAtStop(stopIndex, hslIndex, fallback) {
       if (!this.stops[stopIndex]) {
         return fallback || 0
