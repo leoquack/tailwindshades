@@ -546,7 +546,7 @@ export default {
         ...this.result.shades.map(({ stop, hex, override }) => {
           let c = new Color(`#${override ? override.hex : hex}`)
           const oklch = c.to('oklch').toString()
-          return `--${this.code.name}-${stop * 100}: ${oklch};`
+          return `--color-${this.code.name}-${stop * 100}: ${oklch};`
         })
       )
 
