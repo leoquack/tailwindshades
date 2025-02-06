@@ -5,7 +5,7 @@
   "build": {
     "dockerfile": "Dockerfile",
     "args": {
-      "VARIANT": "16"
+      "VARIANT": "18"
     }
   },
   "runArgs": [
