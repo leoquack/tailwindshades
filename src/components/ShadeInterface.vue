@@ -540,7 +540,10 @@ export default {
   },
   methods: {
     codeDisplayString() {
-      let shades = []
+      const oklch = new Color(`#${this.result.color.hex}`)
+        .to('oklch')
+        .toString()
+      let shades = [`--color-${this.code.name}: ${oklch};`]
 
       shades.push(
         ...this.result.shades.map(({ stop, hex, override }) => {
