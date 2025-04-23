@@ -2,13 +2,13 @@
   <div class="flex flex-col">
     <div
       v-if="step === 'base' && !hasURLHash"
-      class="px-2 md:px-0 text-center flex-grow grid md:grid-cols-2 lg:grid-cols-3 md:space-x-3 lg:space-x-6"
+      class="grid flex-grow px-2 text-center md:px-0 md:grid-cols-2 lg:grid-cols-3 md:space-x-3 lg:space-x-6"
     >
       <div
-        class="leading-none text-theme-lighter flex flex-col justify-center lg:-mt-12 lg:col-start-2"
+        class="flex flex-col justify-center leading-none text-theme-lighter lg:-mt-12 lg:col-start-2"
       >
-        <p class="text-lg md:text-xl text-left">Start by</p>
-        <p class="text-3xl md:text-4xl font-bold mt-1 text-left">
+        <p class="text-lg text-left md:text-xl">Start by</p>
+        <p class="mt-1 text-3xl font-bold text-left md:text-4xl">
           selecting a <u>base</u> color
         </p>
         <input
@@ -18,11 +18,11 @@
             mask: '!#HHHHHH',
             tokens: { H: { pattern: /[0-9a-fA-F]/, uppercase: true } },
           }"
-          class="form-control form-no-outline font-black text-2xl mt-6 py-6 px-8"
+          class="px-8 py-6 mt-6 text-2xl font-black form-control form-no-outline"
         />
         <div class="mt-8">
           <p class="text-left">Default tailwindcss palette colors (*-500)</p>
-          <div class="flex justify-between h-12 mt-2">
+          <div class="flex justify-between mt-2 h-12">
             <div
               class="flex-grow cursor-pointer"
               :class="{ 'border-2 light:border-black': hex === color }"
@@ -41,13 +41,13 @@
         />
         <transition name="fade">
           <div
-            class="btn mt-8 py-4 px-8"
+            class="px-8 py-4 mt-8 btn"
             :style="`background-color: ${hex}; color: ${textColorByBrightness()}`"
             v-show="validHex"
-            @click="step = 'shades'"
+            @click="enterShadeStep"
           >
             <p class="text-xl md:text-2xl">Shade</p>
-            <p class="text-xs mt-1">{{ hex }}</p>
+            <p class="mt-1 text-xs">{{ hex }}</p>
           </div>
         </transition>
 
@@ -56,15 +56,15 @@
           class="flex justify-center items-center mt-24"
         />
       </div>
-      <div class="py-4 px-4 text-theme">
+      <div class="px-4 py-4 text-theme">
         <CommunityQuickSelect />
       </div>
     </div>
 
     <div class="flex flex-col" v-if="step === 'shades' || hasURLHash">
-      <div class="flex justify-between bg-theme-lighter border-t border-theme">
+      <div class="flex justify-between border-t bg-theme-lighter border-theme">
         <button
-          class="text-theme text-sm hover:text-blue-400 focus:outline-none p-2"
+          class="p-2 text-sm text-theme hover:text-blue-400 focus:outline-none"
           @click="backToBaseSelection"
         >
           <i class="fas fa-angle-left"></i>
@@ -78,13 +78,13 @@
               loginFeatures &&
               (shadeHasUnsavedChanges || shade.id)
             "
-            class="text-theme font-bold text-sm bg-theme-500 h-full flex items-center"
+            class="flex items-center h-full text-sm font-bold text-theme bg-theme-500"
           >
             <p v-if="shade.id" class="px-4">my shade #{{ shade.id }}</p>
 
             <button
               v-if="oldVersionMessages.length"
-              class="text-theme text-sm bg-red-500 text-red-800 hover:text-red-900 focus:outline-none p-2"
+              class="p-2 text-sm text-red-800 bg-red-500 text-theme hover:text-red-900 focus:outline-none"
               title="Clone"
               @click="dbInsertShade(version)"
               v-tooltip="{
@@ -92,12 +92,12 @@
                 html: true,
               }"
             >
-              <i class="fas fa-info-circle mr-1"></i>
+              <i class="mr-1 fas fa-info-circle"></i>
               Old version
             </button>
 
             <div
-              class="text-sm focus:outline-none flex items-center justify-between bg-theme-600 h-full pl-4 select-none"
+              class="flex justify-between items-center pl-4 h-full text-sm select-none focus:outline-none bg-theme-600"
               :class="[
                 shadeHasUnsavedChanges
                   ? 'text-theme hover:text-theme'
@@ -105,35 +105,45 @@
                 { 'pr-4': !shade.id },
               ]"
             >
-              <div class="mr-2 cursor-pointer" @click="saveShade">
+              <button
+                class="mr-2"
+                :class="[
+                  shadeHasUnsavedChanges
+                    ? 'text-theme hover:text-theme cursor-pointer'
+                    : 'text-theme-500 cursor-not-allowed',
+                ]"
+                :disabled="!shadeHasUnsavedChanges"
+                @click="saveShade"
+              >
                 <span class="text-sm" v-if="shadeHasUnsavedChanges">*</span>
                 save
-              </div>
+              </button>
               <CustomDropdown
                 class="h-full"
                 placement="right"
                 :disabled="!shadeHasUnsavedChanges"
                 v-if="shade.id"
               >
-                <template
-                  v-slot:button
-                  class="flex h-full items-center bg-theme-600 text-theme px-1"
-                >
-                  <svg
-                    class="w-4 h-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    :fill="shadeHasUnsavedChanges ? '#FFFFFF' : '#262626'"
+                <template v-slot:button>
+                  <div
+                    class="flex items-center px-1 h-full bg-theme-600 text-theme"
                   >
-                    <path
-                      d="M4.516 7.548c.436-.446 1.043-.481 1.576 0L10 11.295l3.908-3.747c.533-.481 1.141-.446 1.574 0 .436.445.408 1.197 0 1.615-.406.418-4.695 4.502-4.695 4.502a1.095 1.095 0 0 1-1.576 0S4.924 9.581 4.516 9.163c-.409-.418-.436-1.17 0-1.615z"
-                    />
-                  </svg>
+                    <svg
+                      class="w-4 h-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      :fill="shadeHasUnsavedChanges ? '#FFFFFF' : '#262626'"
+                    >
+                      <path
+                        d="M4.516 7.548c.436-.446 1.043-.481 1.576 0L10 11.295l3.908-3.747c.533-.481 1.141-.446 1.574 0 .436.445.408 1.197 0 1.615-.406.418-4.695 4.502-4.695 4.502a1.095 1.095 0 0 1-1.576 0S4.924 9.581 4.516 9.163c-.409-.418-.436-1.17 0-1.615z"
+                      />
+                    </svg>
+                  </div>
                 </template>
 
                 <template v-slot:content>
                   <div
-                    class="block px-2 my-1 cursor-pointer rounded hover:bg-purple-500 hover:text-white"
+                    class="block px-2 my-1 rounded cursor-pointer hover:bg-purple-500 hover:text-white"
                     @click="dbInsertShade"
                   >
                     Save as new
@@ -144,7 +154,7 @@
           </div>
 
           <button
-            class="text-theme text-sm hover:text-blue-400 focus:outline-none ml-2 p-2"
+            class="p-2 ml-2 text-sm text-theme hover:text-blue-400 focus:outline-none"
             @click="copyShareLink"
             title="Copy share link"
           >
@@ -153,13 +163,13 @@
           </button>
 
           <div
-            class="flex justify-between px-2 text-xs py-1"
+            class="flex justify-between px-2 py-1 text-xs"
             v-if="loginFeatures && originShade.id"
           >
             <VDropdown :triggers="['hover']">
               <div
                 @click.stop="toggleLikeShade(originShade)"
-                class="flex items-center hover:text-purple-500 cursor-pointer"
+                class="flex items-center cursor-pointer hover:text-purple-500"
               >
                 <svg
                   v-if="
@@ -167,7 +177,7 @@
                     myLikedShades.find(l => l.shade_id === originShade.id)
                   "
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-purple-500"
+                  class="w-5 h-5 text-purple-500"
                   viewBox="0 0 20 20"
                   fill="currentColor"
                 >
@@ -180,7 +190,7 @@
                 <svg
                   v-else
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-theme"
+                  class="w-5 h-5 text-theme"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -471,7 +481,8 @@ export default {
       this.shade = this.emptyShade()
       this.hex = ''
       this.step = 'base'
-      this.$refs.shadeInterface.resetVersionChanges()
+      this.shadeHasUnsavedChanges = false
+      this.$refs.shadeInterface?.resetVersionChanges()
     },
     emptyShade() {
       return {
@@ -488,6 +499,14 @@ export default {
       // https://www.w3.org/TR/AERT/#color-contrast
       let brightness = (rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000
       return brightness > 125 ? 'black' : 'white'
+    },
+    enterShadeStep() {
+      this.step = 'shades'
+      // Explicitly mark as having unsaved changes when entering this step
+      // from the base selection, assuming the user is logged in and it's a new shade.
+      if (this.isLoggedIn && this.loginFeatures && !this.shade.id) {
+        this.shadeHasUnsavedChanges = true
+      }
     },
   },
 }
