@@ -97,20 +97,21 @@
             </button>
 
             <div
-              class="flex justify-between items-center pl-4 h-full text-sm select-none focus:outline-none bg-theme-600"
+              class="flex justify-between items-center h-full text-sm select-none focus:outline-none bg-theme-600"
               :class="[
                 shadeHasUnsavedChanges
                   ? 'text-theme hover:text-theme'
                   : 'text-theme-500',
-                { 'pr-4': !shade.id },
+                ,
               ]"
             >
               <button
-                class="mr-2"
+                class="mr-2 h-full pl-4"
                 :class="[
                   shadeHasUnsavedChanges
                     ? 'text-theme hover:text-theme cursor-pointer'
                     : 'text-theme-500 cursor-not-allowed',
+                  { 'pr-4': !shade.id },
                 ]"
                 :disabled="!shadeHasUnsavedChanges"
                 @click="saveShade"
