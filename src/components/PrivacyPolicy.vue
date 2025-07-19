@@ -68,7 +68,8 @@
     <h3 class="font-semibold mb-2">Cookies</h3>
     <p>
       We use cookies to maintain login sessions and gather analytics data. You
-      may control cookies through your browser settings.
+      may control cookie preferences at any time using the consent banner or
+      your browser settings.
     </p>
 
     <h2 class="text-lg font-semibold mt-8 mb-2">
@@ -125,7 +126,7 @@
       guarantee absolute security over the Internet.
     </p>
 
-    <h2 class="text-lg font-semibold mt-8 mb-2">9. Children’s Privacy</h2>
+    <h2 class="text-lg font-semibold mt-8 mb-2">9. Children's Privacy</h2>
     <p>
       This Service is not intended for children under 13. We do not knowingly
       collect personal information from children.
@@ -150,6 +151,4 @@
   </div>
 </template>
 
-<script setup>
-// No interactivity needed
-</script>
+<script></script>

@@ -76,8 +76,4 @@
   </div>
 </template>
 
-<script setup>
-// No interactivity needed
-</script>
-
 <script></script>
