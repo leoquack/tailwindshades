@@ -52,7 +52,10 @@
     </p>
     <ul class="list-disc pl-6 mb-4">
       <li>Email address</li>
-      <li>Display name</li>
+      <li>
+        Display name (provided by the login service; may include your full name
+        or username depending on your settings)
+      </li>
       <li>Profile picture (if available)</li>
     </ul>
 
