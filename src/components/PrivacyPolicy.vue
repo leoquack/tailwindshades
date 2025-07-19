@@ -142,6 +142,11 @@
       If you have any questions, email us at:
       <strong>leo.stratigakis@gmail.com</strong>
     </p>
+
+    <p class="mt-8">
+      <strong>Disclaimer:</strong> Tailwind Shades is an independent project and
+      is not affiliated with or endorsed by Tailwind Labs Inc.
+    </p>
   </div>
 </template>
 

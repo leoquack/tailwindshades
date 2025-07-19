@@ -32,6 +32,14 @@ app.use(VueHighlightJS)
 
 app.use(VueGtag, {
   config: { id: 'G-RKC3YFFTTL' },
+  enabled: false,
+})
+
+// Wait for Cookiebot to be ready
+window.addEventListener('CookiebotOnConsentReady', function () {
+  if (window.Cookiebot?.consents?.statistics) {
+    app.config.globalProperties.$gtag.optIn()
+  }
 })
 
 const supabase = createClient(
