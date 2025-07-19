@@ -60,6 +60,21 @@
       </div>
 
       <router-view class="flex-grow" />
+
+      <div class="bg-theme-lighter px-4 py-3 text-theme">
+        <div class="flex flex-wrap justify-center items-center space-x-6">
+          <router-link
+            class="hover:text-theme-lighter hover:underline"
+            to="/privacy-policy"
+            >Privacy Policy</router-link
+          >
+          <router-link
+            class="hover:text-theme-lighter hover:underline"
+            to="/terms"
+            >Terms of Service</router-link
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>

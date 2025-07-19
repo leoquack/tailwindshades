@@ -50,11 +50,6 @@
             <p class="mt-1 text-xs">{{ hex }}</p>
           </div>
         </transition>
-
-        <carbon-ads
-          v-if="isProduction"
-          class="flex justify-center items-center mt-24"
-        />
       </div>
       <div class="px-4 py-4 text-theme">
         <CommunityQuickSelect />
@@ -240,7 +235,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import ShadeInterface from '@/components/ShadeInterface.vue'
-import CarbonAds from '@/components/CarbonAds.vue'
 import converter from 'color-convert'
 import CustomDropdown from '@/components/CustomDropdown.vue'
 import CommunityQuickSelect from '@/components/CommunityQuickSelect.vue'
@@ -253,7 +247,6 @@ import { pageview } from 'vue-gtag'
 export default {
   components: {
     ShadeInterface,
-    CarbonAds,
     CustomDropdown,
     CommunityQuickSelect,
     BaseStopSelect,
