@@ -37,7 +37,7 @@ app.use(VueGtag, {
 
 // Wait for Cookiebot to be ready
 window.addEventListener('CookiebotOnConsentReady', function () {
-  if (window.Cookiebot?.consents?.statistics) {
+  if (window.Cookiebot?.consent?.statistics) {
     app.config.globalProperties.$gtag.optIn()
   }
 })
