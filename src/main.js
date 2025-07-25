@@ -31,15 +31,37 @@ app.use(head)
 app.use(VueHighlightJS)
 
 app.use(VueGtag, {
-  config: { id: 'G-RKC3YFFTTL' },
+  config: {
+    id: 'G-RKC3YFFTTL',
+    params: {
+      debug_mode: true,
+    },
+  },
   enabled: false,
 })
 
 // Wait for Cookiebot to be ready
-window.addEventListener('CookiebotOnConsentReady', function () {
-  if (window.Cookiebot?.consent?.statistics) {
-    app.config.globalProperties.$gtag.optIn()
+window.addEventListener('CookiebotOnConsentReady', () => {
+  console.log('[Cookiebot] Consent ready:', window.Cookiebot?.consent)
+
+  const tryOptIn = () => {
+    const gtag = app.config.globalProperties?.$gtag
+    const consented = window.Cookiebot?.consent?.statistics
+
+    console.log('[Cookiebot] Checking opt-in:', {
+      consented,
+      gtagAvailable: !!gtag,
+    })
+
+    if (consented && gtag) {
+      console.log('[Gtag] Opting in to statistics tracking...')
+      gtag.optIn()
+    } else if (!gtag) {
+      setTimeout(tryOptIn, 100)
+    }
   }
+
+  tryOptIn()
 })
 
 const supabase = createClient(
